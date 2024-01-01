@@ -31,7 +31,7 @@ const Header = () => {
         Account()   
 
     }
-    const refreshToken = userData['refreshToken']
+    const refreshToken = userData?.['refreshToken']
     const getNewAccessToken = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`, refreshToken)
