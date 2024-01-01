@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/website_selling_jewelry/static/css/main.a600d8d8.css",
+    "main.js": "/website_selling_jewelry/static/js/main.a0768d03.js",
+    "static/js/787.a6778c67.chunk.js": "/website_selling_jewelry/static/js/787.a6778c67.chunk.js",
+    "static/media/banner3.png": "/website_selling_jewelry/static/media/banner3.8304c60dd9de2d94a67f.png",
+    "static/media/banner1.png": "/website_selling_jewelry/static/media/banner1.9588ed1766582bcf8282.png",
+    "static/media/banner2.png": "/website_selling_jewelry/static/media/banner2.5682bd894e6a834d095b.png",
+    "static/media/logo2.png": "/website_selling_jewelry/static/media/logo2.0f5b8d2b77880d309683.png",
+    "static/media/logo3.png": "/website_selling_jewelry/static/media/logo3.707642ca4b27060a4ba8.png",
+    "index.html": "/website_selling_jewelry/index.html",
+    "main.a600d8d8.css.map": "/website_selling_jewelry/static/css/main.a600d8d8.css.map",
+    "main.a0768d03.js.map": "/website_selling_jewelry/static/js/main.a0768d03.js.map",
+    "787.a6778c67.chunk.js.map": "/website_selling_jewelry/static/js/787.a6778c67.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a600d8d8.css",
+    "static/js/main.a0768d03.js"
+  ]
+}
