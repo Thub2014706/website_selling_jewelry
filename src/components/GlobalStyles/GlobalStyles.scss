@@ -1,0 +1,81 @@
+@import 'normalize.css';
+
+:root {
+    --primary-color: #262525;
+    --font-color: #9a702a;
+    --grey-color: #e1e1e1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 85%;
+}
+
+body {
+    font-family: 'ProximaNova', sans-serif !important;
+    // font-weight: 50;
+    // font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizeSpeed;
+}
+
+.search {
+    border: none;
+    border-bottom: 1px solid white;
+    // background-color: transparent; /* Để nền trở nên trong suốt */
+}
+
+.search-input {
+    border: none;
+    color: white; /* Đổi màu chữ thành trắng */
+    outline: none; /* Loại bỏ viền khi tập trung */
+    background-color: transparent;
+}
+
+.search-icon {
+    color: white;
+}
+
+/* App.css */
+
+.nav {
+    position: relative;
+    text-decoration: none;
+}
+
+.nav::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ffffff;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+}
+
+.nav:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.card-product {
+    overflow: hidden;
+}
+
+.card-img {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.6s ease, transform 2s cubic-bezier(0, 0, 0.44, 1.18);
+}
+
+.card-img:hover {
+    transform: scale(1.1);
+}
