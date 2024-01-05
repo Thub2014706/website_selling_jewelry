@@ -1,20 +1,20 @@
 import React from 'react';
-import { Card, ListGroup } from 'react-bootstrap';
-import anhthu from '~/assets/images/logo2.png';
+import { Card } from 'react-bootstrap';
 
-const Product = () => {
+const Product = ({ image, name, price, discount }) => {
     return (
         <Card style={{ width: '18rem', border: 'none' }}>
             <div className="card-product">
-                <Card.Img className="card-img rounded-0" variant="top" src={anhthu} />
+                <Card.Img className="card-img rounded-0" variant="top" src={image[0]} />
             </div>
             <Card.Body>
                 <Card.Title className="text-center">
-                    Mặt dây chuyền Kim cương Kim tiền Vàng trắng 14K PNJ DDDDW060340
+                    <h4>{name}</h4>
                 </Card.Title>
                 <Card.Text className="mt-3">
                     <h5 className="text-center" style={{ color: 'var(--font-color)' }}>
-                        200.000đ
+                        {(price - (price * discount) / 100).toLocaleString('it-IT')}
+                        <span>&#8363;</span>
                     </h5>
                 </Card.Text>
             </Card.Body>

@@ -2,8 +2,12 @@
     "name": "nienluan-be",
     "version": "0.1.0",
     "private": true,
-    "homepage": "https://Thub2014706.github.io/website_selling_jewelry/",
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.5.1",
+        "@fortawesome/free-brands-svg-icons": "^6.5.1",
+        "@fortawesome/free-regular-svg-icons": "^6.5.1",
+        "@fortawesome/free-solid-svg-icons": "^6.5.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
         "@heroicons/react": "^2.0.18",
         "@reduxjs/toolkit": "^2.0.1",
         "@testing-library/jest-dom": "^5.17.0",

@@ -14,9 +14,8 @@ const publicRoutes = [
         component: NoPage 
     },
     { 
-        path: '/product', 
+        path: '/product/:id', 
         component: ProductDetailsPage, 
-        layout: null 
     },
     {
         path:'/signin',

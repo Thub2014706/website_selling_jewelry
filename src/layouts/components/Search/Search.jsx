@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import React from 'react';
 import { Col } from 'react-bootstrap';
 
@@ -7,7 +9,7 @@ const Search = () => {
             <div className="search p-2">
                 <input className="search-input" type="text" placeholder="Tìm kiếm" />
                 <a href="#">
-                    <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                <FontAwesomeIcon className='search-icon' icon={faMagnifyingGlass} />
                 </a>
             </div>
         </Col>

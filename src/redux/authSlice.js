@@ -1,15 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
-    name: 'auth',
+    name: 'auth', //đặt tên
     initialState: {
+        //giá trị đầu
         login: {
             currentUser: null,
             isFetching: false,
             error: false,
         },
+
+        register: {
+            isFetching: false,
+            error: false,
+            success: false,
+        },
     },
     reducers: {
+        //hoạt động
         loginStart: (state) => {
             state.login.isFetching = true;
         },
@@ -22,9 +30,24 @@ const authSlice = createSlice({
             state.login.isFetching = false;
             state.login.error = true;
         },
+
+        registerStart: (state) => {
+            state.register.isFetching = true;
+        },
+        registerSuccess: (state) => {
+            state.register.isFetching = false;
+            state.register.error = false;
+            state.register.success = true;
+        },
+        registerFailed: (state) => {
+            state.register.isFetching = false;
+            state.register.error = true;
+            state.register.success = false;
+        },
     },
 });
 
-export const { loginStart, loginFailed, loginSuccess } = authSlice.actions;
+export const { loginStart, loginFailed, loginSuccess, registerStart, registerSuccess, registerFailed } =
+    authSlice.actions;
 
 export default authSlice.reducer;
