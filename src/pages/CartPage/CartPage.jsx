@@ -1,20 +1,15 @@
 import { faArrowLeft, faMinus, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
-import { Button, ButtonGroup, Col, Container, Row, Table } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, ButtonGroup, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { decrease, increase, removeFromCart } from '~/redux/cartSlice';
+import { decrease, increase, inputValue, removeFromCart } from '~/redux/cartSlice';
 
 const CartPage = () => {
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.cart.cartItems);
-
-    console.log('ghj', products);
-
-    const value = useSelector((state) => state.cart.quantityBuy);
-    console.log('thu', value);
 
     const removeItem = (products) => {
         dispatch(removeFromCart(products));
@@ -26,17 +21,24 @@ const CartPage = () => {
 
     const handleIncrease = (products) => {
         dispatch(increase(products));
-        console.log('ghđj', products);
     };
 
-    const handleEdit = () => {};
+    const handleEdit = (id, stock, e) => {
+        let number = Number(e.target.value.replace(/[^\d]/g, ''));
+        if (number <= stock) {
+            dispatch(inputValue({ id, number }));
+        } else {
+            number = stock;
+            dispatch(inputValue({ id, number }));
+        }
+        console.log('ghđj', number);
+    };
 
-    // console.log("ghjklsdfgh", products)
     return (
         <Container>
             {products.length !== 0 ? (
                 <Row className="py-5">
-                    <Col md={8}>
+                    <Col md={9}>
                         <Table>
                             <thead>
                                 <tr className="text-center">
@@ -51,12 +53,17 @@ const CartPage = () => {
                                 {products.map((item) => (
                                     <tr>
                                         <td>
-                                            <img
-                                                src={item.product.image[0]}
-                                                style={{ width: '60px' }}
-                                                className="me-3"
-                                            />
-                                            {item.product.name}
+                                            <Link
+                                                to={`/product/${item._id}`}
+                                                className="text-decoration-none text-black"
+                                            >
+                                                <img
+                                                    src={item.product.image[0]}
+                                                    style={{ width: '60px' }}
+                                                    className="me-3"
+                                                />
+                                                {item.product.name}
+                                            </Link>
                                         </td>
                                         <td className="text-center" key={item.product._id}>
                                             {item.product.discount !== 0 && (
@@ -86,8 +93,10 @@ const CartPage = () => {
                                                     type="text"
                                                     style={{ width: '40px' }}
                                                     className="text-center"
-                                                    onChange={handleEdit}
-                                                    value={item.cartQuantity}
+                                                    onChange={(e) =>
+                                                        handleEdit(item.product._id, item.product.inStock, e)
+                                                    }
+                                                    value={item.cartQuantity !== 0 ? item.cartQuantity : ''}
                                                 />
                                                 <Button
                                                     variant="outline-secondary"
@@ -116,7 +125,35 @@ const CartPage = () => {
                             </tbody>
                         </Table>
                     </Col>
-                    <Col md={4}></Col>
+                    <Col md={3}>
+                        <Card className="w-100 rounded-0 p-2" style={{ width: '18rem' }}>
+                            <Card.Body>
+                                <h4>Hóa Đơn</h4>
+                                <hr />
+                                <Table>
+                                    <tr>
+                                        <td>Tạm tính</td>
+                                        <td>fd</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Giảm giá</td>
+                                        <td>fd</td>
+                                    </tr>
+                                    <hr />
+                                    <tr>
+                                        <td>Tổng cộng</td>
+                                        <td>fd</td>
+                                    </tr>
+                                </Table>
+                                <Button
+                                    className="w-100 rounded-0"
+                                    style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                                >
+                                    Tiến hành đặt hàng
+                                </Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 </Row>
             ) : (
                 <Row className="py-5">

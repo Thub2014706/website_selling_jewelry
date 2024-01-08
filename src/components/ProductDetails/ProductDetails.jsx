@@ -14,6 +14,8 @@ const ProductDetails = () => {
 
     const { id } = useParams();
 
+    const navigate = useNavigate();
+
     // lấy thông tin chi tiết sp
     const product = useSelector((state) => state.product.getDetail.currentProduct);
 
@@ -22,38 +24,30 @@ const ProductDetails = () => {
         console.log(product);
     }, []);
 
-    // const value = useSelector((state) => state.cart.quantityBuy);
-    // console.log('thu', value);
-
-    const navigate = useNavigate();
-
-    // const [war, setWar] = useState('');
-
     const [number, setNumber] = useState(1);
 
     const [war, setWar] = useState('');
-
-    const handleEdit = (e) => {
-        const val = e.target.value.replace(/[^\d]/g, '');
-        setWar('');
-        if (val <= product.inStock) {
-            setNumber(val);
-        } else {
-            setNumber(product.inStock);
-        }
-    };
 
     const handleDecrease = () => {
         setWar('');
         if (number > 1) {
             setNumber(number - 1);
         }
-        // dispatch(decrease())
     };
 
     const handleIncrease = () => {
         if (number < product.inStock) {
             setNumber(Number(number) + 1);
+        }
+    };
+
+    const handleEdit = (e) => {
+        const val = Number(e.target.value.replace(/[^\d]/g, ''));
+        setWar('');
+        if (val <= product.inStock) {
+            setNumber(val);
+        } else {
+            setNumber(product.inStock);
         }
     };
 
@@ -167,7 +161,6 @@ const ProductDetails = () => {
                                 <span>&#8363;</span>
                             </h3>
                         </div>
-                        {/* <QuantityBox id={product._id} inStock={product.inStock} val={1} /> */}
                         <div>
                             <ButtonGroup size="sm" aria-label="Basic example">
                                 <Button variant="outline-secondary" className="rounded-0" onClick={handleDecrease}>
@@ -178,7 +171,7 @@ const ProductDetails = () => {
                                     style={{ width: '40px' }}
                                     className="text-center"
                                     onChange={handleEdit}
-                                    value={number}
+                                    value={number !== 0 ? number : ''}
                                 />
                                 <Button variant="outline-secondary" className="rounded-0" onClick={handleIncrease}>
                                     <FontAwesomeIcon icon={faPlus} />
