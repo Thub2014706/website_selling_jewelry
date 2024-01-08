@@ -52,7 +52,7 @@ const Header = () => {
                 <Container>
                     <Row>
                         <Col md="1">
-                            <img src={logo} style={{ height: '50px' }} alt="" />
+                            <Link to={'/'}><img src={logo} style={{ height: '50px' }} alt="" /></Link>
                         </Col>
                         <Col md="7">
                             <Navbar sticky="top" expand="lg" className="text-white">
@@ -98,12 +98,16 @@ const Header = () => {
                                     )}
                                 </Col>
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
-                                    <ion-icon
-                                        name="bag-handle-outline"
-                                        size="small"
-                                        style={{ marginRight: '5px' }}
-                                    ></ion-icon>{' '}
-                                    Giỏ Hàng
+                                        <Link to={'/cart'} className="text-decoration-none text-white">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                size="small"
+                                                style={{ marginRight: '5px' }}
+                                            ></ion-icon>{' '}
+                                        </Link>
+                                    <Link to={'/cart'} className="text-decoration-none text-white">
+                                        Giỏ Hàng
+                                    </Link>
                                 </Col>
                             </Row>
                         </Col>

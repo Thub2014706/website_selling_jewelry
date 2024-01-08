@@ -13,6 +13,7 @@ const productSlice = createSlice({
             isFetching: false,
             error: false,
         },
+        // quantityBuy: 1,
     },
     reducers: {
         getAllStart: (state) => {
@@ -37,9 +38,24 @@ const productSlice = createSlice({
         getDetailFailed: (state) => {
             state.getDetail.error = true;
         },
+        setNewNumber: (state, action) => {
+            state.quantityBuy = action.payload;
+        },
+        // decrease: (state, action) => {
+        //     if (state.quantityBuy > 1) {
+        //         state.quantityBuy -= 1;
+        //     }
+        // },
     },
 });
 
-export const { getAllStart, getAllSuccess, getAllFailed, getDetailStart, getDetailSuccess, getDetailFailed } =
-    productSlice.actions;
+export const {
+    getAllStart,
+    getAllSuccess,
+    getAllFailed,
+    getDetailStart,
+    getDetailSuccess,
+    getDetailFailed,
+    // setNewNumber,
+} = productSlice.actions;
 export default productSlice.reducer;

@@ -1,42 +1,156 @@
-import React, { useEffect } from 'react';
-import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { productDetail } from '~/redux/apiRequest';
-import QuantityBox from '../QuantityBox/QuantityBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBagShopping } from '@fortawesome/free-solid-svg-icons';
+import { faBagShopping, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { addToCart } from '~/redux/cartSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
+
     const { id } = useParams();
+
+    // lấy thông tin chi tiết sp
     const product = useSelector((state) => state.product.getDetail.currentProduct);
+
     useEffect(() => {
         productDetail(dispatch, id);
         console.log(product);
     }, []);
 
+    // const value = useSelector((state) => state.cart.quantityBuy);
+    // console.log('thu', value);
+
+    const navigate = useNavigate();
+
+    // const [war, setWar] = useState('');
+
+    const [number, setNumber] = useState(1);
+
+    const [war, setWar] = useState('');
+
+    const handleEdit = (e) => {
+        const val = e.target.value.replace(/[^\d]/g, '');
+        setWar('');
+        if (val <= product.inStock) {
+            setNumber(val);
+        } else {
+            setNumber(product.inStock);
+        }
+    };
+
+    const handleDecrease = () => {
+        setWar('');
+        if (number > 1) {
+            setNumber(number - 1);
+        }
+        // dispatch(decrease())
+    };
+
+    const handleIncrease = () => {
+        if (number < product.inStock) {
+            setNumber(Number(number) + 1);
+        }
+    };
+
+    const data = {
+        product,
+        cartQuantity: number,
+    };
+
+    const handleToCart = () => {
+        const products = JSON.parse(localStorage.getItem('cartProduct'));
+        if (products) {
+            const findId = products.find((item) => item.product._id === id);
+            console.log('ghjdfghj', findId);
+
+            if (findId && findId.cartQuantity + number > product.inStock) {
+                setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
+            } else {
+                dispatch(addToCart(data));
+                setWar('');
+                toast('Thêm giỏ hàng thành công', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    type: 'success',
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            }
+        } else {
+            dispatch(addToCart(data));
+            setWar('');
+            toast('Thêm giỏ hàng thành công', {
+                position: 'top-center',
+                autoClose: 2000,
+                type: 'success',
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+            });
+        }
+    };
+
+    const buyNow = () => {
+        const products = JSON.parse(localStorage.getItem('cartProduct'));
+        if (products) {
+            const findId = products.find((item) => item.product._id === id);
+            console.log('ghjdfghj', findId);
+
+            if (findId && findId.cartQuantity + number > product.inStock) {
+                setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
+            } else {
+                dispatch(addToCart(data));
+                navigate('/cart');
+                setWar('');
+            }
+        } else {
+            dispatch(addToCart(data));
+            navigate('/cart');
+            setWar('');
+        }
+    };
+
+    const [photo, setPhoto] = useState(0);
+
     return (
         <Container>
+            <ToastContainer />
             {product !== null ? (
                 <Row>
-                    <Col md="6">
-                        {/* <img src={product.image} alt="" /> */}
-                        <Carousel data-bs-theme="dark">
-                            {product.image.map((img, index) => (
-                                <Carousel.Item >
-                                    <img src={img} alt="" className="d-block mx-auto" />
-                                    <p data-bs-target="#demo" data-bs-slide-to={index}>{index + 1} / {product.image.length}</p>
-                                </Carousel.Item>
-                            ))}
-                        </Carousel>
+                    <Col md={1}>
+                        {/* <FontAwesomeIcon icon={faChevronUp} onClick={() => setMove('up')} /> */}
+                        {product.image.map((img, index) => (
+                            <img
+                                onClick={() => setPhoto(index)}
+                                src={img}
+                                className={`d-block mx-auto w-75 border rounded mt-2 ${
+                                    photo === index ? 'border-secondary' : ''
+                                }`}
+                            />
+                        ))}
+                        {/* <FontAwesomeIcon icon={faChevronDown} onClick={() => setMove('down')} /> */}
                     </Col>
-                    <Col md="6" className="mt-5">
+                    <Col md={5}>
+                        <img src={product.image[photo]} alt="" className="d-block mx-auto w-100" />
+                    </Col>
+                    <Col md={6} className="mt-5 ps-5">
                         <h2>{product.name}</h2>
                         <h5>
                             Đã bán: {product.selled} | Kho còn: {product.inStock}
                         </h5>
-                        <div className=" mt-4">
+                        <div className="my-4">
                             {product.discount !== 0 && (
                                 <h5
                                     className="text-decoration-line-through"
@@ -53,10 +167,29 @@ const ProductDetails = () => {
                                 <span>&#8363;</span>
                             </h3>
                         </div>
-                        <QuantityBox inStock={product.inStock} />
+                        {/* <QuantityBox id={product._id} inStock={product.inStock} val={1} /> */}
+                        <div>
+                            <ButtonGroup size="sm" aria-label="Basic example">
+                                <Button variant="outline-secondary" className="rounded-0" onClick={handleDecrease}>
+                                    <FontAwesomeIcon icon={faMinus} />
+                                </Button>
+                                <input
+                                    type="text"
+                                    style={{ width: '40px' }}
+                                    className="text-center"
+                                    onChange={handleEdit}
+                                    value={number}
+                                />
+                                <Button variant="outline-secondary" className="rounded-0" onClick={handleIncrease}>
+                                    <FontAwesomeIcon icon={faPlus} />
+                                </Button>
+                            </ButtonGroup>
+                        </div>
+                        <p className="text-danger mt-2">{war}</p>
                         <Button
                             className="py-2 px-4 mt-4 me-3 rounded-0"
                             style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                            onClick={handleToCart}
                         >
                             <FontAwesomeIcon icon={faBagShopping} className="me-2" />
                             Thêm vào giỏ
@@ -64,6 +197,7 @@ const ProductDetails = () => {
                         <Button
                             className="py-2 px-4 mt-4 rounded-0"
                             style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
+                            onClick={buyNow}
                         >
                             Mua ngay
                         </Button>

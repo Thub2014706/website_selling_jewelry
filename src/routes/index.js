@@ -1,3 +1,4 @@
+import CartPage from '~/pages/CartPage/CartPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
 import NoPage from '~/pages/NoPage/NoPage';
@@ -26,6 +27,10 @@ const publicRoutes = [
         path:'/signup',
         component: RegisterPage,
         layout: null
+    },
+    {
+        path:'/cart',
+        component: CartPage,
     }
 ];
 
