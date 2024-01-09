@@ -4,7 +4,7 @@ import ProductDetails from '~/components/ProductDetails/ProductDetails'
 
 const ProductDetailsPage = () => {
   return (
-    <Container className='py-3'>
+    <Container fluid className='py-3'>
       <ProductDetails />
     </Container>
   )

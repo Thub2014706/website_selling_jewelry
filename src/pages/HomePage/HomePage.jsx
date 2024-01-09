@@ -5,17 +5,29 @@ import Product from '~/components/Product/Product';
 import { useDispatch, useSelector } from 'react-redux';
 import { allProduct } from '~/redux/apiRequest';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+// import { config } from 'dotenv';
 
 const HomePage = () => {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.product.getAllProduct.currentProduct);
 
+    // let axiosJWT = axios.create();
+    console.log('dfghjk', products);
+
     useEffect(() => {
         allProduct(dispatch);
     }, []);
 
+    // axiosJWT.interceptors.request.use(
+    //     //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
+    //     async(config) => {
+    //         const decodedToken = jwtDecode(user)
+    //     }
+    // );
+
     return (
-        <Container fluid>
+        <div>
             <Banner />
             <Container>
                 {products !== null ? (
@@ -38,7 +50,7 @@ const HomePage = () => {
                     <p>Loading...</p>
                 )}
             </Container>
-        </Container>
+        </div>
     );
 };
 

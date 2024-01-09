@@ -1,50 +1,56 @@
 import React, { useState } from 'react';
 import logo from '~/assets/images/logo3.png';
-import { Container, Row, Col, Navbar, Nav } from 'react-bootstrap';
+import { Container, Row, Col, Navbar, Nav, Badge } from 'react-bootstrap';
 import Search from '../Search/Search';
 import TextStatus from '../TextStatus/TextStatus';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '~/redux/authSlice';
 
 const Header = () => {
     // localStorage.removeItem('user');
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.login.currentUser);
-    // const [userInfo, setUserInfo] = useState(null)
-    // const userData = JSON.parse(localStorage.getItem('user'))
-    // if (userData) {
-    //     const accessToken = userData['accessToken']
-    //     const dataFromAccess = jwtDecode(accessToken)
-    //     const idUser = dataFromAccess.id
-    //     const Account = async () => {
-    //         try {
-    //             const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/detail-account/${idUser}`, {
-    //                 headers: {
-    //                     authorization: `Beaer ${accessToken}`
-    //                 }
-    //             })
-    //             // console.log(response.data)
-    //             setUserInfo(response.data)
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    //     Account()
+    let axiosJWT = axios.create();
 
-    // }
-    // const refreshToken = userData?.['refreshToken']
-    // const getNewAccessToken = async () => {
-    //     try {
-    //         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`, refreshToken)
-    //         console.log('jhgfd', response)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    const refreshToken = async () => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`, {
+                withCredentials: true,
+            });
+            console.log('token', response);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-    // getNewAccessToken()
+    
+    axiosJWT.interceptors.request.use(
+        //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
+        async (config) => {
+            let date = new Date();
+            const decodedToken = jwtDecode(user?.accesToken);
+            if (decodedToken.exp < date.getTime() / 1000) {
+                const data = await refreshToken();
+                
+                const refreshUser = {
+                    ...user,
+                    accesToken: data.accesToken,
+                };
+                dispatch(loginSuccess(refreshUser));
+                config.headers['token'] = 'Bearer ' + data.accesToken;
+            }
+            return config;
+        },
+        (err) => {
+            return Promise.reject(err);
+        },
+    );
 
+    const length = useSelector((state) => state.cart.cartItems.length);
     return (
         <div>
             <TextStatus />
@@ -52,7 +58,9 @@ const Header = () => {
                 <Container>
                     <Row>
                         <Col md="1">
-                            <Link to={'/'}><img src={logo} style={{ height: '50px' }} alt="" /></Link>
+                            <Link to={'/'}>
+                                <img src={logo} style={{ height: '50px' }} alt="" />
+                            </Link>
                         </Col>
                         <Col md="7">
                             <Navbar sticky="top" expand="lg" className="text-white">
@@ -98,14 +106,17 @@ const Header = () => {
                                     )}
                                 </Col>
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
-                                        <Link to={'/cart'} className="text-decoration-none text-white">
-                                            <ion-icon
-                                                name="bag-handle-outline"
-                                                size="small"
-                                                style={{ marginRight: '5px' }}
-                                            ></ion-icon>{' '}
-                                        </Link>
                                     <Link to={'/cart'} className="text-decoration-none text-white">
+                                        <ion-icon
+                                            name="bag-handle-outline"
+                                            size="small"
+                                            // style={{ marginRight: '5px' }}
+                                        ></ion-icon>
+                                        <span class="position-absolute translate-middle badge rounded-pill bg-danger">
+                                            {length}
+                                        </span>{' '}
+                                    </Link>
+                                    <Link to={'/cart'} className="text-decoration-none text-white ms-2">
                                         Giỏ Hàng
                                     </Link>
                                 </Col>

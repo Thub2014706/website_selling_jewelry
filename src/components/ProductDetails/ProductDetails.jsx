@@ -24,19 +24,27 @@ const ProductDetails = () => {
         console.log(product);
     }, []);
 
+    // giá trị số lượng sp
     const [number, setNumber] = useState(1);
 
-    const [war, setWar] = useState('');
+    // chọn kích thước, lấy vị trí index
+    const [sizeValue, setSizeValue] = useState(null);
+
+    const [war, setWar] = useState(''); //thông báo lỗi
 
     const handleDecrease = () => {
         setWar('');
-        if (number > 1) {
+        if (sizeValue === null) {
+            setWar('Hãy chọn phân loại hàng');
+        } else if (number > 1) {
             setNumber(number - 1);
         }
     };
 
     const handleIncrease = () => {
-        if (number < product.inStock) {
+        if (sizeValue === null) {
+            setWar('Hãy chọn phân loại hàng');
+        } else if (number < product.variants[sizeValue].inStock) {
             setNumber(Number(number) + 1);
         }
     };
@@ -44,27 +52,33 @@ const ProductDetails = () => {
     const handleEdit = (e) => {
         const val = Number(e.target.value.replace(/[^\d]/g, ''));
         setWar('');
-        if (val <= product.inStock) {
+        if (sizeValue === null) {
+            setWar('Hãy chọn phân loại hàng');
+        } else if (val <= product.variants[sizeValue].inStock) {
             setNumber(val);
         } else {
-            setNumber(product.inStock);
+            setNumber(product.variants[sizeValue].inStock);
         }
     };
 
-    const data = {
-        product,
-        cartQuantity: number,
-    };
+    console.log('fghjhj', product);
 
     const handleToCart = () => {
         const products = JSON.parse(localStorage.getItem('cartProduct'));
         if (products) {
-            const findId = products.find((item) => item.product._id === id);
-            console.log('ghjdfghj', findId);
+            const productAtId = products.find((item) => item.product._id === id);
+            console.log('ghjdfghj', productAtId);
 
-            if (findId && findId.cartQuantity + number > product.inStock) {
+            if (sizeValue === null) {
+                setWar('Hãy chọn phân loại hàng');
+            } else if (productAtId && productAtId.cartQuantity + number > product.variants[sizeValue].inStock) {
                 setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
             } else {
+                const data = {
+                    product,
+                    idSize: product.variants[sizeValue],
+                    cartQuantity: number,
+                };
                 dispatch(addToCart(data));
                 setWar('');
                 toast('Thêm giỏ hàng thành công', {
@@ -80,43 +94,68 @@ const ProductDetails = () => {
                 });
             }
         } else {
-            dispatch(addToCart(data));
-            setWar('');
-            toast('Thêm giỏ hàng thành công', {
-                position: 'top-center',
-                autoClose: 2000,
-                type: 'success',
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-            });
+            if (sizeValue === null) {
+                setWar('Hãy chọn phân loại hàng');
+            } else {
+                const data = {
+                    product,
+                    idSize: product.variants[sizeValue],
+                    cartQuantity: number,
+                };
+                dispatch(addToCart(data));
+                setWar('');
+                toast('Thêm giỏ hàng thành công', {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    type: 'success',
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            }
         }
     };
 
     const buyNow = () => {
-        const products = JSON.parse(localStorage.getItem('cartProduct'));
-        if (products) {
-            const findId = products.find((item) => item.product._id === id);
-            console.log('ghjdfghj', findId);
-
-            if (findId && findId.cartQuantity + number > product.inStock) {
-                setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
-            } else {
-                dispatch(addToCart(data));
-                navigate('/cart');
-                setWar('');
-            }
-        } else {
-            dispatch(addToCart(data));
-            navigate('/cart');
-            setWar('');
-        }
+        //     const products = JSON.parse(localStorage.getItem('cartProduct'));
+        //     if (products) {
+        //         const productAtId = products.find((item) => item.product._id === id);
+        //         console.log('ghjdfghj', productAtId);
+        //         if (sizeValue === null) {
+        //             setWar('Hãy chọn phân loại hàng');
+        //         } else if (productAtId && productAtId.cartQuantity + number > product.variants[sizeValue].inStock) {
+        //             setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
+        //         } else {
+        //             dispatch(addToCart(data));
+        //             navigate('/cart');
+        //             setWar('');
+        //         }
+        //     } else {
+        //         dispatch(addToCart(data));
+        //         navigate('/cart');
+        //         setWar('');
+        //     }
     };
 
     const [photo, setPhoto] = useState(0);
+
+    const sumArray = (array) => {
+        let sum = 0;
+        array.forEach((element) => {
+            sum += element.inStock;
+        });
+        return sum;
+    };
+
+    const handleSize = (i) => {
+        setWar('');
+        setNumber(1);
+        setSizeValue(i);
+    };
+    console.log('sdfghjkl;', sizeValue);
 
     return (
         <Container>
@@ -124,26 +163,23 @@ const ProductDetails = () => {
             {product !== null ? (
                 <Row>
                     <Col md={1}>
-                        {/* <FontAwesomeIcon icon={faChevronUp} onClick={() => setMove('up')} /> */}
                         {product.image.map((img, index) => (
                             <img
                                 onClick={() => setPhoto(index)}
                                 src={img}
                                 className={`d-block mx-auto w-75 border rounded mt-2 ${
-                                    photo === index ? 'border-secondary' : ''
+                                    photo === index ? 'border-secondary shadow' : ''
                                 }`}
                             />
                         ))}
-                        {/* <FontAwesomeIcon icon={faChevronDown} onClick={() => setMove('down')} /> */}
                     </Col>
                     <Col md={5}>
                         <img src={product.image[photo]} alt="" className="d-block mx-auto w-100" />
                     </Col>
+
                     <Col md={6} className="mt-5 ps-5">
                         <h2>{product.name}</h2>
-                        <h5>
-                            Đã bán: {product.selled} | Kho còn: {product.inStock}
-                        </h5>
+                        <h5>Đã bán: {product.selled}</h5>
                         <div className="my-4">
                             {product.discount !== 0 && (
                                 <h5
@@ -161,7 +197,19 @@ const ProductDetails = () => {
                                 <span>&#8363;</span>
                             </h3>
                         </div>
-                        <div>
+                        <h5>
+                            Chọn kích thước (cm):
+                            {product.variants.map((item, index) => (
+                                <Button
+                                    variant="outline-dark"
+                                    className={`mx-1 rounded-0 ${sizeValue === index ? 'bg-dark text-white' : ''}`}
+                                    onClick={() => handleSize(index)}
+                                >
+                                    {item.size}
+                                </Button>
+                            ))}
+                        </h5>
+                        <div className="mt-3">
                             <ButtonGroup size="sm" aria-label="Basic example">
                                 <Button variant="outline-secondary" className="rounded-0" onClick={handleDecrease}>
                                     <FontAwesomeIcon icon={faMinus} />
@@ -177,6 +225,10 @@ const ProductDetails = () => {
                                     <FontAwesomeIcon icon={faPlus} />
                                 </Button>
                             </ButtonGroup>
+                            <span className="h5 ms-3">
+                                Kho còn:{' '}
+                                {sizeValue === null ? sumArray(product.variants) : product.variants[sizeValue].inStock}
+                            </span>
                         </div>
                         <p className="text-danger mt-2">{war}</p>
                         <Button
