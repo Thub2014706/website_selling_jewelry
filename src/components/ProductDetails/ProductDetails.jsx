@@ -66,32 +66,34 @@ const ProductDetails = () => {
     const handleToCart = () => {
         const products = JSON.parse(localStorage.getItem('cartProduct'));
         if (products) {
-            const productAtId = products.find((item) => item.product._id === id);
-            console.log('ghjdfghj', productAtId);
-
             if (sizeValue === null) {
                 setWar('Hãy chọn phân loại hàng');
-            } else if (productAtId && productAtId.cartQuantity + number > product.variants[sizeValue].inStock) {
-                setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
             } else {
-                const data = {
-                    product,
-                    idSize: product.variants[sizeValue],
-                    cartQuantity: number,
-                };
-                dispatch(addToCart(data));
-                setWar('');
-                toast('Thêm giỏ hàng thành công', {
-                    position: 'top-center',
-                    autoClose: 2000,
-                    type: 'success',
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'light',
-                });
+                const thisId = product.variants[sizeValue]._id
+                const productAtSize = products.find((item) => item.idSize._id === thisId);
+                // console.log("id", productAtSize)
+                if (productAtSize && productAtSize.cartQuantity + number > product.variants[sizeValue].inStock) {
+                    setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
+                } else {
+                    const data = {
+                        product,
+                        idSize: product.variants[sizeValue],
+                        cartQuantity: number,
+                    };
+                    dispatch(addToCart(data));
+                    setWar('');
+                    toast('Thêm giỏ hàng thành công', {
+                        position: 'top-center',
+                        autoClose: 2000,
+                        type: 'success',
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'light',
+                    });
+                }
             }
         } else {
             if (sizeValue === null) {

@@ -79,9 +79,10 @@ const CartPage = () => {
                                 <tbody>
                                     {products.map((item) => (
                                         <tr style={{ height: '70px' }}>
+                                            {/* <td>{item}</td> */}
                                             <td className="align-middle">
                                                 <Link
-                                                    to={`/product/${item._id}`}
+                                                    to={`/product/${item.product._id}`}
                                                     className="text-decoration-none text-black"
                                                 >
                                                     <img

@@ -1,5 +1,15 @@
 import axios from 'axios';
-import { loginFailed, loginStart, loginSuccess, registerFailed, registerStart, registerSuccess } from './authSlice';
+import { jwtDecode } from 'jwt-decode';
+import {
+    loginFailed,
+    loginStart,
+    loginSuccess,
+    logoutStart,
+    logoutSuccess,
+    registerFailed,
+    registerStart,
+    registerSuccess,
+} from './authSlice';
 import {
     getAllFailed,
     getAllStart,
@@ -9,11 +19,59 @@ import {
     getDetailSuccess,
 } from './productSlice';
 
+let axiosJWT = axios.create();
+
+const refreshToken = async () => {
+    console.log('token');
+    try {
+        const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/user/refresh-token`,
+            {},
+            {
+                withCredentials: true,
+            },
+        );
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const setInterceptor = (user, dispatch) => {
+    axiosJWT.interceptors.request.use(
+        //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
+        async (config) => {
+            let date = new Date();
+            const decodedToken = jwtDecode(user?.accesToken);
+            if (decodedToken.exp < date.getTime() / 1000) {
+                const data = await refreshToken();
+
+                const refreshUser = {
+                    ...user,
+                    accesToken: data.accesToken,
+                };
+                dispatch(loginSuccess(refreshUser));
+                config.headers['authorization'] = 'Bearer ' + data.accesToken;
+            }
+            return config;
+        },
+        (err) => {
+            return Promise.reject(err);
+        },
+    );
+};
+
+const ensureInterceptor = (user, dispatch) => {
+    setInterceptor(user, dispatch);
+};
+
 export const loginUser = async (user, dispatch, navigate, toast) => {
     dispatch(loginStart());
     try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
+        const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
         dispatch(loginSuccess(res.data));
+        ensureInterceptor(res.data, dispatch);
+        console.log('dang nhap', ensureInterceptor(res.data, dispatch));
         navigate('/');
     } catch (error) {
         dispatch(loginFailed());
@@ -70,6 +128,18 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
         } else {
             alert('Lỗi mạng');
         }
+    }
+};
+
+export const logout = async (dispatch, token) => {
+    dispatch(logoutStart());
+    try {
+        await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/user/logout`, {}, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        dispatch(loginSuccess())
+    } catch (error) {
+        dispatch(logoutSuccess());
     }
 };
 

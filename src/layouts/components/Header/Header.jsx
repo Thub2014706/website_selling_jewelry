@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '~/assets/images/logo3.png';
-import { Container, Row, Col, Navbar, Nav, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Navbar, Nav, Badge, Button, Dropdown, NavDropdown } from 'react-bootstrap';
 import Search from '../Search/Search';
 import TextStatus from '../TextStatus/TextStatus';
 import { Link } from 'react-router-dom';
@@ -8,49 +8,20 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '~/redux/authSlice';
+import { logout } from '~/redux/apiRequest';
+import userImg from '~/assets/images/person-outline.svg'
 
 const Header = () => {
     // localStorage.removeItem('user');
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.login.currentUser);
-    let axiosJWT = axios.create();
 
-    const refreshToken = async () => {
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`, {
-                withCredentials: true,
-            });
-            console.log('token', response);
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    
-    axiosJWT.interceptors.request.use(
-        //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
-        async (config) => {
-            let date = new Date();
-            const decodedToken = jwtDecode(user?.accesToken);
-            if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await refreshToken();
-                
-                const refreshUser = {
-                    ...user,
-                    accesToken: data.accesToken,
-                };
-                dispatch(loginSuccess(refreshUser));
-                config.headers['token'] = 'Bearer ' + data.accesToken;
-            }
-            return config;
-        },
-        (err) => {
-            return Promise.reject(err);
-        },
-    );
-
+    console.log(user);
     const length = useSelector((state) => state.cart.cartItems.length);
+
+    const handleLogout = () => {
+        logout(dispatch, user?.accessToken);
+    };
     return (
         <div>
             <TextStatus />
@@ -90,21 +61,50 @@ const Header = () => {
                             <Row>
                                 <Search />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
-                                    <Link to={'/signin'} className="text-decoration-none text-white">
+                                    {/* <Link to={'/signin'} className="text-decoration-none text-white">
                                         <ion-icon
                                             name="person-outline"
                                             size="small"
                                             style={{ marginRight: '5px' }}
                                         ></ion-icon>{' '}
-                                    </Link>
-                                    {user !== null ? (
-                                        user.data.username
-                                    ) : (
+                                    </Link> */}
+                                    {user === null ? (
                                         <Link to={'/signin'} className="text-decoration-none text-white">
-                                            Tài Khoản
+                                            {/* <img src={userImg} style={{width: '20px'}} alt="" />{' '} */}
+                                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                                                <ion-icon
+                                                    name="person-outline"
+                                                    size="small"
+                                                    style={{ marginRight: '4px' }}
+                                                ></ion-icon>
+                                                Tài Khoản
+                                            </span>
                                         </Link>
+                                    ) : (
+                                        <div>
+                                            <Dropdown>
+                                                
+                                                <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                                                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                                                        <ion-icon
+                                                            name="person-outline"
+                                                            size="small"
+                                                            style={{ marginRight: '4px' }}
+                                                        ></ion-icon>{' '}
+                                                        {user.data.username}
+                                                    </span>
+                                                </Dropdown.Toggle>
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                        </div>
                                     )}
                                 </Col>
+                                {/* <Col>
+                                    <Button onClick={handleLogout}>Đăng xuất</Button>
+                                </Col> */}
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     <Link to={'/cart'} className="text-decoration-none text-white">
                                         <ion-icon
