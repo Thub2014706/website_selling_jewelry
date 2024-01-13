@@ -13,7 +13,11 @@ const productSlice = createSlice({
             isFetching: false,
             error: false,
         },
-        // quantityBuy: 1,
+        // infoProduct: {
+        //     currentProduct: null,
+        //     isFetching: false,
+        //     error: false,
+        // },
     },
     reducers: {
         getAllStart: (state) => {

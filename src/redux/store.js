@@ -24,6 +24,7 @@ export const store = configureStore({
 });
 
 export let persistor = persistStore(store);
+
 // import { persistStore } from 'redux-persist';
 // import storage from 'redux-persist/lib/storage';
 

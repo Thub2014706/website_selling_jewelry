@@ -26,7 +26,7 @@ const refreshToken = async () => {
     try {
         const response = await axios.post(
             `${process.env.REACT_APP_API_URL}/api/user/refresh-token`,
-            {},
+            // {},
             {
                 withCredentials: true,
             },
@@ -134,10 +134,14 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
 export const logout = async (dispatch, token) => {
     dispatch(logoutStart());
     try {
-        await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/user/logout`, {}, {
-            headers: { authorization: `Bearer ${token}` },
-        });
-        dispatch(loginSuccess())
+        await axiosJWT.post(
+            `${process.env.REACT_APP_API_URL}/api/user/logout`,
+            {},
+            {
+                headers: { authorization: `Bearer ${token}` },
+            },
+        );
+        dispatch(loginSuccess());
     } catch (error) {
         dispatch(logoutSuccess());
     }
@@ -157,6 +161,30 @@ export const productDetail = async (dispatch, id) => {
     dispatch(getDetailStart());
     try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/detail-product/${id}`);
+        dispatch(getDetailSuccess(response.data));
+    } catch (error) {
+        dispatch(getDetailFailed());
+    }
+};
+
+export const updateProduct = async (dispatch, id, token) => {
+    dispatch(getDetailStart());
+    try {
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/product/update-product/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        dispatch(getDetailSuccess(response.data));
+    } catch (error) {
+        dispatch(getDetailFailed());
+    }
+};
+
+export const addProduct = async (dispatch, data, token) => {
+    dispatch(getDetailStart());
+    try {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
         dispatch(getDetailSuccess(response.data));
     } catch (error) {
         dispatch(getDetailFailed());

@@ -9,7 +9,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '~/redux/authSlice';
 import { logout } from '~/redux/apiRequest';
-import userImg from '~/assets/images/person-outline.svg'
+import userImg from '~/assets/images/person-outline.svg';
 
 const Header = () => {
     // localStorage.removeItem('user');
@@ -61,13 +61,6 @@ const Header = () => {
                             <Row>
                                 <Search />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
-                                    {/* <Link to={'/signin'} className="text-decoration-none text-white">
-                                        <ion-icon
-                                            name="person-outline"
-                                            size="small"
-                                            style={{ marginRight: '5px' }}
-                                        ></ion-icon>{' '}
-                                    </Link> */}
                                     {user === null ? (
                                         <Link to={'/signin'} className="text-decoration-none text-white">
                                             {/* <img src={userImg} style={{width: '20px'}} alt="" />{' '} */}
@@ -83,7 +76,6 @@ const Header = () => {
                                     ) : (
                                         <div>
                                             <Dropdown>
-                                                
                                                 <Dropdown.Toggle variant="dark" id="dropdown-basic">
                                                     <span style={{ display: 'flex', alignItems: 'center' }}>
                                                         <ion-icon
@@ -107,17 +99,20 @@ const Header = () => {
                                 </Col> */}
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     <Link to={'/cart'} className="text-decoration-none text-white">
-                                        <ion-icon
-                                            name="bag-handle-outline"
-                                            size="small"
-                                            // style={{ marginRight: '5px' }}
-                                        ></ion-icon>
-                                        <span class="position-absolute translate-middle badge rounded-pill bg-danger">
-                                            {length}
-                                        </span>{' '}
-                                    </Link>
-                                    <Link to={'/cart'} className="text-decoration-none text-white ms-2">
-                                        Giỏ Hàng
+                                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                size="small"
+                                                style={{ marginRight: '5px' }}
+                                            ></ion-icon>
+                                            <span
+                                                class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                                style={{ marginLeft: '18px' }}
+                                            >
+                                                {length}
+                                            </span>{' '}
+                                            Giỏ Hàng
+                                        </span>
                                     </Link>
                                 </Col>
                             </Row>
