@@ -1,79 +1,109 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, FormGroup, Row } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { addProduct, updateProduct } from '~/redux/apiRequest';
+import React, { useState } from 'react';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import {  useSelector } from 'react-redux';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { addProduct } from '~/services/ProductService';
 
 const AdminAddProduct = () => {
-    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    const [data, setData] = useState({
-        name: '',
-        image: [],
-        type: '',
-        price: '',
-        information: '',
-        discount: '',
-    });
+    const [name, setName] = useState('');
+    const [image, setImage] = useState([]);
+    const [variants, setVariants] = useState([]);
+    const [type, setType] = useState('');
+    const [price, setPrice] = useState('');
+    const [information, setInformation] = useState('');
+    const [discount, setDiscount] = useState('');
 
     const addLink = () => {
-        const link = [...data.image, ''];
-        setData((preData) => ({
-            ...preData,
-            image: link,
-        }));
+        const link = [...image, ''];
+        setImage(link);
     };
 
     const deleteLink = (i) => {
-        const deleteLink = [...data.image];
-        setData((preData) => ({
-            ...preData,
-            image: deleteLink.filter((val, index) => index !== i),
-        }));
+        const link = [...image];
+        setImage(link.filter((val, index) => index !== i));
     };
 
-    const handleData = (e, i) => {
+    const handleImg = (e, i) => {
+        const inputData = [...image];
+        inputData[i] = e.target.value;
+        setImage(inputData);
+    };
+
+    const addSize = () => {
+        const add = [...variants, { size: '', inStock: '' }];
+        setVariants(add);
+    };
+
+    const deleteSize = (i) => {
+        const copyAdd = [...variants];
+        setVariants(copyAdd.filter((value, index) => index !== i));
+    };
+
+    const handleVariants = (e, i) => {
         const { name, value } = e.target;
-        if (name === 'image') {
-            const inputData = [...data.image];
-            inputData[i] = value;
-            setData((preData) => ({
-                ...preData,
-                image: inputData,
-            }));
-        } else if (name === 'price') {
-            const format = value.replace(/[^\d]/g, '');
-            setData((preData) => ({
-                ...preData,
-                price: Number(format).toLocaleString('it-IT'),
-            }));
-        } else if (name === 'discount') {
-            setData((preData) => ({
-                ...preData,
-                discount: Number(value.replace(/[^\d]/g, '').slice(0, 2)),
-            }));
-        } else {
-            setData((preData) => ({
-                ...preData,
-                [name]: value,
-            }));
-        }
+        const inSize = name === 'size' ? value : variants[i].size;
+        const inInStock = name === 'inStock' ? value.replace(/[^\d]/g, '') : variants[i].inStock;
+        const copyAdd = [...variants];
+        copyAdd[i] = { size: inSize, inStock: inInStock };
+        setVariants(copyAdd);
+    };
+
+    // const handleSize = (e, i) => {
+    //     const copyAdd = [...variants];
+    //     copyAdd.size[i] = e.target.value
+    //     setVariants(copyAdd);
+    // };
+
+    // const handleInStock = (e, i) => {
+    //     const copyAdd = [...variants];
+    //     copyAdd.inStock[i] = e.target.value
+    //     setVariants(copyAdd);
+    // };
+
+    const handlePrice = (e) => {
+        const format = e.target.value.replace(/[^\d]/g, '');
+        setPrice(Number(format).toLocaleString('it-IT'));
+    };
+
+    const handleDiscount = (e) => {
+        setDiscount(Number(e.target.value.replace(/[^\d]/g, '').slice(0, 2)));
+    };
+
+    const handleInfo = (e, editor) => {
+        const data = editor.getData();
+        setInformation(data);
+    };
+
+    const data = {
+        name,
+        image,
+        type,
+        variants,
+        price,
+        information,
+        discount,
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        addProduct(dispatch, data, user.accessToken);
+        await addProduct( data, user.accessToken, toast);
     };
 
-    console.log(data);
+    console.log('kq', data);
+
     return (
         <div>
+            <ToastContainer />
             <Card className="w-50">
                 <Card.Body>
-                    <Card.Title>Cập nhật sản phẩm</Card.Title>
+                    <Card.Title>Thêm sản phẩm</Card.Title>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Tên sản phẩm
                             </Form.Label>
@@ -81,15 +111,15 @@ const AdminAddProduct = () => {
                                 <Form.Control
                                     type="text"
                                     name="name"
-                                    value={data.name}
+                                    value={name}
                                     placeholder="Nhập tên sản phẩm"
                                     required
-                                    onChange={handleData}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Hình ảnh
                             </Form.Label>
@@ -99,8 +129,8 @@ const AdminAddProduct = () => {
                                     +
                                 </Button>
                             </Col>
-                            {data.image.map((data, index) => (
-                                <Col sm={{ span: 10, offset: 2 }} className='mt-3'>
+                            {image.map((data, index) => (
+                                <Col sm={{ span: 10, offset: 2 }} className="mt-3">
                                     <Form.Group as={Row}>
                                         <Col sm={11}>
                                             <Form.Control
@@ -109,7 +139,7 @@ const AdminAddProduct = () => {
                                                 value={data}
                                                 placeholder="Nhập link hình ảnh"
                                                 required
-                                                onChange={(e) => handleData(e, index)}
+                                                onChange={(e) => handleImg(e, index)}
                                             />
                                         </Col>
                                         <Col sm={1}>
@@ -126,7 +156,7 @@ const AdminAddProduct = () => {
                             ))}
                         </Form.Group>
 
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Email address
                             </Form.Label>
@@ -134,15 +164,60 @@ const AdminAddProduct = () => {
                                 <Form.Control
                                     type="text"
                                     name="type"
-                                    value={data.type}
+                                    value={type}
                                     placeholder="Nhập tên sản phẩm"
                                     required
-                                    onChange={handleData}
+                                    onChange={(e) => setType(e.target.value)}
                                 />
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column={2}>Kích cỡ - Kho</Form.Label>
+                            <Col sm={10}>
+                                Thêm kích cỡ và kho
+                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={() => addSize()}>
+                                    +
+                                </Button>
+                            </Col>
+                            {variants.map((data, index) => (
+                                <Col sm={{ span: 10, offset: 2 }} className="mt-3 w-100">
+                                    <Form.Group as={Row}>
+                                        <Col sm="auto">
+                                            <Form.Control
+                                                type="text"
+                                                name="size"
+                                                value={data.size}
+                                                placeholder="Nhập kích cỡ"
+                                                required
+                                                onChange={(e) => handleVariants(e, index)}
+                                            />
+                                        </Col>
+                                        <Col sm="auto">
+                                            <Form.Control
+                                                type="text"
+                                                name="inStock"
+                                                value={data.inStock}
+                                                placeholder="Nhập số lượng kho"
+                                                required
+                                                onChange={(e) => handleVariants(e, index)}
+                                            />
+                                        </Col>
+                                        <Col sm={1}>
+                                            <Button
+                                                variant="outline-dark"
+                                                className="rounded-0"
+                                                onClick={() => deleteSize(index)}
+                                            >
+                                                x
+                                            </Button>
+                                        </Col>
+                                    </Form.Group>
+                                </Col>
+                            ))}
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Giá tiền
                             </Form.Label>
@@ -150,15 +225,15 @@ const AdminAddProduct = () => {
                                 <Form.Control
                                     type="text"
                                     name="price"
-                                    value={data.price}
+                                    value={price}
                                     placeholder="Nhập giá tiền"
                                     required
-                                    onChange={handleData}
+                                    onChange={handlePrice}
                                 />
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Khuyến mãi (%)
                             </Form.Label>
@@ -166,29 +241,35 @@ const AdminAddProduct = () => {
                                 <Form.Control
                                     type="text"
                                     name="discount"
-                                    value={data.discount}
+                                    value={discount}
                                     placeholder="Nhập mã khuyến mãi"
-                                    onChange={handleData}
+                                    onChange={handleDiscount}
                                 />
                             </Col>
                         </Form.Group>
 
-                        <Form.Group as={Row} className='mb-3'>
+                        <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm={2}>
                                 Thông tin
                             </Form.Label>
                             <Col sm={10}>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    name="information"
-                                    value={data.information}
-                                    placeholder="Nhập thông tin"
-                                    required
-                                    onChange={handleData}
+                                <CKEditor
+                                    editor={Editor}
+                                    data={information}
+                                    onReady={(editor) => {
+                                        console.log('Editor is ready to use!', editor);
+                                    }}
+                                    onChange={handleInfo}
+                                    onBlur={(event, editor) => {
+                                        console.log('Blur.', editor);
+                                    }}
+                                    onFocus={(event, editor) => {
+                                        console.log('Focus.', editor);
+                                    }}
                                 />
                             </Col>
                         </Form.Group>
+
                         <Button
                             type="submit"
                             className="mt-5"

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Container, Card, Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
@@ -22,37 +21,13 @@ const LoginPage = () => {
         }));
         // console.log('ds', data);
     };
-    const submitLogin = async (e) => {
+    const submitLogin = (e) => {
         e.preventDefault();
-        // try {
-        //     const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, data);
-        //     console.log(response);
-        //     localStorage.setItem('user', JSON.stringify(response.data));
-        //     navigate('/');
-        // } catch (error) {
-        //     console.log(error);
-        //     if (error.response) {
-        //         toast(error.response.data.message, {
-        //             position: 'top-center',
-        //             autoClose: 2000,
-        //             type: 'error',
-        //             hideProgressBar: true,
-        //             closeOnClick: true,
-        //             pauseOnHover: true,
-        //             draggable: true,
-        //             progress: undefined,
-        //             theme: 'light',
-        //         });
-        //     } else {
-        //         console.log('Lỗi mạng');
-        //         alert('Lỗi mạng');
-        //     }
-        // }
         loginUser(data, dispatch, navigate, toast);
     };
-    // console.log(`${process.env.REACT_APP_API_URL}`);
+
     return (
-        <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center">
+        <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center background">
             <ToastContainer />
             <Card className="py-4 px-3" style={{ width: '25%' }}>
                 <Card.Body>

@@ -16,7 +16,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    console.log(user);
+    // console.log(user);
     const length = useSelector((state) => state.cart.cartItems.length);
 
     const handleLogout = () => {
@@ -62,7 +62,7 @@ const Header = () => {
                                 <Search />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     {user === null ? (
-                                        <Link to={'/signin'} className="text-decoration-none text-white">
+                                        <Link to={`/signin`} className="text-decoration-none text-white">
                                             {/* <img src={userImg} style={{width: '20px'}} alt="" />{' '} */}
                                             <span style={{ display: 'flex', alignItems: 'center' }}>
                                                 <ion-icon
@@ -83,7 +83,7 @@ const Header = () => {
                                                             size="small"
                                                             style={{ marginRight: '4px' }}
                                                         ></ion-icon>{' '}
-                                                        {user.data.username}
+                                                        {user?.data.username}
                                                     </span>
                                                 </Dropdown.Toggle>
 

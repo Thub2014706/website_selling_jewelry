@@ -10,14 +10,6 @@ import {
     registerStart,
     registerSuccess,
 } from './authSlice';
-import {
-    getAllFailed,
-    getAllStart,
-    getAllSuccess,
-    getDetailFailed,
-    getDetailStart,
-    getDetailSuccess,
-} from './productSlice';
 
 let axiosJWT = axios.create();
 
@@ -71,9 +63,9 @@ export const loginUser = async (user, dispatch, navigate, toast) => {
         const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
         dispatch(loginSuccess(res.data));
         ensureInterceptor(res.data, dispatch);
-        console.log('dang nhap', ensureInterceptor(res.data, dispatch));
         navigate('/');
     } catch (error) {
+        // console.log("loi",error)
         dispatch(loginFailed());
         if (error.response) {
             toast(error.response.data.message, {
@@ -88,7 +80,7 @@ export const loginUser = async (user, dispatch, navigate, toast) => {
                 theme: 'light',
             });
         } else {
-            console.log('Lỗi mạng');
+            console.log(error);
             alert('Lỗi mạng');
         }
     }
@@ -147,46 +139,3 @@ export const logout = async (dispatch, token) => {
     }
 };
 
-export const allProduct = async (dispatch) => {
-    dispatch(getAllStart());
-    try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/all-product`);
-        dispatch(getAllSuccess(response.data));
-    } catch (error) {
-        dispatch(getAllFailed());
-    }
-};
-
-export const productDetail = async (dispatch, id) => {
-    dispatch(getDetailStart());
-    try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/detail-product/${id}`);
-        dispatch(getDetailSuccess(response.data));
-    } catch (error) {
-        dispatch(getDetailFailed());
-    }
-};
-
-export const updateProduct = async (dispatch, id, token) => {
-    dispatch(getDetailStart());
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/product/update-product/${id}`, {
-            headers: { authorization: `Bearer ${token}` },
-        });
-        dispatch(getDetailSuccess(response.data));
-    } catch (error) {
-        dispatch(getDetailFailed());
-    }
-};
-
-export const addProduct = async (dispatch, data, token) => {
-    dispatch(getDetailStart());
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
-            headers: { authorization: `Bearer ${token}` },
-        });
-        dispatch(getDetailSuccess(response.data));
-    } catch (error) {
-        dispatch(getDetailFailed());
-    }
-};

@@ -1,30 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Banner from '~/components/Banner/Banner';
 import { Col, Container, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
-import { useDispatch, useSelector } from 'react-redux';
-import { allProduct } from '~/redux/apiRequest';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-// import { config } from 'dotenv';
+import { allProduct } from '~/services/ProductService';
 
 const HomePage = () => {
-    const dispatch = useDispatch();
-    const products = useSelector((state) => state.product.getAllProduct.currentProduct);
-
-    // let axiosJWT = axios.create();
-    console.log('dfghjk', products);
+    const [products, setProducts] = useState(null);
 
     useEffect(() => {
-        allProduct(dispatch);
+        const fetchAllProduct = async () => {
+            const data = await allProduct();
+            setProducts(data);
+        };
+        fetchAllProduct()
     }, []);
-
-    // axiosJWT.interceptors.request.use(
-    //     //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
-    //     async(config) => {
-    //         const decodedToken = jwtDecode(user)
-    //     }
-    // );
 
     return (
         <div>
