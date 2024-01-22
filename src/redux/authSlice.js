@@ -15,11 +15,6 @@ const authSlice = createSlice({
             error: false,
             success: false,
         },
-        // logout: {
-        //     isFetching: false,
-        //     error: false,
-        //     success: false,
-        // },
     },
     reducers: {
         //hoạt động

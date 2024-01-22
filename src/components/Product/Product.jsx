@@ -1,11 +1,16 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Badge, Card } from 'react-bootstrap';
 
 const Product = ({ image, name, price, discount }) => {
     return (
         <Card style={{ width: '18rem', border: 'none' }}>
             <div className="card-product">
                 <Card.Img className="card-img rounded-0" variant="top" src={image[0]} />
+                {discount !== 0 && (
+                    <Badge bg="danger" style={{ position: 'absolute', top: '0', right: '0' }}>
+                        -{discount}%
+                    </Badge>
+                )}
             </div>
             <Card.Body>
                 <Card.Title className="text-center">

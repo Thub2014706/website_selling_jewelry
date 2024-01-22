@@ -59,10 +59,6 @@ const cartSlice = createSlice({
             state.totalPay = total
         },
         setDiscount: (state) => {
-            // let total = 0
-            // state.cartItems.forEach(element => {
-            //     total += element.product.price * element.cartQuantity
-            // });
             state.totalDiscount = state.totalPay - state.totalAmount
         },
     },

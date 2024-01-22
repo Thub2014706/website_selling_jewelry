@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 import {
     loginFailed,
     loginStart,
     loginSuccess,
+    logoutFailed,
     logoutStart,
     logoutSuccess,
     registerFailed,
@@ -11,61 +12,57 @@ import {
     registerSuccess,
 } from './authSlice';
 
-let axiosJWT = axios.create();
 
-const refreshToken = async () => {
-    console.log('token');
-    try {
-        const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/user/refresh-token`,
-            // {},
-            {
-                withCredentials: true,
-            },
-        );
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-};
+// export const refreshToken = async () => {
+//     console.log('token');
+//     try {
+//         const response = await axios.post(
+//             `${process.env.REACT_APP_API_URL}/api/user/refresh-token`,
+//             {},
+//             {
+//                 withCredentials: true,
+//             },
+//         );
+//         return response.data;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
-const setInterceptor = (user, dispatch) => {
-    axiosJWT.interceptors.request.use(
-        //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
-        async (config) => {
-            let date = new Date();
-            const decodedToken = jwtDecode(user?.accesToken);
-            if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await refreshToken();
+// export const setInterceptor = (user, dispatch) => {
+//     axiosJWT.interceptors.request.use(
+//         //trước khi gửi request nào đó thì interceptors sẽ check này trước khi gọi api nào đó
+//         async (config) => {
+//             // let date = new Date();
+//             let decodedToken = jwtDecode(user?.accessToken);
+//             if (decodedToken.exp < new Date().getTime() / 1000) {
+//                 const newToken = await refreshToken();
+//                 const newData = user?.data
 
-                const refreshUser = {
-                    ...user,
-                    accesToken: data.accesToken,
-                };
-                dispatch(loginSuccess(refreshUser));
-                config.headers['authorization'] = 'Bearer ' + data.accesToken;
-            }
-            return config;
-        },
-        (err) => {
-            return Promise.reject(err);
-        },
-    );
-};
-
-const ensureInterceptor = (user, dispatch) => {
-    setInterceptor(user, dispatch);
-};
+//                 const refreshUser = {
+//                     newData,
+//                     accessToken: newToken.accessToken,
+//                 };
+//                 dispatch(loginSuccess(refreshUser));
+//                 config.headers.Authorization = 'Bearer ' + newToken.accessToken;
+//             }
+//             return config;
+//         },
+//         (err) => {
+//             return Promise.reject(err);
+//         },
+//     );
+// };
 
 export const loginUser = async (user, dispatch, navigate, toast) => {
     dispatch(loginStart());
     try {
-        const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
         dispatch(loginSuccess(res.data));
-        ensureInterceptor(res.data, dispatch);
+        // setInterceptor(res.data, dispatch);
+        console.log(res.data)
         navigate('/');
     } catch (error) {
-        // console.log("loi",error)
         dispatch(loginFailed());
         if (error.response) {
             toast(error.response.data.message, {
@@ -123,7 +120,7 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
     }
 };
 
-export const logout = async (dispatch, token) => {
+export const logout = async (dispatch, token, axiosJWT) => {
     dispatch(logoutStart());
     try {
         await axiosJWT.post(
@@ -133,9 +130,9 @@ export const logout = async (dispatch, token) => {
                 headers: { authorization: `Bearer ${token}` },
             },
         );
-        dispatch(loginSuccess());
-    } catch (error) {
         dispatch(logoutSuccess());
+    } catch (error) {
+        dispatch(logoutFailed());
     }
 };
 

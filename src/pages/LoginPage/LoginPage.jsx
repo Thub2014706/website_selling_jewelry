@@ -8,19 +8,22 @@ import { loginUser } from '~/redux/apiRequest';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    
     const dispatch = useDispatch();
+
     const [data, setData] = useState({
         email: '',
         password: '',
     });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData((preData) => ({
             ...preData,
             [name]: value,
         }));
-        // console.log('ds', data);
     };
+    
     const submitLogin = (e) => {
         e.preventDefault();
         loginUser(data, dispatch, navigate, toast);

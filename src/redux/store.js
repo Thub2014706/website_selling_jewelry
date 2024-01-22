@@ -1,16 +1,22 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
-import productReducer from './productSlice';
 import cartReducer from './cartSlice';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import productReducer from './productSlice';
 
 const persistConfig = {
     key: 'root',
     version: 1,
     storage,
 };
-const rootReducer = combineReducers({ auth: authReducer, product: productReducer, cart: cartReducer });
+
+const rootReducer = combineReducers({ 
+    auth: authReducer, 
+    cart: cartReducer ,
+    product: productReducer,
+});
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
@@ -24,28 +30,3 @@ export const store = configureStore({
 });
 
 export let persistor = persistStore(store);
-
-// import { persistStore } from 'redux-persist';
-// import storage from 'redux-persist/lib/storage';
-
-// const persistConfig = {
-//     key: 'root',
-//     storage,
-// };
-
-// const rootReducer = combineReducers({auth: authReducer,
-//     product: productReducer,
-//     cart: cartReducer,})
-
-// const persistedReducer = persistReducer(persistConfig, rootReducer)
-
-// export default configureStore({
-//     reducer: {
-//         // auth: authReducer,
-//         // product: productReducer,
-//         // cart: cartReducer,
-//     },
-// });
-
-// import authReducer from "./authSlice";
-// import userReducer from "./userSlice";

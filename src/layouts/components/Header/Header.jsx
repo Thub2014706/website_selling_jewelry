@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '~/assets/images/logo3.png';
-import { Container, Row, Col, Navbar, Nav, Badge, Button, Dropdown, NavDropdown } from 'react-bootstrap';
+import { Container, Row, Col, Navbar, Nav, Dropdown } from 'react-bootstrap';
 import Search from '../Search/Search';
 import TextStatus from '../TextStatus/TextStatus';
-import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess } from '~/redux/authSlice';
 import { logout } from '~/redux/apiRequest';
-import userImg from '~/assets/images/person-outline.svg';
+import { createAxios } from '~/createInstance';
+import { searchProducts } from '~/redux/productSlice';
 
 const Header = () => {
     // localStorage.removeItem('user');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    // console.log(user);
     const length = useSelector((state) => state.cart.cartItems.length);
 
+    let axiosJWT = createAxios(user, dispatch);
+
     const handleLogout = () => {
-        logout(dispatch, user?.accessToken);
+        logout(dispatch, user?.accessToken, axiosJWT);
     };
+
+    const [search, setSearch] = useState('');
+    const searchInput = (e) => {
+        setSearch(e.target.value);
+    };
+    // console.log(search)
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            dispatch(searchProducts(search));
+            navigate(`/search/${search}`);
+        }
+    };
+    const handleSearch = () => {
+        dispatch(searchProducts(search));
+        navigate(`/search/${search}`);
+    };
+
+    const deleteSearch = () => {
+        setSearch('')
+    }
+
     return (
         <div>
             <TextStatus />
@@ -59,7 +83,7 @@ const Header = () => {
                         </Col>
                         <Col md="4">
                             <Row>
-                                <Search />
+                                <Search color="white" search={search} searchInput={searchInput} handleSearch={handleSearch} handleKeyDown={handleKeyDown} deleteSearch={deleteSearch} />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     {user === null ? (
                                         <Link to={`/signin`} className="text-decoration-none text-white">

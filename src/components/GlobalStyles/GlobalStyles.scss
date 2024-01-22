@@ -30,19 +30,15 @@ body {
 
 .search {
     border: none;
-    border-bottom: 1px solid white;
+    // border-bottom: 1px solid white;
     // background-color: transparent; /* Để nền trở nên trong suốt */
 }
 
 .search-input {
     border: none;
-    color: white; /* Đổi màu chữ thành trắng */
+    // color: white; /* Đổi màu chữ thành trắng */
     outline: none; /* Loại bỏ viền khi tập trung */
     background-color: transparent;
-}
-
-.search-icon {
-    color: white;
 }
 
 /* App.css */
