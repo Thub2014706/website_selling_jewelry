@@ -7,9 +7,6 @@ axios.defaults.withCredentials = true;
 export const refreshToken = async () => {
     console.log('tokennnn');
     try {
-        // const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`, {
-        //     withCredentials: true,
-        // });
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`);
         console.log('thu nghiem', response);
         return response.data;
@@ -25,7 +22,6 @@ export const createAxios = (user, dispatch) => {
         async (config) => {
             // let date = new Date();
             let decodedToken = jwtDecode(user?.accessToken);
-            console.log('thu nghiem', decodedToken.exp < new Date().getTime() / 1000);
             if (decodedToken.exp < new Date().getTime() / 1000) {
                 try {
                     const newToken = await refreshToken();

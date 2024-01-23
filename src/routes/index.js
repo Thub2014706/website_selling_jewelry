@@ -7,6 +7,7 @@ import thunghiem from '~/components/AdminProduct/FormProduct';
 import ShippingAddress from '~/components/FormAddress/FormAddress';
 import UpdateAddress from '~/components/UpdateAddress/UpdateAddress';
 import CartPage from '~/pages/CartPage/CartPage';
+import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
 import NoPage from '~/pages/NoPage/NoPage';
@@ -78,6 +79,12 @@ const publicRoutes = [
     },
 ];
 
-const privateRoutes = [];
+const privateRoutes = [
+    {
+        path: '/checkout',
+        component: CheckoutPage,
+        layout: null,
+    },
+];
 
 export { publicRoutes, privateRoutes };

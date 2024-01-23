@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import subVn from 'sub-vn';
 import { createAxios } from '~/createInstance';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { addAddress } from '~/services/AddressService';
 
-const FormAddress = () => {
+const ModalAddAdress = ({ show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const provinces = subVn.getProvinces();
@@ -73,75 +73,106 @@ const FormAddress = () => {
         e.preventDefault();
         await addAddress(axiosJWT, data, user?.accessToken);
     };
-
     return (
-        <div>
-            <Card className="w-50">
-                <Card.Body>
-                    <Card.Title>Thêm địa chỉ</Card.Title>
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Tỉnh</Form.Label>
+        <Modal centered show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Thêm địa chỉ</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="text-center p-5">
+                <Form onSubmit={handlesubmit}>
+                    <Form.Group className="mb-3" as={Row}>
+                        <Form.Label column sm={4}>
+                            Tỉnh
+                        </Form.Label>
+                        <Col sm={8}>
                             <Form.Select value={province} onChange={handleProvince} aria-label="Default select example">
                                 <option value="">---Chọn Tỉnh---</option>
                                 {provinces.map((item) => (
                                     <option value={item.code}>{item.name}</option>
                                 ))}
                             </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Quận / Huyện</Form.Label>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" as={Row}>
+                        <Form.Label column sm={4}>
+                            Quận / Huyện
+                        </Form.Label>
+                        <Col sm={8}>
                             <Form.Select value={district} onChange={handleDistrict} aria-label="Default select example">
                                 <option value="">---Chọn Quận / Huyện---</option>
                                 {districts.map((item) => (
                                     <option value={item.code}>{item.name}</option>
                                 ))}
                             </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Xã / Phường</Form.Label>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" as={Row}>
+                        <Form.Label column sm={4}>
+                            Xã / Phường
+                        </Form.Label>
+                        <Col sm={8}>
                             <Form.Select value={ward} onChange={handleWard} aria-label="Default select example">
                                 <option value="">---Chọn Xã / Phường---</option>
                                 {wards.map((item) => (
                                     <option value={item.name}>{item.name}</option>
                                 ))}
                             </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Địa chỉ</Form.Label>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" as={Row} controlId="formBasicEmail">
+                        <Form.Label column sm={4}>
+                            Địa chỉ
+                        </Form.Label>
+                        <Col sm={8}>
                             <Form.Control
                                 type="text"
                                 value={address}
                                 onChange={handleAddress}
                                 placeholder="Nhập địa chỉ"
                             />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Số điện thoại</Form.Label>
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" as={Row} controlId="formBasicEmail">
+                        <Form.Label column sm={4}>
+                            Số điện thoại
+                        </Form.Label>
+                        <Col sm={8}>
                             <Form.Control
                                 type="text"
                                 value={phone}
                                 onChange={handlePhone}
                                 placeholder="Nhập số điện thoại"
                             />
-                        </Form.Group>
+                        </Col>
+                    </Form.Group>
+
+                    <Col sm={{ offset: 2, span: 10 }}>
                         <Form.Check
                             className="mb-3"
                             type="checkbox"
                             value={check}
                             id="check"
-                            onClick={handleCheck}
+                            onChange={handleCheck}
                             label="Đặt làm địa chỉ mặc định"
                         />
+                    </Col>
 
-                        <Button variant="primary" type="submit" onClick={handlesubmit}>
-                            Submit
-                        </Button>
-                    </Form>
-                </Card.Body>
-            </Card>
-        </div>
+                    <Button
+                        className="w-100 rounded-0"
+                        style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                        type="submit"
+                        onClick={handleClose}
+                    >
+                        Thêm
+                    </Button>
+                </Form>
+            </Modal.Body>
+        </Modal>
     );
 };
 
-export default FormAddress;
+export default ModalAddAdress;

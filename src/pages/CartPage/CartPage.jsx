@@ -198,12 +198,14 @@ const CartPage = () => {
                                             </td>
                                         </tr>
                                     </Table>
-                                    <Button
-                                        className="w-100 rounded-0"
-                                        style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
-                                    >
-                                        Tiến hành đặt hàng
-                                    </Button>
+                                    <Link to={'/checkout'}>
+                                        <Button
+                                            className="w-100 rounded-0"
+                                            style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                                        >
+                                            Tiến hành đặt hàng
+                                        </Button>
+                                    </Link>
                                 </Card.Body>
                             </Card>
                         </Col>
