@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import ModalAddAdress from '~/components/ModalAddAddress/ModalAddAddress';
-import ModalAllAddress from '~/components/ModalAllAddress/ModalAllAddress';
-import ModalUpdateAdress from '~/components/ModalUpdateAddress/ModalUpdateAddress';
+import AllAddress from '~/components/AllAddress/AllAddress';
+import AddAdress from '~/components/AddAddress/AddAddress';
 import { createAxios } from '~/createInstance';
 import { getAllByUser } from '~/services/AddressService';
 
@@ -15,41 +14,50 @@ const CheckoutPage = () => {
 
     const axiosJWT = createAxios(user, dispatch);
     const [showAddress, setShowAddress] = useState(null);
-    // console.log(allAdress)
-
-    useEffect(() => {
-        const fetchAddress = async () => {
-            const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
-            const main = addresses.find((item) => item.main === true);
-            if (main) {
-                setShowAddress(main);
-            }
-        };
-        fetchAddress();
-    }, [showAddress]);
+    const [select, setSelect] = useState(null);
+    const handleSelect = (id) => {
+        setSelect(id);
+    };
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [showAll, setShowAll] = useState(false);
+
+    const handleCloseAll = () => setShowAll(false);
+    const handleShowAll = () => setShowAll(true);
+
+    useEffect(() => {
+        const fetchAddress = async () => {
+            const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
+            if (addresses) {
+                const selectId = addresses.find((item) => item._id === select);
+                const main = addresses.find((item) => item.main === true);
+                setShowAddress(selectId ? selectId : main);
+            }
+        };
+        fetchAddress();
+    }, [handleCloseAll]);
+
     return (
         <div>
             <Container className="p-4">
                 <Row>
                     <Col sm={6}>
+                        <h4>Địa chỉ nhận hàng</h4>
                         {showAddress ? (
                             <div>
-                                <h4>Địa chỉ nhận hàng</h4>
                                 <p>
-                                    {showAddress.phone}, {showAddress.address}, {showAddress.ward},{' '}
-                                    {showAddress.district}, {showAddress.province}
-                                    <a href="#" onClick={handleShow} className="ms-2">
+                                    {showAddress.name}, {showAddress.phone} <br /> {showAddress.address},{' '}
+                                    {showAddress.ward}, {showAddress.district}, {showAddress.province}
+                                    {showAddress.main === true && <span className="ms-2 text-danger">Mặc định</span>}
+                                    <a href="#" onClick={handleShowAll} className="ms-3">
                                         Thay đổi
                                     </a>
                                 </p>
-                                {/* <ModalUpdateAdress id={showAddress._id} show={show} handleClose={handleClose} /> */}
-                                <ModalAllAddress show={show} handleClose={handleClose} />
+                                <AllAddress idSelect={handleSelect} show={showAll} handleCloseAll={handleCloseAll} />
                             </div>
                         ) : (
                             <div>
@@ -61,7 +69,7 @@ const CheckoutPage = () => {
                                 >
                                     Thêm địa chỉ
                                 </Button>
-                                <ModalAddAdress show={show} handleClose={handleClose} />
+                                <AddAdress show={show} handleClose={handleClose} />
                             </div>
                         )}
                     </Col>
