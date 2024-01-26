@@ -70,7 +70,6 @@ const AddAdress = ({ show, handleClose }) => {
         main: check,
         user: user?.data.id,
     };
-    // console.log(data);
 
     const dispatch = useDispatch();
 
@@ -82,6 +81,7 @@ const AddAdress = ({ show, handleClose }) => {
     };
 
     const [allAddress, setAllAddress] = useState(null);
+    console.log(allAddress);
 
     useEffect(() => {
         const fetchAddress = async () => {
@@ -210,10 +210,9 @@ const AddAdress = ({ show, handleClose }) => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                <Button
+                    <Button
                         className="rounded-0 px-4"
-                        style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
-                        type="submit"
+                        variant='outline-dark'
                         onClick={handleClose}
                     >
                         Huỷ
@@ -222,6 +221,7 @@ const AddAdress = ({ show, handleClose }) => {
                         className="px-4 rounded-0"
                         style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
                         onClick={handleClose}
+                        type="submit"
                     >
                         Thêm
                     </Button>

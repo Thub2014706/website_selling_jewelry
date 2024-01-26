@@ -228,8 +228,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                 <Modal.Footer>
                     <Button
                         className="rounded-0 px-4"
-                        style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
-                        type="submit"
+                        variant='outline-dark'
                         onClick={handleClose}
                     >
                         Huỷ
@@ -238,6 +237,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                         className="px-4 rounded-0"
                         style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
                         onClick={handleClose}
+                        type="submit"
                     >
                         Cập nhật
                     </Button>

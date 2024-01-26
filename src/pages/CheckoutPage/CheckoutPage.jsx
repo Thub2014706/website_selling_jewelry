@@ -5,6 +5,8 @@ import AllAddress from '~/components/AllAddress/AllAddress';
 import AddAdress from '~/components/AddAddress/AddAddress';
 import { createAxios } from '~/createInstance';
 import { getAllByUser } from '~/services/AddressService';
+import img1 from '~/assets/images/title_cart2.png'
+import TitleImage from '~/components/TitleImage/TitleImage';
 
 const CheckoutPage = () => {
     const products = useSelector((state) => state.cart.cartItems);
@@ -18,6 +20,8 @@ const CheckoutPage = () => {
     const handleSelect = (id) => {
         setSelect(id);
     };
+    // console.log(select)
+    const [allAddress, setAllAddress] = useState(null);
 
     const [show, setShow] = useState(false);
 
@@ -32,17 +36,23 @@ const CheckoutPage = () => {
     useEffect(() => {
         const fetchAddress = async () => {
             const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
+            setAllAddress(addresses);
             if (addresses) {
                 const selectId = addresses.find((item) => item._id === select);
                 const main = addresses.find((item) => item.main === true);
                 setShowAddress(selectId ? selectId : main);
+                // console.log(addresses)
             }
         };
         fetchAddress();
-    }, [handleCloseAll]);
+    }, [allAddress, handleCloseAll]);
+    // console.log(showAddress);
+
+    const total = useSelector((state) => state.cart.totalPay);
 
     return (
         <div>
+            <TitleImage title='THANH TOÁN' img={img1} />
             <Container className="p-4">
                 <Row>
                     <Col sm={6}>
@@ -104,8 +114,12 @@ const CheckoutPage = () => {
                                         ))}
                                     </tbody>
                                 </Table>
+                                <h5 className="text-end mt-5" style={{ color: 'var(--font-color)' }}>
+                                    Tổng: {total.toLocaleString('it-IT')}
+                                    <span>&#8363;</span>
+                                </h5>
                                 <Button
-                                    className="w-25 mt-5 float-end rounded-0"
+                                    className="w-25 mt-2 float-end rounded-0"
                                     style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
                                 >
                                     Đặt hàng

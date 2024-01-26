@@ -38,7 +38,6 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
 
     const handleSelect = (id) => {
         setSelect(id);
-        console.log(select);
     };
 
     useEffect(() => {
@@ -53,11 +52,11 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
         fetchAll();
     }, [handleCloseUpdate, handleCloseAdd]);
 
-    // console.log(showAdd)
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         idSelect(select);
+        // console.log(showAdd)
     };
 
     return (
@@ -109,8 +108,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
                     <Modal.Footer>
                         <Button
                             className="rounded-0 px-4"
-                            style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
-                            type="submit"
+                            variant='outline-dark'
                             onClick={handleCloseAll}
                         >
                             Huỷ
@@ -119,6 +117,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
                             className="px-4 rounded-0"
                             style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
                             onClick={handleCloseAll}
+                            type="submit"
                         >
                             Xác nhận
                         </Button>

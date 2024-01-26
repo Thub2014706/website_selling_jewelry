@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const cartSlice = createSlice({
     name: 'cart',
     initialState: {
-        cartItems: localStorage.getItem('cartProduct') ? JSON.parse(localStorage.getItem('cartProduct')) : [],
+        cartItems: [],
         totalAmount: 0,
         totalDiscount: 0,
         totalPay: 0,
@@ -17,52 +17,56 @@ const cartSlice = createSlice({
                 const tempProduct = action.payload;
                 state.cartItems.push(tempProduct);
             }
-            localStorage.setItem('cartProduct', JSON.stringify(state.cartItems));
+        },
+        clearCart: (state) => {
+            state.cartItems = [];
+            state.totalAmount = 0;
+            state.totalDiscount = 0;
+            state.totalPay = 0;
         },
         removeFromCart: (state, action) => {
             const newCartItems = state.cartItems.filter((item) => item.idSize._id !== action.payload.idSize._id);
-            state.cartItems = newCartItems
-            localStorage.setItem('cartProduct', JSON.stringify(state.cartItems))
+            state.cartItems = newCartItems;
         },
         decrease: (state, action) => {
             const itemIndex = state.cartItems.findIndex((item) => item.idSize._id === action.payload.idSize._id);
             if (state.cartItems[itemIndex].cartQuantity > 1) {
-                state.cartItems[itemIndex].cartQuantity -= 1
+                state.cartItems[itemIndex].cartQuantity -= 1;
             }
-            localStorage.setItem('cartProduct', JSON.stringify(state.cartItems));
         },
         increase: (state, action) => {
             const itemIndex = state.cartItems.findIndex((item) => item.idSize._id === action.payload.idSize._id);
             if (state.cartItems[itemIndex].cartQuantity < state.cartItems[itemIndex].idSize.inStock) {
-                state.cartItems[itemIndex].cartQuantity += 1
+                state.cartItems[itemIndex].cartQuantity += 1;
             }
-            localStorage.setItem('cartProduct', JSON.stringify(state.cartItems));
         },
         inputValue: (state, action) => {
-            const {id, number} = action.payload
+            const { id, number } = action.payload;
             const itemIndex = state.cartItems.findIndex((item) => item.idSize._id === id);
-            state.cartItems[itemIndex].cartQuantity = number
-            localStorage.setItem('cartProduct', JSON.stringify(state.cartItems));
+            state.cartItems[itemIndex].cartQuantity = number;
         },
         setTotal: (state) => {
-            let total = 0
-            state.cartItems.forEach(element => {
-                total += element.product.price * element.cartQuantity
+            let total = 0;
+            state.cartItems.forEach((element) => {
+                total += element.product.price * element.cartQuantity;
             });
-            state.totalAmount = total
+            state.totalAmount = total;
         },
         setTotalPay: (state) => {
-            let total = 0
-            state.cartItems.forEach(element => {
-                total += (element.product.price - (element.product.price * element.product.discount) / 100) * element.cartQuantity
+            let total = 0;
+            state.cartItems.forEach((element) => {
+                total +=
+                    (element.product.price - (element.product.price * element.product.discount) / 100) *
+                    element.cartQuantity;
             });
-            state.totalPay = total
+            state.totalPay = total;
         },
         setDiscount: (state) => {
-            state.totalDiscount = state.totalPay - state.totalAmount
+            state.totalDiscount = state.totalPay - state.totalAmount;
         },
     },
 });
 
-export const { addToCart, removeFromCart, decrease, increase, inputValue, setTotal, setTotalPay, setDiscount } = cartSlice.actions;
+export const { addToCart, clearCart, removeFromCart, decrease, increase, inputValue, setTotal, setTotalPay, setDiscount } =
+    cartSlice.actions;
 export default cartSlice.reducer;

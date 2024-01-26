@@ -11,6 +11,7 @@ import {
     registerStart,
     registerSuccess,
 } from './authSlice';
+import { clearCart } from './cartSlice';
 
 
 // export const refreshToken = async () => {
@@ -130,6 +131,7 @@ export const logout = async (dispatch, token, axiosJWT) => {
                 headers: { authorization: `Bearer ${token}` },
             },
         );
+        dispatch(clearCart())
         dispatch(logoutSuccess());
     } catch (error) {
         dispatch(logoutFailed());

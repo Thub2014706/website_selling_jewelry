@@ -72,7 +72,6 @@ const privateRoutes = [
     {
         path: '/checkout',
         component: CheckoutPage,
-        layout: null,
     },
 ];
 

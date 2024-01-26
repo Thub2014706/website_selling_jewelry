@@ -66,8 +66,8 @@ const ProductDetails = () => {
 
     console.log('fghjhj', product);
 
+    const products = useSelector(state => state.cart.cartItems);
     const handleToCart = () => {
-        const products = JSON.parse(localStorage.getItem('cartProduct'));
         if (products) {
             if (sizeValue === null) {
                 setWar('Hãy chọn phân loại hàng');

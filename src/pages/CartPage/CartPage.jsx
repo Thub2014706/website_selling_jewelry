@@ -5,12 +5,14 @@ import { Button, ButtonGroup, Card, Col, Container, Row, Table } from 'react-boo
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import img1 from '~/assets/images/title_cart1.png';
+import TitleImage from '~/components/TitleImage/TitleImage';
 import { decrease, increase, inputValue, removeFromCart, setDiscount, setTotal, setTotalPay } from '~/redux/cartSlice';
 
 const CartPage = () => {
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.cart.cartItems);
+    console.log(products)
 
     const removeItem = (products) => {
         dispatch(removeFromCart(products));
@@ -47,19 +49,7 @@ const CartPage = () => {
 
     return (
         <div>
-            <div style={{ position: 'relative', width: '100%' }}>
-                <img src={img1} className="w-100" />
-                <span className='h2 fst-italic text-black fw-bold'
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                    }}
-                >
-                    GIỎ HÀNG
-                </span>
-            </div>
+            <TitleImage title='GIỎ HÀNG' img={img1} />
             <Container>
                 {products.length !== 0 ? (
                     // SẢN PHẨM ĐẶT
