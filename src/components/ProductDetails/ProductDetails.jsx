@@ -66,7 +66,7 @@ const ProductDetails = () => {
 
     console.log('fghjhj', product);
 
-    const products = useSelector(state => state.cart.cartItems);
+    const products = useSelector((state) => state.cart.cartItems);
     const handleToCart = () => {
         if (products) {
             if (sizeValue === null) {
@@ -82,6 +82,7 @@ const ProductDetails = () => {
                         product,
                         idSize: product.variants[sizeValue],
                         cartQuantity: number,
+                        totalPriceItem: number * product.price - (product.price * product.discount) / 100,
                     };
                     dispatch(addToCart(data));
                     setWar('');
@@ -106,6 +107,7 @@ const ProductDetails = () => {
                     product,
                     idSize: product.variants[sizeValue],
                     cartQuantity: number,
+                    totalPriceItem: number * product.price - (product.price * product.discount) / 100,
                 };
                 dispatch(addToCart(data));
                 setWar('');

@@ -7,6 +7,7 @@ import CartPage from '~/pages/CartPage/CartPage';
 import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
+import MyOrderPage from '~/pages/MyOrderPage/MyOrderPage';
 import NoPage from '~/pages/NoPage/NoPage';
 import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
 import ProductPage from '~/pages/ProductPage/ProductPage';
@@ -72,6 +73,10 @@ const privateRoutes = [
     {
         path: '/checkout',
         component: CheckoutPage,
+    },
+    {
+        path: '/myorder/:id',
+        component: MyOrderPage,
     },
 ];
 

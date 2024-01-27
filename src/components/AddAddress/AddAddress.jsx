@@ -81,7 +81,6 @@ const AddAdress = ({ show, handleClose }) => {
     };
 
     const [allAddress, setAllAddress] = useState(null);
-    console.log(allAddress);
 
     useEffect(() => {
         const fetchAddress = async () => {

@@ -126,11 +126,7 @@ const CartPage = () => {
                                                 </ButtonGroup>
                                             </td>
                                             <td className="text-center align-middle">
-                                                {(
-                                                    (item.product.price -
-                                                        (item.product.price * item.product.discount) / 100) *
-                                                    item.cartQuantity
-                                                ).toLocaleString('it-IT')}
+                                                {item.totalPriceItem.toLocaleString('it-IT')}
                                                 <span>&#8363;</span>
                                             </td>
                                             <td className="text-center align-middle">

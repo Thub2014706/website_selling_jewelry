@@ -5,11 +5,21 @@ import AllAddress from '~/components/AllAddress/AllAddress';
 import AddAdress from '~/components/AddAddress/AddAddress';
 import { createAxios } from '~/createInstance';
 import { getAllByUser } from '~/services/AddressService';
-import img1 from '~/assets/images/title_cart2.png'
+import img1 from '~/assets/images/title_cart2.png';
 import TitleImage from '~/components/TitleImage/TitleImage';
+import { createOrder } from '~/services/OrderService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { clearCart } from '~/redux/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 const CheckoutPage = () => {
+    const navigate = useNavigate()
+
     const products = useSelector((state) => state.cart.cartItems);
+
+    const [allProduct, setAllProduct] = useState([]);
+
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const dispatch = useDispatch();
@@ -37,6 +47,19 @@ const CheckoutPage = () => {
         const fetchAddress = async () => {
             const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
             setAllAddress(addresses);
+            if (products && products.length > 0) {
+                const copy = [...allProduct];
+                products.map(
+                    (element, index) =>
+                        (copy[index] = {
+                            price: element.totalPriceItem,
+                            quantity: element.cartQuantity,
+                            idVariant: element.idSize._id,
+                            idProduct: element.product._id,
+                        }),
+                );
+                setAllProduct(copy)
+            }
             if (addresses) {
                 const selectId = addresses.find((item) => item._id === select);
                 const main = addresses.find((item) => item.main === true);
@@ -50,9 +73,27 @@ const CheckoutPage = () => {
 
     const total = useSelector((state) => state.cart.totalPay);
 
+    const data = {
+        total,
+        amount: products.length,
+        cart: allProduct,
+        user: user?.data.id,
+        shipping: showAddress?._id,
+    };
+    // console.log(data);
+
+    const handleOrder = async () => {
+        await createOrder(axiosJWT, data, user?.accessToken, toast);
+        setTimeout(() => {
+            navigate(`/myorder/${user?.data.id}`)
+            dispatch(clearCart())
+        }, 2000)
+    };
+
     return (
         <div>
-            <TitleImage title='THANH TOÁN' img={img1} />
+            <ToastContainer />
+            <TitleImage title="THANH TOÁN" img={img1} />
             <Container className="p-4">
                 <Row>
                     <Col sm={6}>
@@ -103,11 +144,7 @@ const CheckoutPage = () => {
                                                 </td>
                                                 <td>x{item.cartQuantity}</td>
                                                 <td>
-                                                    {(
-                                                        (item.product.price -
-                                                            (item.product.price * item.product.discount) / 100) *
-                                                        item.cartQuantity
-                                                    ).toLocaleString('it-IT')}
+                                                    {item.totalPriceItem.toLocaleString('it-IT')}
                                                     <span>&#8363;</span>
                                                 </td>
                                             </tr>
@@ -121,6 +158,7 @@ const CheckoutPage = () => {
                                 <Button
                                     className="w-25 mt-2 float-end rounded-0"
                                     style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                                    onClick={handleOrder}
                                 >
                                     Đặt hàng
                                 </Button>
