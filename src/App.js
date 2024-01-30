@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { privateRoutes, publicRoutes } from '~/routes';
+import { adminRoutes, privateRoutes, publicRoutes } from '~/routes';
 import { MainLayout } from '~/layouts';
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
@@ -53,6 +53,28 @@ function App() {
                                     )
                                 ) : (
                                     <Navigate to="/signin" replace />
+                                )
+                            }
+                        />
+                    ))}
+
+                    {adminRoutes.map((route, index) => (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                user && user.data.isAdmin === true ? (
+                                    route.layout === null ? (
+                                        <Fragment>
+                                            <route.component />
+                                        </Fragment>
+                                    ) : (
+                                        <MainLayout>
+                                            <route.component />
+                                        </MainLayout>
+                                    )
+                                ) : (
+                                    <Navigate to="*" replace />
                                 )
                             }
                         />

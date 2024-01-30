@@ -14,7 +14,7 @@ import { clearCart } from '~/redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 
 const CheckoutPage = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const products = useSelector((state) => state.cart.cartItems);
 
@@ -52,13 +52,18 @@ const CheckoutPage = () => {
                 products.map(
                     (element, index) =>
                         (copy[index] = {
-                            price: element.totalPriceItem,
+                            name: element.product.name,
+                            image: element.product.image[0],
+                            size: element.idSize.size,
+                            price: element.product.price,
+                            priceMain: element.product.price * (1- element.product.discount / 100),
+                            priceBuy: element.totalPriceItem,
                             quantity: element.cartQuantity,
                             idVariant: element.idSize._id,
                             idProduct: element.product._id,
                         }),
                 );
-                setAllProduct(copy)
+                setAllProduct(copy);
             }
             if (addresses) {
                 const selectId = addresses.find((item) => item._id === select);
@@ -85,9 +90,9 @@ const CheckoutPage = () => {
     const handleOrder = async () => {
         await createOrder(axiosJWT, data, user?.accessToken, toast);
         setTimeout(() => {
-            navigate(`/myorder/${user?.data.id}`)
-            dispatch(clearCart())
-        }, 2000)
+            navigate(`/myorder/${user?.data.id}`);
+            dispatch(clearCart());
+        }, 2000);
     };
 
     return (

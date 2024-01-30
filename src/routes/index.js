@@ -1,8 +1,10 @@
+import AdminOrder from '~/components/AdminOrder/AdminOrder';
 import AdminAddCategories from '~/components/AdminProduct/AdminAddCategories';
 import AdminAddProduct from '~/components/AdminProduct/AdminAddProduct';
 import AdminAllProduct from '~/components/AdminProduct/AdminAllProduct';
 import AdminUpdateProduct from '~/components/AdminProduct/AdminUpdateProduct';
 import thunghiem from '~/components/AdminProduct/FormProduct';
+import AdminPage from '~/pages/AdminPage/AdminPage';
 import CartPage from '~/pages/CartPage/CartPage';
 import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
@@ -41,27 +43,8 @@ const publicRoutes = [
         component: CartPage,
     },
     {
-        path: '/admin/get-products',
-        component: AdminAllProduct,
-        layout: null,
-    },
-    {
-        path: '/admin/update-product/:id',
-        component: AdminUpdateProduct,
-        layout: null,
-    },
-    {
-        path: '/admin/add-product',
-        component: AdminAddProduct,
-        layout: null,
-    },
-    {
         path: '/search/:name',
         component: ProductPage,
-    },
-    {
-        path: '/admin/add-categories',
-        component: AdminAddCategories,
     },
     {
         path: '/thunghiem',
@@ -80,4 +63,37 @@ const privateRoutes = [
     },
 ];
 
-export { publicRoutes, privateRoutes };
+const adminRoutes = [
+    {
+        path: '/admin',
+        component: AdminPage,
+        layout: null,
+    },
+    {
+        path: '/admin/get-products',
+        component: AdminAllProduct,
+        layout: null,
+    },
+    {
+        path: '/admin/update-product/:id',
+        component: AdminUpdateProduct,
+        layout: null,
+    },
+    {
+        path: '/admin/add-product',
+        component: AdminAddProduct,
+        layout: null,
+    },
+    {
+        path: '/admin/add-categories',
+        component: AdminAddCategories,
+        layout: null,
+    },
+    {
+        path: '/admin/allorder',
+        component: AdminOrder,
+        layout: null,
+    },
+];
+
+export { publicRoutes, privateRoutes, adminRoutes };

@@ -39,3 +39,14 @@ export const getAllByUser = async (axiosJWT, token, id) => {
         console.log(error)
     }
 }
+
+export const getAllAddress = async (axiosJWT, token) => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/address/getall`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data
+    } catch (error) {
+        console.log(error)
+    }
+}

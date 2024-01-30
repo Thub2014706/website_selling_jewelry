@@ -43,8 +43,8 @@ const Header = () => {
     };
 
     const deleteSearch = () => {
-        setSearch('')
-    }
+        setSearch('');
+    };
 
     return (
         <div>
@@ -83,7 +83,14 @@ const Header = () => {
                         </Col>
                         <Col md="4">
                             <Row>
-                                <Search color="white" search={search} searchInput={searchInput} handleSearch={handleSearch} handleKeyDown={handleKeyDown} deleteSearch={deleteSearch} />
+                                <Search
+                                    color="white"
+                                    search={search}
+                                    searchInput={searchInput}
+                                    handleSearch={handleSearch}
+                                    handleKeyDown={handleKeyDown}
+                                    deleteSearch={deleteSearch}
+                                />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     {user === null ? (
                                         <Link to={`/signin`} className="text-decoration-none text-white">
@@ -112,6 +119,9 @@ const Header = () => {
                                                 </Dropdown.Toggle>
 
                                                 <Dropdown.Menu>
+                                                    <Dropdown.Item>
+                                                        <Link to={`/myorder/${user.data.id}`} className='text-black text-decoration-none'>Đơn hàng của bạn</Link>
+                                                    </Dropdown.Item>
                                                     <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
