@@ -140,7 +140,7 @@ const Header = () => {
                                                 style={{ marginRight: '5px' }}
                                             ></ion-icon>
                                             <span
-                                                class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                                className="position-absolute translate-middle badge rounded-pill bg-danger"
                                                 style={{ marginLeft: '18px' }}
                                             >
                                                 {length}

@@ -13,7 +13,7 @@ const HomePage = () => {
             const data = await allProduct();
             setProducts(data);
         };
-        fetchAllProduct()
+        fetchAllProduct();
     }, []);
 
     return (
@@ -22,11 +22,10 @@ const HomePage = () => {
             <Container>
                 {products !== null ? (
                     <Row>
-                        {products.map((product) => (
-                            <Col md={3}>
+                        {products.map((product, index) => (
+                            <Col md={3} key={product._id}>
                                 <Link to={`/product/${product._id}`} className="text-decoration-none">
                                     <Product
-                                        key={product._id}
                                         image={product.image}
                                         name={product.name}
                                         price={product.price}
