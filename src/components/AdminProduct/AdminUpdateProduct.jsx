@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { productDetail, updateProduct } from '~/services/ProductService';
-import FormProduct from './FormProduct';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { allType, productDetail, updateProduct } from '~/services/ProductService';
+import { createAxios } from '~/createInstance';
+import AdminAddCategories from './AdminAddCategories';
 
-const AdminUpdateProduct = () => {
-    const { id } = useParams();
-
+const AdminUpdateProduct = ({ show, handleClose, id }) => {
     const [name, setName] = useState('');
     const [image, setImage] = useState([]);
     const [variants, setVariants] = useState([]);
@@ -13,8 +18,9 @@ const AdminUpdateProduct = () => {
     const [price, setPrice] = useState('');
     const [information, setInformation] = useState('');
     const [discount, setDiscount] = useState('');
-    const [load, setLoad] = useState(false);
-    console.log(name);
+
+    const user = useSelector((state) => state.auth.login.currentUser);
+    console.log(id);
 
     useEffect(() => {
         const fetchProductDetail = async () => {
@@ -26,29 +32,296 @@ const AdminUpdateProduct = () => {
             setPrice(data.price);
             setInformation(data.information);
             setDiscount(data.discount);
-            setLoad(true);
         };
         fetchProductDetail();
     }, [id]);
 
-    const handleSubmit = async (data, token, toast) => {
-        await updateProduct(data, id, token, toast);
+    const addLink = () => {
+        const link = [...image, ''];
+        setImage(link);
+    };
+
+    const deleteLink = (i) => {
+        const link = [...image];
+        setImage(link.filter((val, index) => index !== i));
+    };
+
+    const handleImg = (e, i) => {
+        const copyAdd = [...image];
+        copyAdd[i] = e.target.value;
+        setImage(copyAdd);
+    };
+
+    const addSize = () => {
+        const add = [...variants, { size: '', inStock: '' }];
+        setVariants(add);
+    };
+
+    const deleteSize = (i) => {
+        const add = [...variants];
+        setVariants(add.filter((val, index) => index !== i));
+    };
+
+    const handleVariants = (e, i) => {
+        const { name, value } = e.target;
+        const inSize = name === 'size' ? value : variants[i].size;
+        const inInStock = name === 'inStock' ? value.replace(/[^\d]/g, '') : variants[i].inStock;
+        const copyAdd = [...variants];
+        copyAdd[i] = { size: inSize, inStock: inInStock };
+        setVariants(copyAdd);
+    };
+
+    const handlePrice = (e) => {
+        const format = e.target.value.replace(/[^\d]/g, '');
+        setPrice(Number(format));
+    };
+
+    const handleDiscount = (e) => {
+        setDiscount(Number(e.target.value.replace(/[^\d]/g, '').slice(0, 2)));
+    };
+
+    const handleInfo = (e, editor) => {
+        const data = editor.getData();
+        setInformation(data);
+    };
+
+    const data = {
+        name,
+        image,
+        type,
+        variants,
+        price,
+        information,
+        discount,
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        updateProduct(data, id, user.accessToken, toast);
+    };
+
+    const [types, setTypes] = useState(null);
+
+    const dispatch = useDispatch();
+
+    const axiosJWT = createAxios(user, dispatch);
+
+    useEffect(() => {
+        const fetchTypes = async () => {
+            const data = await allType(user?.accessToken, axiosJWT);
+            setTypes(data);
+        };
+        fetchTypes();
+    }, []);
+
+    const handleType = (e) => {
+        setType(e.target.value);
+    };
+
+    const [showAdd, setShowAdd] = useState(false);
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+    };
+    const handleShowAdd = () => {
+        setShowAdd(true);
+        handleClose();
     };
 
     return (
         <div>
-            {load && (
-                <FormProduct
-                    showName={name}
-                    showImage={image}
-                    showVariants={variants}
-                    showType={type}
-                    showPrice={price}
-                    showInformation={information}
-                    showDiscount={discount}
-                    onSubmit={handleSubmit}
-                />
-            )}
+            <Modal show={show} centered size="lg" onHide={handleClose}>
+                <ToastContainer />
+                <Form onSubmit={handleSubmit}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Cập nhật sản phẩm</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Tên sản phẩm
+                            </Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    type="text"
+                                    name="name"
+                                    value={name}
+                                    placeholder="Nhập tên sản phẩm"
+                                    required
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Hình ảnh
+                            </Form.Label>
+                            <Col sm={10}>
+                                Thêm link hình ảnh
+                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={() => addLink()}>
+                                    +
+                                </Button>
+                            </Col>
+                            {image.map((data, index) => (
+                                <Col sm={{ span: 10, offset: 2 }} className="mt-3">
+                                    <Form.Group as={Row}>
+                                        <Col sm={11}>
+                                            <Form.Control
+                                                type="url"
+                                                name="image"
+                                                value={data}
+                                                placeholder="Nhập link hình ảnh"
+                                                required
+                                                onChange={(e) => handleImg(e, index)}
+                                            />
+                                        </Col>
+                                        <Col sm={1}>
+                                            <Button
+                                                variant="outline-dark"
+                                                className="rounded-0"
+                                                onClick={() => deleteLink(index)}
+                                            >
+                                                x
+                                            </Button>
+                                        </Col>
+                                    </Form.Group>
+                                </Col>
+                            ))}
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Phân loại
+                            </Form.Label>
+                            <Col sm={7}>
+                                <Form.Select aria-label="Default select example" value={type} onChange={handleType}>
+                                    <option value="">---Chọn phân loại---</option>
+                                    {types !== null &&
+                                        types.map((item) => <option value={item._id}>{item.name}</option>)}
+                                </Form.Select>
+                            </Col>
+                            <Col sm={3}>
+                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={handleShowAdd}>
+                                    Thêm phân loại
+                                </Button>
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column={2}>Kích cỡ - Kho</Form.Label>
+                            <Col sm={10}>
+                                Thêm kích cỡ và kho
+                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={() => addSize()}>
+                                    +
+                                </Button>
+                            </Col>
+                            {variants.map((data, index) => (
+                                <Col sm={{ span: 10, offset: 2 }} className="mt-3 w-100">
+                                    <Form.Group as={Row}>
+                                        <Col sm="auto">
+                                            <Form.Control
+                                                type="text"
+                                                name="size"
+                                                value={data.size}
+                                                placeholder="Nhập kích cỡ"
+                                                required
+                                                onChange={(e) => handleVariants(e, index)}
+                                            />
+                                        </Col>
+                                        <Col sm="auto">
+                                            <Form.Control
+                                                type="text"
+                                                name="inStock"
+                                                value={data.inStock}
+                                                placeholder="Nhập số lượng kho"
+                                                required
+                                                onChange={(e) => handleVariants(e, index)}
+                                            />
+                                        </Col>
+                                        <Col sm={1}>
+                                            <Button
+                                                variant="outline-dark"
+                                                className="rounded-0"
+                                                onClick={() => deleteSize(index)}
+                                            >
+                                                x
+                                            </Button>
+                                        </Col>
+                                    </Form.Group>
+                                </Col>
+                            ))}
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Giá tiền
+                            </Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    type="text"
+                                    name="price"
+                                    value={price.toLocaleString('it-IT')}
+                                    placeholder="Nhập giá tiền"
+                                    required
+                                    onChange={handlePrice}
+                                />
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Khuyến mãi (%)
+                            </Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    type="text"
+                                    name="discount"
+                                    value={discount}
+                                    placeholder="Nhập mã khuyến mãi"
+                                    onChange={handleDiscount}
+                                />
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={2}>
+                                Thông tin
+                            </Form.Label>
+                            <Col sm={10}>
+                                <CKEditor
+                                    editor={Editor}
+                                    data={information}
+                                    onReady={(editor) => {
+                                        console.log('Editor is ready to use!', editor);
+                                    }}
+                                    onChange={handleInfo}
+                                    onBlur={(event, editor) => {
+                                        console.log('Blur.', editor);
+                                    }}
+                                    onFocus={(event, editor) => {
+                                        console.log('Focus.', editor);
+                                    }}
+                                />
+                            </Col>
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button className="rounded-0 px-4" variant="outline-dark" onClick={handleClose}>
+                            Huỷ
+                        </Button>
+                        <Button
+                            className="px-4 rounded-0"
+                            style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
+                            onClick={handleClose}
+                            type="submit"
+                        >
+                            Cập nhật
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+            <AdminAddCategories show={showAdd} handleClose={handleCloseAdd} />
         </div>
     );
 };

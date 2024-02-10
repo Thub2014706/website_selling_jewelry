@@ -6,7 +6,7 @@
     --primary-color: #262525;
     --font-color: #9a702a;
     --grey-color: #e1e1e1;
-    --list-menu:rgb(73, 72, 72);
+    --list-menu: rgb(73, 72, 72);
 }
 
 * {
@@ -84,6 +84,10 @@ body {
     background-size: cover;
 }
 
+.menu:hover {
+    background-color: var(--list-menu);
+}
+
 // .list-menu {
 //     animation-name: expandMenu;
 //     animation-duration: 0.5s;
@@ -103,4 +107,3 @@ body {
 //         display: block;
 //     }
 // }
-

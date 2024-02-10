@@ -74,16 +74,16 @@ const adminRoutes = [
         component: AdminAllProduct,
         layout: null,
     },
-    {
-        path: '/admin/update-product/:id',
-        component: AdminUpdateProduct,
-        layout: null,
-    },
-    {
-        path: '/admin/add-product',
-        component: AdminAddProduct,
-        layout: null,
-    },
+    // {
+    //     path: '/admin/update-product/:id',
+    //     component: AdminUpdateProduct,
+    //     layout: null,
+    // },
+    // {
+    //     path: '/admin/add-product',
+    //     component: AdminAddProduct,
+    //     layout: null,
+    // },
     {
         path: '/admin/add-categories',
         component: AdminAddCategories,

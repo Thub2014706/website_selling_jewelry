@@ -7,7 +7,7 @@ const ListMenu = ({ condition, handleAction, children, title, icon }) => {
     return (
         <div className="px-1">
             <div
-                className="py-2 px-3 rounded"
+                className="py-2 px-3 rounded menu"
                 // style={{ backgroundColor: condition ? 'var(--list-menu)' : ''}}
             >
                 <a href="javascript:void(0)" className="text-decoration-none text-white fs-5" onClick={handleAction}>
@@ -22,7 +22,7 @@ const ListMenu = ({ condition, handleAction, children, title, icon }) => {
                 </a>
             </div>
             {condition && (
-                <ul className=" mt-3 h5" style={{ listStyle: 'none' }}>
+                <ul className=" mt-1 h5" style={{ listStyle: 'none' }}>
                     {children}
                 </ul>
             )}

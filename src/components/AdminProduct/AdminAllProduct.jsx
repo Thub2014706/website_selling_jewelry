@@ -1,16 +1,18 @@
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Row, Table } from 'react-bootstrap';
+import { Button, Col, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { allProduct, deleteProduct } from '~/services/ProductService';
+import { allProduct, allType, deleteProduct } from '~/services/ProductService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../ModalSelect/ModalSelect';
 import { createAxios } from '~/createInstance';
 import Search from '~/layouts/components/Search/Search';
 import { searchProducts } from '~/redux/productSlice';
+import AdminUpdateProduct from './AdminUpdateProduct';
+import AdminAddProduct from './AdminAddProduct';
 
 const AdminAllProduct = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -21,6 +23,8 @@ const AdminAllProduct = () => {
 
     const [products, setProducts] = useState(null);
 
+    const [categories, setCategories] = useState(null);
+
     const [search, setSearch] = useState('');
 
     const searchInput = (e) => {
@@ -28,23 +32,14 @@ const AdminAllProduct = () => {
     };
 
     const deleteSearch = () => {
-        setSearch('')
-    }
-
-    // const handleKeyDown = (e) => {
-    //     if (e.key === 'Enter') {
-    //         e.preventDefault();
-    //         // dispatch(searchProducts(search));
-    //     }
-    // };
-
-    // const handleSearch = () => {
-    //     // dispatch(searchProducts(search));
-    // };
+        setSearch('');
+    };
 
     useEffect(() => {
         const fetchAllProduct = async () => {
             const data = await allProduct();
+            const dataType = await allType(user?.accessToken, axiosJWT);
+            setCategories(dataType);
             const timer = setTimeout(() => {
                 if (search !== '') {
                     const newData = data.filter((item) =>
@@ -64,11 +59,11 @@ const AdminAllProduct = () => {
                     setProducts(data);
                 }
             }, 1200);
-            return () => clearTimeout(timer)
+            return () => clearTimeout(timer);
         };
         fetchAllProduct();
     }, [products]);
-    // console.log(products);
+    // console.log(categories);
 
     const sumArray = (array) => {
         let sum = 0;
@@ -90,23 +85,51 @@ const AdminAllProduct = () => {
         setShow(false);
     };
 
-    const handleDelete = () => {
-        deleteProduct(idP, user.accessToken, toast, axiosJWT);
+    const handleDelete = async () => {
+        await deleteProduct(idP, user.accessToken, toast, axiosJWT);
         setShow(false);
+    };
+
+    const [showUpdate, setShowUpdate] = useState(false);
+    // const [idShow, setIdShow] = useState(null);
+
+    const handleCloseUpdate = () => {
+        setShowUpdate(false);
+    };
+    const handleShowUpdate = (id) => {
+        setShowUpdate(true);
+        setIdP(id);
+    };
+
+    const [showAdd, setShowAdd] = useState(false);
+
+    const handleCloseAdd = () => {
+        setShowAdd(false);
+    };
+    const handleShowAdd = () => {
+        setShowAdd(true);
     };
 
     return (
         <div>
             <ToastContainer />
             <Row className="mb-4">
-                <Search
-                    color="black"
-                    search={search}
-                    searchInput={searchInput}
-                    deleteSearch={deleteSearch}
-                    // handleSearch={handleSearch}
-                    // handleKeyDown={handleKeyDown}
-                />
+                <Col>
+                    <Search
+                        color="black"
+                        search={search}
+                        searchInput={searchInput}
+                        deleteSearch={deleteSearch}
+                        // handleSearch={handleSearch}
+                        // handleKeyDown={handleKeyDown}
+                    />
+                </Col>
+                <Col>
+                    <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
+                        Thêm sản phẩm
+                    </Button>
+                    <AdminAddProduct show={showAdd} handleClose={handleCloseAdd} />
+                </Col>
             </Row>
             <Row>
                 {products !== null ? (
@@ -124,33 +147,40 @@ const AdminAllProduct = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((product, index) => (
-                                <tr key={product._id} className="align-middle">
-                                    <td className="text-center">{index + 1}</td>
-                                    <td className="text-center">
-                                        <img src={product.image[0]} style={{ height: '50px' }} alt="" />
-                                    </td>
-                                    <td>{product.name}</td>
-                                    <td className="text-center">
-                                        {product.price.toLocaleString('it-IT')}
-                                        <span>&#8363;</span>
-                                    </td>
-                                    <td className="text-center">{sumArray(product.variants)}</td>
-                                    <td className="text-center">{product.type}</td>
-                                    <td className="text-center">
-                                        <Link to={`/admin/update-product/${product._id}`}>
-                                            <FontAwesomeIcon icon={faPenToSquare} color="black" />
-                                        </Link>
-                                    </td>
-                                    <td className="text-center">
-                                        <FontAwesomeIcon
-                                            onClick={() => handleShow(product._id)}
-                                            icon={faTrashCan}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
+                            {products.map((product, index) => {
+                                let idType = categories.find((item) => item._id === product.type);
+                                return (
+                                    <tr key={product._id} className="align-middle">
+                                        <td className="text-center">{index + 1}</td>
+                                        <td className="text-center">
+                                            <img src={product.image[0]} style={{ height: '50px' }} alt="" />
+                                        </td>
+                                        <td>{product.name}</td>
+                                        <td className="text-center">
+                                            {product.price.toLocaleString('it-IT')}
+                                            <span>&#8363;</span>
+                                        </td>
+                                        <td className="text-center">{sumArray(product.variants)}</td>
+                                        {idType ? <td className="text-center">{idType.name}</td> : <td className='text-center'>(Không có)</td>}
+                                        <td className="text-center">
+                                            <FontAwesomeIcon
+                                                icon={faPenToSquare}
+                                                color="green"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => handleShowUpdate(product._id)}
+                                            />
+                                        </td>
+                                        <td className="text-center">
+                                            <FontAwesomeIcon
+                                                color="red"
+                                                onClick={() => handleShow(product._id)}
+                                                icon={faTrashCan}
+                                                style={{ cursor: 'pointer' }}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                         <Modal
                             text="Bạn chắc chắn muốn xóa sản phẩm này?"
@@ -160,6 +190,7 @@ const AdminAllProduct = () => {
                             handleAction={() => handleDelete()}
                             handleClose={handleClose}
                         />
+                        {idP && <AdminUpdateProduct show={showUpdate} handleClose={handleCloseUpdate} id={idP} />}
                     </Table>
                 ) : (
                     <p>Loading...</p>

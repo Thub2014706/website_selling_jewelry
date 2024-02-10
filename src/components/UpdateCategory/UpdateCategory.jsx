@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '~/createInstance';
+import { allType, createType, typeDetail, updateType } from '~/services/ProductService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createAxios } from '~/createInstance';
-import { allType, createType } from '~/services/ProductService';
+import { Button, Modal } from 'react-bootstrap';
+import { Form } from 'react-router-dom';
 
-const AdminAddCategories = ({ show, handleClose }) => {
+const UpdateCategory = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const dispatch = useDispatch();
@@ -15,14 +16,22 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const [types, setTypes] = useState(null);
 
-    const [name, setname] = useState('');
+    // const [type, setType] = useState(null);
+
+    const [name, setName] = useState('');
 
     const [father, setFather] = useState('');
 
     useEffect(() => {
         const fetchTypes = async () => {
-            const data = await allType(user?.accessToken, axiosJWT);
-            setTypes(data);
+            const dataAll = await allType(user?.accessToken, axiosJWT);
+            const dataUpdate = await typeDetail(id, axiosJWT, user?.accessToken);
+            setTypes(dataAll);
+            // setType(dataUpdate);
+            if (dataUpdate) {
+                setName(dataUpdate.name);
+                setFather(dataUpdate.father);
+            }
         };
         fetchTypes();
     }, [types]);
@@ -38,7 +47,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const handleAdd = async (e) => {
         e.preventDefault();
-        await createType(data, user?.accessToken, axiosJWT, toast);
+        await updateType(user?.accessToken, toast, data, axiosJWT, id);
     };
 
     return (
@@ -55,7 +64,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
                                 type="text"
                                 name="name"
                                 value={name}
-                                onChange={(e) => setname(e.target.value)}
+                                onChange={(e) => setName(e.target.value)}
                                 placeholder="Nhập tên phân loại mới"
                             />
                         </Form.Group>
@@ -89,4 +98,4 @@ const AdminAddCategories = ({ show, handleClose }) => {
     );
 };
 
-export default AdminAddCategories;
+export default UpdateCategory;

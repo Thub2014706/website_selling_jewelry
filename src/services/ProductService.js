@@ -132,7 +132,7 @@ export const createType = async (data, token, axiosJWT, toast) => {
             theme: 'light',
         });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         toast('Không thể thêm', {
             position: 'top-center',
             autoClose: 2000,
@@ -145,7 +145,7 @@ export const createType = async (data, token, axiosJWT, toast) => {
             theme: 'light',
         });
     }
-}
+};
 
 export const allType = async (token, axiosJWT) => {
     try {
@@ -153,8 +153,85 @@ export const allType = async (token, axiosJWT) => {
             headers: { authorization: `Bearer ${token}` },
         });
         // console.log("dfghj",response.data)
-        return response.data
+        return response.data;
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
+
+export const deleteType = async (token, toast, axiosJWT, id) => {
+    try {
+        await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/product/delete-type/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        toast('Xóa thành công', {
+            position: 'top-center',
+            autoClose: 2000,
+            type: 'success',
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+        });
+        // console.log("dfghj",response.data)
+    } catch (error) {
+        console.log(error);
+        toast('Không thể xóa', {
+            position: 'top-center',
+            autoClose: 2000,
+            type: 'error',
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+        });
+    }
+};
+
+export const updateType = async (token, toast, data, axiosJWT, id) => {
+    try {
+        await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/product/update-type/${id}`, data, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        toast('Cập nhật thành công', {
+            position: 'top-center',
+            autoClose: 2000,
+            type: 'success',
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+        });
+        // console.log("dfghj",response.data)
+    } catch (error) {
+        console.log(error);
+        toast('Không thể cập nhật', {
+            position: 'top-center',
+            autoClose: 2000,
+            type: 'error',
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+        });
+    }
+};
+
+export const typeDetail = async (id, axiosJWT, token) => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/product/detail-type/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
