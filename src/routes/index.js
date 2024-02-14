@@ -84,11 +84,11 @@ const adminRoutes = [
     //     component: AdminAddProduct,
     //     layout: null,
     // },
-    {
-        path: '/admin/add-categories',
-        component: AdminAddCategories,
-        layout: null,
-    },
+    // {
+    //     path: '/admin/add-categories',
+    //     component: AdminAddCategories,
+    //     layout: null,
+    // },
     {
         path: '/admin/allorder',
         component: AdminOrder,

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '~/createInstance';
-import { allType, createType, typeDetail, updateType } from '~/services/ProductService';
+import { allType, typeDetail, updateType } from '~/services/ProductService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Button, Modal } from 'react-bootstrap';
-import { Form } from 'react-router-dom';
+import { Button, Form, Modal } from 'react-bootstrap';
 
 const UpdateCategory = ({ id, show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -24,17 +23,15 @@ const UpdateCategory = ({ id, show, handleClose }) => {
 
     useEffect(() => {
         const fetchTypes = async () => {
-            const dataAll = await allType(user?.accessToken, axiosJWT);
             const dataUpdate = await typeDetail(id, axiosJWT, user?.accessToken);
+            const dataAll = await allType(user?.accessToken, axiosJWT);
             setTypes(dataAll);
-            // setType(dataUpdate);
-            if (dataUpdate) {
-                setName(dataUpdate.name);
-                setFather(dataUpdate.father);
-            }
+            setName(dataUpdate.name);
+            setFather(dataUpdate.father);
         };
         fetchTypes();
-    }, [types]);
+    }, [id]);
+    // console.log(father)
 
     const handleFather = (e) => {
         setFather(e.target.value);
@@ -45,7 +42,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
         father,
     };
 
-    const handleAdd = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
         await updateType(user?.accessToken, toast, data, axiosJWT, id);
     };
@@ -54,9 +51,9 @@ const UpdateCategory = ({ id, show, handleClose }) => {
         <div>
             <Modal show={show} centered onHide={handleClose}>
                 <ToastContainer />
-                <Form onSubmit={handleAdd}>
+                <Form onSubmit={handleUpdate}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Thêm phân loại</Modal.Title>
+                        <Modal.Title>Cập nhật phân loại</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -70,12 +67,15 @@ const UpdateCategory = ({ id, show, handleClose }) => {
                         </Form.Group>
                         <Form.Select
                             className="mb-3"
-                            name="father"
+                            value={father}
                             onChange={handleFather}
                             aria-label="Default select example"
                         >
                             <option value="">---Chọn phân loại cha---</option>
-                            {types !== null && types.map((item) => <option value={item.name}>{item.name}</option>)}
+                            {types !== null &&
+                                types.map(
+                                    (item) => item.name !== name && <option value={item.name}>{item.name}</option>,
+                                )}
                         </Form.Select>
                         {/* <Button variant="primary" onClick={handleAdd}>Thêm phân loại</Button> */}
                     </Modal.Body>
@@ -89,7 +89,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
                             onClick={handleClose}
                             type="submit"
                         >
-                            Thêm
+                            Cập nhật
                         </Button>
                     </Modal.Footer>
                 </Form>

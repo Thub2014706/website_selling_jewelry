@@ -88,22 +88,67 @@ body {
     background-color: var(--list-menu);
 }
 
-// .list-menu {
-//     animation-name: expandMenu;
-//     animation-duration: 0.5s;
-//     overflow: hidden; /* Đảm bảo nội dung không vượt ra ngoài khung */
-// }
+.down {
+    animation-name: expandMenuDown;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
 
-// @keyframes expandMenu {
-//     0% {
-//         // opacity: 0; /* Bắt đầu với độ mờ là 0 */
-//         display: none;
-//     }
-//     // 50% {
-//     //     opacity: 0.5; /* Hiển thị toàn bộ nội dung */
-//     // }
-//     100% {
-//         // opacity: 1; /* Hiển thị toàn bộ nội dung */
-//         display: block;
-//     }
-// }
+@keyframes expandMenuDown {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(90deg);
+    }
+}
+
+.up {
+    animation-name: expandMenuUp;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes expandMenuUp {
+    0% {
+        transform: rotate(90deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.list {
+    position: relative;
+    overflow: hidden;
+    animation-name: listMenuDown;
+    animation-duration: 0.4s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes listMenuDown {
+    0% {
+        max-height: 0;
+    }
+    100% {
+        max-height: 300px;
+    }
+}
+
+.unlist {
+    position: relative;
+    overflow: hidden;
+    animation-name: listMenuUp;
+    animation-duration: 0.4s; /* Đảm bảo thời gian animation tương đồng với listMenuDown */
+    animation-fill-mode: forwards;
+}
+
+@keyframes listMenuUp {
+    0% {
+        max-height: 300px;
+    }
+    100% {
+        max-height: 0;
+    }
+}
+

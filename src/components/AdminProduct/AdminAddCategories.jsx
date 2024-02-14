@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +15,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const [types, setTypes] = useState(null);
 
-    const [name, setname] = useState('');
+    const [name, setName] = useState('');
 
     const [father, setFather] = useState('');
 
@@ -25,7 +25,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
             setTypes(data);
         };
         fetchTypes();
-    }, [types]);
+    }, [user?.accessToken, axiosJWT]);
 
     const handleFather = (e) => {
         setFather(e.target.value);
@@ -55,13 +55,14 @@ const AdminAddCategories = ({ show, handleClose }) => {
                                 type="text"
                                 name="name"
                                 value={name}
-                                onChange={(e) => setname(e.target.value)}
+                                onChange={(e) => setName(e.target.value)}
                                 placeholder="Nhập tên phân loại mới"
                             />
                         </Form.Group>
                         <Form.Select
                             className="mb-3"
                             name="father"
+                            value={father}
                             onChange={handleFather}
                             aria-label="Default select example"
                         >

@@ -9,10 +9,6 @@ import AdminAllProduct from '~/components/AdminProduct/AdminAllProduct';
 import ListMenu from '~/components/ListMenu/ListMenu';
 
 const AdminPage = () => {
-    const [manage, setManage] = useState(false);
-
-    const [statistical, setStatistical] = useState(false);
-
     const [showPage, setShowPage] = useState('');
 
     const Pages = () => {
@@ -30,46 +26,8 @@ const AdminPage = () => {
             <Row>
                 <Col sm={2} className="min-vh-100 py-2" style={{ backgroundColor: 'var(--primary-color)' }}>
                     <img src={logo} className="mx-auto d-block mb-4" style={{ height: '50px' }} alt="" />
-                    {/* <a
-                        href="javascript:void(0)"
-                        className="text-decoration-none text-white fs-5"
-                        onClick={() => setManage(!manage)}
-                    >
-                        <div className="px-3 mb-3">
-                            <FontAwesomeIcon icon={faClipboard} className="me-2" /> Quản lý
-                            <FontAwesomeIcon
-                                className="float-end"
-                                icon={faChevronDown}
-                                style={{ transform: manage ? 'rotate(180deg)' : '' }}
-                            />
-                        </div>
-                    </a>
-                    {manage === true && (
-                        <ul className="ms-2 h5" style={{ listStyle: 'none' }}>
-                            <li className="mb-3">
-                                <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                    quanly
-                                </a>
-                            </li>
-                            <li className="mb-3">
-                                <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                    quanly
-                                </a>
-                            </li>
-                            <li className="mb-3">
-                                <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                    quanly
-                                </a>
-                            </li>
-                        </ul>
-                    )} */}
 
-                    <ListMenu
-                        condition={manage}
-                        title="Quản lý"
-                        icon={faClipboard}
-                        handleAction={() => setManage(!manage)}
-                    >
+                    <ListMenu title="Quản lý" icon={faClipboard}>
                         <li
                             className="menu mb-1 px-3 py-2 rounded"
                             style={{ backgroundColor: showPage === 'allUser' ? 'var(--list-menu)' : '' }}
@@ -116,12 +74,7 @@ const AdminPage = () => {
                         </li>
                     </ListMenu>
 
-                    <ListMenu
-                        condition={statistical}
-                        title="Thống kê"
-                        icon={faChartPie}
-                        handleAction={() => setStatistical(!statistical)}
-                    >
+                    <ListMenu title="Thống kê" icon={faChartPie}>
                         <li className="mb-3">
                             <a className="text-decoration-none text-white" href="javascript:void(0)">
                                 quanly

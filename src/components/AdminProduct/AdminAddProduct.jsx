@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -90,6 +90,13 @@ const AdminAddProduct = ({ show, handleClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         await addProduct(data, user?.accessToken, toast);
+        setName('');
+        setImage([]);
+        setVariants([]);
+        setType('');
+        setPrice('');
+        setInformation('');
+        setDiscount('');
     };
 
     const [types, setTypes] = useState(null);
@@ -100,17 +107,7 @@ const AdminAddProduct = ({ show, handleClose }) => {
             setTypes(data);
         };
         fetchTypes();
-    }, [types]);
-
-    const [showAdd, setShowAdd] = useState(false);
-
-    const handleCloseAdd = () => {
-        setShowAdd(false);
-    };
-    const handleShowAdd = () => {
-        setShowAdd(true);
-        handleClose();
-    };
+    }, [user?.accessToken, axiosJWT]);
 
     return (
         <div>
@@ -178,17 +175,12 @@ const AdminAddProduct = ({ show, handleClose }) => {
                             <Form.Label column sm={2}>
                                 Phân loại
                             </Form.Label>
-                            <Col sm={7}>
+                            <Col sm={10}>
                                 <Form.Select aria-label="Default select example" value={type} onChange={handleType}>
                                     <option value="">---Chọn phân loại---</option>
                                     {types !== null &&
                                         types.map((item) => <option value={item._id}>{item.name}</option>)}
                                 </Form.Select>
-                            </Col>
-                            <Col sm={3}>
-                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={handleShowAdd}>
-                                    Thêm phân loại
-                                </Button>
                             </Col>
                         </Form.Group>
 
@@ -305,7 +297,6 @@ const AdminAddProduct = ({ show, handleClose }) => {
                     </Modal.Footer>
                 </Form>
             </Modal>
-            <AdminAddCategories show={showAdd} handleClose={handleCloseAdd} />
         </div>
     );
 };
