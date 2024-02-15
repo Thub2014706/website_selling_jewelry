@@ -29,7 +29,7 @@ const ListMenu = ({ children, title, icon }) => {
                 </a>
             </div>
             <ul
-                className={`mt-1 h5 ${numberClick >= 0 && click && 'list'} ${numberClick > 0 && !click && 'unlist'}`}
+                className={`mt-1 h5 ${numberClick > 0 && click && 'list'} ${numberClick > 0 && !click && 'unlist'}`}
                 style={{ maxHeight: numberClick === 0 ? '0' : '', overflow: numberClick === 0 ? 'hidden' : '' }}
             >
                 {children}

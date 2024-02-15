@@ -161,7 +161,11 @@ const AdminAllProduct = () => {
                                             <span>&#8363;</span>
                                         </td>
                                         <td className="text-center">{sumArray(product.variants)}</td>
-                                        {idType ? <td className="text-center">{idType.name}</td> : <td className='text-center'>(Không có)</td>}
+                                        {idType ? (
+                                            <td className="text-center">{idType.name}</td>
+                                        ) : (
+                                            <td className="text-center">(Không có)</td>
+                                        )}
                                         <td className="text-center">
                                             <FontAwesomeIcon
                                                 icon={faPenToSquare}

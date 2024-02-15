@@ -6,13 +6,16 @@ import logo from '~/assets/images/logo3.png';
 import AdminCategory from '~/components/AdminCategory/AdminCategory';
 import AdminOrder from '~/components/AdminOrder/AdminOrder';
 import AdminAllProduct from '~/components/AdminProduct/AdminAllProduct';
+import AllUser from '~/components/AllUser/AllUser';
 import ListMenu from '~/components/ListMenu/ListMenu';
 
 const AdminPage = () => {
     const [showPage, setShowPage] = useState('');
 
     const Pages = () => {
-        if (showPage === 'allProduct') {
+        if (showPage === 'allUser') {
+            return <AllUser />;
+        } else if (showPage === 'allProduct') {
             return <AdminAllProduct />;
         } else if (showPage === 'allOrder') {
             return <AdminOrder />;
@@ -32,7 +35,11 @@ const AdminPage = () => {
                             className="menu mb-1 px-3 py-2 rounded"
                             style={{ backgroundColor: showPage === 'allUser' ? 'var(--list-menu)' : '' }}
                         >
-                            <a className="text-decoration-none text-white" href="javascript:void(0)">
+                            <a
+                                className="text-decoration-none text-white"
+                                href="javascript:void(0)"
+                                onClick={() => setShowPage('allUser')}
+                            >
                                 Người dùng
                             </a>
                         </li>

@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '~/redux/apiRequest';
 import { createAxios } from '~/createInstance';
 import { searchProducts } from '~/redux/productSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightFromBracket, faCaretDown, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
     // localStorage.removeItem('user');
@@ -44,6 +46,16 @@ const Header = () => {
 
     const deleteSearch = () => {
         setSearch('');
+    };
+
+    const [show, setShow] = useState(false);
+
+    const handleShow = () => {
+        setShow(true);
+    };
+
+    const handleHide = () => {
+        setShow(false);
     };
 
     return (
@@ -94,7 +106,6 @@ const Header = () => {
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     {user === null ? (
                                         <Link to={`/signin`} className="text-decoration-none text-white">
-                                            {/* <img src={userImg} style={{width: '20px'}} alt="" />{' '} */}
                                             <span style={{ display: 'flex', alignItems: 'center' }}>
                                                 <ion-icon
                                                     name="person-outline"
@@ -106,31 +117,64 @@ const Header = () => {
                                         </Link>
                                     ) : (
                                         <div>
-                                            <Dropdown>
-                                                <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                                                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <ion-icon
-                                                            name="person-outline"
-                                                            size="small"
-                                                            style={{ marginRight: '4px' }}
-                                                        ></ion-icon>{' '}
-                                                        {user?.data.username}
-                                                    </span>
-                                                </Dropdown.Toggle>
-
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item>
-                                                        <Link to={`/myorder/${user.data.id}`} className='text-black text-decoration-none'>Đơn hàng của bạn</Link>
-                                                    </Dropdown.Item>
-                                                    <Dropdown.Item onClick={handleLogout}>Đăng xuất</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                            <a
+                                                href="#"
+                                                className="list-user text-white text-decoration-none"
+                                                style={{ display: 'flex', alignItems: 'center' }}
+                                                onMouseOver={handleShow}
+                                                onMouseOut={handleHide}
+                                            >
+                                                <ion-icon
+                                                    name="person-outline"
+                                                    size="small"
+                                                    style={{ marginRight: '4px' }}
+                                                ></ion-icon>
+                                                {user?.data.username}
+                                                <FontAwesomeIcon icon={faChevronDown} className="ms-2" />
+                                            </a>
+                                            {show && (
+                                                <div
+                                                    onMouseOver={handleShow}
+                                                    onMouseOut={handleHide}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        zIndex: '100',
+                                                    }}
+                                                >
+                                                    <ul
+                                                        style={{
+                                                            backgroundColor: 'white',
+                                                            listStyle: 'none',
+                                                        }}
+                                                        className="p-2 mt-2 shadow"
+                                                    >
+                                                        <li className="mb-2">
+                                                            <Link
+                                                                to={`/myorder/${user.data.id}`}
+                                                                className="text-black text-decoration-none"
+                                                            >
+                                                                Đơn hàng của bạn
+                                                            </Link>
+                                                        </li>
+                                                        <li>
+                                                            <FontAwesomeIcon
+                                                                icon={faArrowRightFromBracket}
+                                                                color="black"
+                                                            />
+                                                            <a
+                                                                href="#"
+                                                                onClick={handleLogout}
+                                                                className="ms-1 text-black text-decoration-none"
+                                                            >
+                                                                Đăng xuất
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </Col>
-                                {/* <Col>
-                                    <Button onClick={handleLogout}>Đăng xuất</Button>
-                                </Col> */}
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>
                                     <Link to={'/cart'} className="text-decoration-none text-white">
                                         <span style={{ display: 'flex', alignItems: 'center' }}>
