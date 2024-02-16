@@ -118,7 +118,7 @@ const Header = () => {
                                     ) : (
                                         <div>
                                             <a
-                                                href="#"
+                                                href="javascript:void(0)"
                                                 className="list-user text-white text-decoration-none"
                                                 style={{ display: 'flex', alignItems: 'center' }}
                                                 onMouseOver={handleShow}
@@ -146,7 +146,7 @@ const Header = () => {
                                                             backgroundColor: 'white',
                                                             listStyle: 'none',
                                                         }}
-                                                        className="p-2 mt-2 shadow"
+                                                        className="p-3 mt-2 shadow"
                                                     >
                                                         <li className="mb-2">
                                                             <Link
@@ -156,13 +156,23 @@ const Header = () => {
                                                                 Đơn hàng của bạn
                                                             </Link>
                                                         </li>
+                                                        {user.data.isAdmin && (
+                                                            <li className="mb-2">
+                                                                <Link
+                                                                    to={'/admin'}
+                                                                    className="text-black text-decoration-none"
+                                                                >
+                                                                    Quản lý
+                                                                </Link>
+                                                            </li>
+                                                        )}
                                                         <li>
                                                             <FontAwesomeIcon
                                                                 icon={faArrowRightFromBracket}
                                                                 color="black"
                                                             />
                                                             <a
-                                                                href="#"
+                                                                href="javascript:void(0)"
                                                                 onClick={handleLogout}
                                                                 className="ms-1 text-black text-decoration-none"
                                                             >

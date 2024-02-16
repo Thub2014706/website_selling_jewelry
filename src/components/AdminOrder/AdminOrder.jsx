@@ -39,8 +39,6 @@ const AdminOrder = () => {
         setOrderShow(data);
     };
 
-    console.log(addresses);
-
     const handleClose = () => setShow(false);
 
     return (

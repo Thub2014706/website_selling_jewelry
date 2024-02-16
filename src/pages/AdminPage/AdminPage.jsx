@@ -1,13 +1,16 @@
-import { faChartPie, faChevronDown, faChevronUp, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faChevronDown, faChevronUp, faClipboard, faFilePen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Accordion, Button, Card, Col, Container, Dropdown, ListGroup, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import logo from '~/assets/images/logo3.png';
 import AdminCategory from '~/components/AdminCategory/AdminCategory';
 import AdminOrder from '~/components/AdminOrder/AdminOrder';
 import AdminAllProduct from '~/components/AdminProduct/AdminAllProduct';
 import AllUser from '~/components/AllUser/AllUser';
+import HandleOrder from '~/components/HandleOrder/HandleOrder';
 import ListMenu from '~/components/ListMenu/ListMenu';
+import MenuSelect from '~/components/MenuSelect/MenuSelect';
 
 const AdminPage = () => {
     const [showPage, setShowPage] = useState('');
@@ -21,6 +24,8 @@ const AdminPage = () => {
             return <AdminOrder />;
         } else if (showPage === 'categories') {
             return <AdminCategory />;
+        } else if (showPage === 'handleOrder') {
+            return <HandleOrder />;
         }
     };
 
@@ -28,8 +33,11 @@ const AdminPage = () => {
         <Container fluid>
             <Row>
                 <Col sm={2} className="min-vh-100 py-2" style={{ backgroundColor: 'var(--primary-color)' }}>
-                    <img src={logo} className="mx-auto d-block mb-4" style={{ height: '50px' }} alt="" />
+                    <Link to={'/'}>
+                        <img src={logo} className="mx-auto d-block mb-4" style={{ height: '50px' }} alt="" />
+                    </Link>
 
+                    {/* Quản lý */}
                     <ListMenu title="Quản lý" icon={faClipboard}>
                         <li
                             className="menu mb-1 px-3 py-2 rounded"
@@ -81,6 +89,14 @@ const AdminPage = () => {
                         </li>
                     </ListMenu>
 
+                    {/* Xử lý đơn hàng */}
+                    <MenuSelect
+                        title="Xử lý đơn hàng"
+                        handleClick={() => setShowPage('handleOrder')}
+                        styleMenu={{ backgroundColor: showPage === 'handleOrder' ? 'var(--list-menu)' : '' }}
+                    />
+
+                    {/* Thống kê */}
                     <ListMenu title="Thống kê" icon={faChartPie}>
                         <li className="mb-3">
                             <a className="text-decoration-none text-white" href="javascript:void(0)">
