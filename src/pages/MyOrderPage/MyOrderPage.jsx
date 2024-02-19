@@ -207,17 +207,6 @@ const MyOrderPage = () => {
                                     </Button>
                                 </div>
                             )}
-                            <ModalSelect
-                                show={show}
-                                text="Bạn có chắc muốn hủy đơn hàng này"
-                                accept="Hủy đơn"
-                                cancel="Thoát"
-                                handleAction={handleCancel}
-                                handleClose={handleClose}
-                            />
-                            {idComment && (
-                                <AddComment id={idComment} show={showComment} handleClose={handleCloseComment} />
-                            )}
                         </Container>
                     ))
                 ) : (
@@ -233,6 +222,15 @@ const MyOrderPage = () => {
             ) : (
                 <p>Loading...</p>
             )}
+            <ModalSelect
+                show={show}
+                text="Bạn có chắc muốn hủy đơn hàng này"
+                accept="Hủy đơn"
+                cancel="Thoát"
+                handleAction={handleCancel}
+                handleClose={handleClose}
+            />
+            {idComment && <AddComment id={idComment} show={showComment} handleClose={handleCloseComment} />}
         </div>
     );
 };

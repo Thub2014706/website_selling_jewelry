@@ -34,7 +34,7 @@ const AdminUpdateProduct = ({ show, handleClose, id }) => {
             setDiscount(data.discount);
         };
         fetchProductDetail();
-    }, [id]);
+    }, [id, show]);
 
     const addLink = () => {
         const link = [...image, ''];

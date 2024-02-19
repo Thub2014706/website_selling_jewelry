@@ -41,6 +41,13 @@ const AdminAddCategories = ({ show, handleClose }) => {
         await createType(data, user?.accessToken, axiosJWT, toast);
     };
 
+    useEffect(() => {
+        if (!show) {
+            setName('');
+            setFather('');
+        }
+    }, [show]);
+
     return (
         <div>
             <Modal show={show} centered onHide={handleClose}>

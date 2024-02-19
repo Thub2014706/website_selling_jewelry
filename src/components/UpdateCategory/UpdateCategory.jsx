@@ -30,7 +30,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
             setFather(dataUpdate.father);
         };
         fetchTypes();
-    }, [id]);
+    }, [id, show]);
     // console.log(father)
 
     const handleFather = (e) => {
