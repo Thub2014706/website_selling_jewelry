@@ -24,11 +24,10 @@ const AddComment = ({ id, show, handleClose }) => {
         const fetchOrder = async () => {
             const data = await orderDetail(axiosJWT, id, user?.accessToken);
             setOrder(data);
-            setShortComment(shortComment.fill(''))
+            setShortComment(shortComment.fill(''));
         };
         fetchOrder();
     }, [id]);
-
 
     const handleComment = (e, i) => {
         const copy = [...shortComment];
@@ -36,10 +35,9 @@ const AddComment = ({ id, show, handleClose }) => {
         setShortComment(copy);
     };
 
-
     const onStar = (i, number) => {
-        const copy = [...star]
-        copy[i] = number
+        const copy = [...star];
+        copy[i] = number;
         setStar(copy);
     };
 
@@ -67,7 +65,10 @@ const AddComment = ({ id, show, handleClose }) => {
                         {order !== null &&
                             order.cart.map((item, index) => {
                                 data.push({
-                                    user: user?.accessToken,
+                                    user: {
+                                        iduser: user?.accessToken,
+                                        username: user?.data.username,
+                                    },
                                     order: id,
                                     product: item.idProduct,
                                     shortComment: shortComment[index],
@@ -75,15 +76,15 @@ const AddComment = ({ id, show, handleClose }) => {
                                 });
 
                                 return (
-                                    <div key={item._id} className='mb-2'>
-                                        <span>
-                                            <img src={item.image} style={{ height: '50px' }} alt="" />
-                                            <p>{item.name}</p>
+                                    <div key={item._id} className="mb-2">
+                                        <span className='d-flex mb-2'>
+                                            <img src={item.image} className='me-2' style={{ height: '50px' }} alt="" />
+                                            <p className='mt-2'>{item.name}</p>
                                         </span>
-                                        <p style={{ display: 'inline-block' }}>
-                                            Đánh giá sao:
+                                        <span className='d-flex'>
+                                            <p className='me-2'>Đánh giá sao:</p>
                                             <HandleStar key={index} value={(val) => onStar(index, val)} />
-                                        </p>
+                                        </span>
                                         <Form.Control
                                             as="textarea"
                                             value={shortComment[index]}

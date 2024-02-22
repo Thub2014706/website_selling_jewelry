@@ -56,7 +56,7 @@ const CheckoutPage = () => {
                             image: element.product.image[0],
                             size: element.idSize.size,
                             price: element.product.price,
-                            priceMain: element.product.price * (1- element.product.discount / 100),
+                            priceMain: element.product.price * (1 - element.product.discount / 100),
                             priceBuy: element.totalPriceItem,
                             quantity: element.cartQuantity,
                             idVariant: element.idSize._id,
@@ -73,7 +73,7 @@ const CheckoutPage = () => {
             }
         };
         fetchAddress();
-    }, [allAddress, handleCloseAll]);
+    }, [allAddress, handleCloseAll, showAddress]);
     // console.log(showAddress);
 
     const total = useSelector((state) => state.cart.totalPay);
@@ -113,7 +113,12 @@ const CheckoutPage = () => {
                                         Thay đổi
                                     </a>
                                 </p>
-                                <AllAddress idSelect={handleSelect} show={showAll} handleCloseAll={handleCloseAll} />
+                                <AllAddress
+                                    idSelect={handleSelect}
+                                    show={showAll}
+                                    handleCloseAll={handleCloseAll}
+                                    selectMain={showAddress._id}
+                                />
                             </div>
                         ) : (
                             <div>

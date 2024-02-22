@@ -105,9 +105,18 @@ const AdminAddProduct = ({ show, handleClose }) => {
         const fetchTypes = async () => {
             const data = await allType(user?.accessToken, axiosJWT);
             setTypes(data);
+            if (!show) {
+                setName('');
+                setImage([]);
+                setVariants([]);
+                setType('');
+                setPrice('');
+                setInformation('');
+                setDiscount('');
+            }
         };
         fetchTypes();
-    }, [user?.accessToken, axiosJWT]);
+    }, [user?.accessToken, axiosJWT, show]);
 
     return (
         <div>

@@ -9,6 +9,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import parse from 'html-react-parser';
 import { productDetail } from '~/services/ProductService';
+import { allCommentByProduct } from '~/services/CommentService';
+import { createAxios } from '~/createInstance';
+import Star from '../Star/Star';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
@@ -17,12 +20,16 @@ const ProductDetails = () => {
 
     const navigate = useNavigate();
 
+    const [comments, setComments] = useState(null);
+
     // lấy thông tin chi tiết sp
     const [product, setProduct] = useState(null);
     useEffect(() => {
         const fetchProductDetail = async () => {
-            const data = await productDetail(id);
-            setProduct(data);
+            const dataProduct = await productDetail(id);
+            setProduct(dataProduct);
+            const dataComment = await allCommentByProduct(id);
+            setComments(dataComment);
         };
         fetchProductDetail();
     }, [id]);
@@ -162,7 +169,19 @@ const ProductDetails = () => {
         setNumber(1);
         setSizeValue(i);
     };
-    console.log('sdfghjkl;', sizeValue);
+    console.log('sdfghjkl;', comments);
+
+    // const avgStar = () => {
+    //     if (comments !== null) {
+    //         let sum = 0;
+    //         let i = 0;
+    //         comments.map((item) => {
+    //             sum += item.star;
+    //             i += 1;
+    //         });
+    //         return sum / i;
+    //     }
+    // };
 
     return (
         <div>
@@ -187,6 +206,11 @@ const ProductDetails = () => {
 
                         <Col md={6} className="mt-5 ps-5">
                             <h2>{product.name}</h2>
+                            {/* <span className="d-flex">
+                                <h5 className='me-2 text-reset' style={{ color: 'var(--font-color)' }}>{avgStar()}</h5>
+                                <Star number={Math.round(avgStar())} />
+                                <h5 className='ms-2' style={{ color: 'var(--list-menu)' }}>({comments.length} đánh giá)</h5>
+                            </span> */}
                             <h5>Đã bán: {product.selled}</h5>
                             <div className="my-4">
                                 {product.discount !== 0 && (
@@ -280,7 +304,31 @@ const ProductDetails = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <div>{parse(product.information)}</div>
+                        <Col>
+                            <h3 className='text-center fst-italic'>Thông tin sản phẩm</h3>
+                            <div>{parse(product.information)}</div>
+                        </Col>
+                    {/* </Row>
+                    <Row> */}
+                        <Col>
+                            <h3 className='text-center fst-italic'>Đánh giá sản phẩm</h3>
+                            {comments !== null && comments.length > 0 ? (
+                                <div>
+                                    <h5 style={{ color: 'var(--font-color)' }}>{comments.length} đánh giá</h5>
+                                    {comments.map((item) => (
+                                        <div>
+                                            <span className="d-flex">
+                                                <h5 className="me-2">{item.user.username}</h5>
+                                                <Star number={item.star} />
+                                            </span>
+                                            <p>{item.shortComment}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <h5 className='text-center'>Chưa có đánh giá nào</h5>
+                            )}
+                        </Col>
                     </Row>
                 </Container>
             ) : (

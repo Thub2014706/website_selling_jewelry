@@ -33,13 +33,16 @@ const AdminOrder = () => {
 
     const [orderShow, setOrderShow] = useState(null);
 
-    const handleShow = async (id) => {
+    const [idShipping, setIdShipping] = useState(null);
+    const handleShow = async (idItem, idShip) => {
+        setIdShipping(idShip)
         setShow(true);
-        const data = await orderDetail(axiosJWT, id, user?.accessToken);
+        const data = await orderDetail(axiosJWT, idItem, user?.accessToken);
         setOrderShow(data);
     };
 
     const handleClose = () => setShow(false);
+
 
     return (
         <div>
@@ -76,16 +79,8 @@ const AdminOrder = () => {
                                     </td>
                                     <td>{item.status}</td>
                                     <td>
-                                        <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item._id)} />
+                                        <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item._id, idAddress)} />
                                     </td>
-                                    {orderShow && (
-                                        <OrderDetail
-                                            show={show}
-                                            handleClose={handleClose}
-                                            orderShow={orderShow}
-                                            shipping={idAddress}
-                                        />
-                                    )}
                                 </tr>
                             );
                         })}
@@ -93,6 +88,9 @@ const AdminOrder = () => {
                 </Table>
             ) : (
                 <p>Loading...</p>
+            )}
+            {orderShow && (
+                <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} shipping={idShipping} />
             )}
         </div>
     );

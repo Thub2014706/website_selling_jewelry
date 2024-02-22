@@ -14,6 +14,7 @@ const cartSlice = createSlice({
             const itemIndex = state.cartItems.findIndex((item) => item.idSize._id === action.payload.idSize._id);
             if (itemIndex >= 0) {
                 state.cartItems[itemIndex].cartQuantity += action.payload.cartQuantity;
+                state.cartItems[itemIndex].totalPriceItem += action.payload.cartQuantity * action.payload.totalPriceItem
             } else {
                 const tempProduct = action.payload;
                 state.cartItems.push(tempProduct);

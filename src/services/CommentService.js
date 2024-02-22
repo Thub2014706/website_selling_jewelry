@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const createComment = async (axiosJWT, token, data, id, toast) => {
     try {
         await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/comment/add-comment/${id}`, data, {
@@ -27,5 +29,36 @@ export const createComment = async (axiosJWT, token, data, id, toast) => {
             progress: undefined,
             theme: 'light',
         });
+    }
+}
+
+export const detailComment = async (axiosJWT, token, id) => {
+    try {
+        const response =  await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/comment/detail-comment/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const allCommentByUser = async (axiosJWT, token, id) => {
+    try {
+        const response =  await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/comment/all-comment-by-user/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const allCommentByProduct = async (id) => {
+    try {
+        const response =  await axios.get(`${process.env.REACT_APP_API_URL}/api/comment/all-comment-by-product/${id}`);
+        return response.data
+    } catch (error) {
+        console.log(error);
     }
 }

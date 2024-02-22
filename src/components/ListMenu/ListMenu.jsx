@@ -14,23 +14,27 @@ const ListMenu = ({ children, title, icon }) => {
 
     return (
         <div className="px-1">
-            <div className="py-2 px-3 rounded menu">
-                <a
-                    href="javascript:void(0)"
-                    className="text-decoration-none text-white fs-5"
-                    onClick={() => {
-                        handleClick();
-                    }}
-                >
+            <a
+                href="javascript:void(0)"
+                className="text-decoration-none text-white fs-5"
+                onClick={() => {
+                    handleClick();
+                }}
+            >
+                <div className="py-2 px-3 rounded menu">
                     <div>
                         <FontAwesomeIcon icon={icon} className="me-2" /> {title}
                         <FontAwesomeIcon className={`float-end mt-1 ${click ? 'down' : 'up'}`} icon={faAngleRight} />
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
             <ul
                 className={`mt-1 h5 ${numberClick > 0 && click && 'list'} ${numberClick > 0 && !click && 'unlist'}`}
-                style={{ maxHeight: numberClick === 0 ? '0' : '', overflow: numberClick === 0 ? 'hidden' : '' }}
+                style={{
+                    listStyle: 'none',
+                    maxHeight: numberClick === 0 ? '0' : '',
+                    overflow: numberClick === 0 ? 'hidden' : '',
+                }}
             >
                 {children}
             </ul>

@@ -6,7 +6,7 @@ import { getAllByUser } from '~/services/AddressService';
 import UpdateAdress from '../UpdateAddress/UpdateAddress';
 import AddAdress from '../AddAddress/AddAddress';
 
-const AllAddress = ({ idSelect, show, handleCloseAll }) => {
+const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
 
@@ -40,18 +40,22 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
         setSelect(id);
     };
 
+    const handleCancel = () => {
+        // handleCloseAll()
+        setSelect(selectMain)
+    }
+
     useEffect(() => {
         const fetchAll = async () => {
             const data = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
             setAllAddress(data);
-            const main = data.find((item) => item.main === true);
+            // const main = data.find((item) => item.main === true);
             if (select === null) {
-                setSelect(main._id);
+                setSelect(selectMain);
             }
         };
         fetchAll();
     }, [handleCloseUpdate, handleCloseAdd]);
-
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -109,7 +113,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll }) => {
                         <Button
                             className="rounded-0 px-4"
                             variant='outline-dark'
-                            onClick={handleCloseAll}
+                            onClick={() => {handleCancel(); handleCloseAll()}}
                         >
                             Huỷ
                         </Button>

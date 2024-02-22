@@ -39,54 +39,54 @@ const AdminPage = () => {
 
                     {/* Quản lý */}
                     <ListMenu title="Quản lý" icon={faClipboard}>
-                        <li
-                            className="menu mb-1 px-3 py-2 rounded"
-                            style={{ backgroundColor: showPage === 'allUser' ? 'var(--list-menu)' : '' }}
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('allUser')}
                         >
-                            <a
-                                className="text-decoration-none text-white"
-                                href="javascript:void(0)"
-                                onClick={() => setShowPage('allUser')}
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'allUser' ? 'var(--list-menu)' : '' }}
                             >
                                 Người dùng
-                            </a>
-                        </li>
-                        <li
-                            className="menu mb-1 px-3 py-2 rounded"
-                            style={{ backgroundColor: showPage === 'allProduct' ? 'var(--list-menu)' : '' }}
+                            </li>
+                        </a>
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('allProduct')}
                         >
-                            <a
-                                className="text-decoration-none text-white"
-                                href="javascript:void(0)"
-                                onClick={() => setShowPage('allProduct')}
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'allProduct' ? 'var(--list-menu)' : '' }}
                             >
                                 Sản phẩm
-                            </a>
-                        </li>
-                        <li
-                            className="menu mb-1 px-3 py-2 rounded"
-                            style={{ backgroundColor: showPage === 'allOrder' ? 'var(--list-menu)' : '' }}
+                            </li>
+                        </a>
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('allOrder')}
                         >
-                            <a
-                                className="text-decoration-none text-white"
-                                href="javascript:void(0)"
-                                onClick={() => setShowPage('allOrder')}
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'allOrder' ? 'var(--list-menu)' : '' }}
                             >
                                 Đơn hàng
-                            </a>
-                        </li>
-                        <li
-                            className="menu mb-1 px-3 py-2 rounded"
-                            style={{ backgroundColor: showPage === 'categories' ? 'var(--list-menu)' : '' }}
+                            </li>
+                        </a>
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('categories')}
                         >
-                            <a
-                                className="text-decoration-none text-white"
-                                href="javascript:void(0)"
-                                onClick={() => setShowPage('categories')}
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'categories' ? 'var(--list-menu)' : '' }}
                             >
                                 Danh mục
-                            </a>
-                        </li>
+                            </li>
+                        </a>
                     </ListMenu>
 
                     {/* Xử lý đơn hàng */}

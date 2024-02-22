@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import AddComment from '~/components/AddComment/AddComment';
+import { allCommentByUser } from '~/services/CommentService';
+import ButtonStatus from '~/components/ButtonStatus/ButtonStatus';
 
 const MyOrderPage = () => {
     const { id } = useParams();
@@ -23,10 +25,15 @@ const MyOrderPage = () => {
 
     const [select, setSelect] = useState('all');
 
+    const [comments, setComments] = useState(null);
+
     useEffect(() => {
         const fetchOrder = async () => {
             const data = await allOrderByUser(axiosJWT, id, user?.accessToken);
             setAllOrder(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+            const dataComment = await allCommentByUser(axiosJWT, user?.accessToken, id);
+            setComments(dataComment);
+            // console.log(dataComment)
         };
         fetchOrder();
     }, [allOrder]);
@@ -134,7 +141,7 @@ const MyOrderPage = () => {
                     </Col>
                 </Row>
             </Container>
-            {allOrder !== null ? (
+            {allOrder !== null && comments !== null ? (
                 Pages().length > 0 ? (
                     Pages().map((item) => (
                         <Container className="shadow px-5 py-3 mt-4">
@@ -179,34 +186,17 @@ const MyOrderPage = () => {
                                 </span>
                             </h5>
                             {item.status === 'Đang xử lý' && (
-                                <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <Button
-                                        className="rounded-0 px-5"
-                                        variant="outline-dark"
-                                        onClick={() => handleShow(item._id)}
-                                    >
-                                        Huỷ đơn
-                                    </Button>
-                                </div>
+                                <ButtonStatus title="Huỷ đơn" handleButton={() => handleShow(item._id)} />
                             )}
-                            {item.status === 'Đang vận chuyển' && (
-                                <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <Button className="rounded-0 px-5" variant="outline-dark">
-                                        Đã nhận hàng
-                                    </Button>
-                                </div>
-                            )}
-                            {item.status === 'Đã giao' && (
-                                <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <Button
-                                        className="rounded-0 px-5"
-                                        variant="outline-dark"
-                                        onClick={() => handleShowComment(item._id)}
-                                    >
-                                        Đánh giá
-                                    </Button>
-                                </div>
-                            )}
+                            {item.status === 'Đang vận chuyển' && <ButtonStatus title="Đã nhận hàng" />}
+                            {item.status === 'Đã giao' &&
+                                (!comments.find((miniItem) => miniItem.order === item._id) ? (
+                                    <ButtonStatus title="Đánh giá" handleButton={() => handleShowComment(item._id)} />
+                                ) : (
+                                    <div className="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <h5 className="text-danger">Đã đánh giá</h5>
+                                    </div>
+                                ))}
                         </Container>
                     ))
                 ) : (
