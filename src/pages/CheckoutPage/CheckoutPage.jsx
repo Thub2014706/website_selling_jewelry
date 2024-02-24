@@ -39,9 +39,13 @@ const CheckoutPage = () => {
     const handleShow = () => setShow(true);
 
     const [showAll, setShowAll] = useState(false);
+    const [idSelect, setIdSelect] = useState(null);
 
     const handleCloseAll = () => setShowAll(false);
-    const handleShowAll = () => setShowAll(true);
+    const handleShowAll = (id) => {
+        setIdSelect(id)
+        setShowAll(true);
+    };
 
     useEffect(() => {
         const fetchAddress = async () => {
@@ -109,16 +113,10 @@ const CheckoutPage = () => {
                                     {showAddress.name}, {showAddress.phone} <br /> {showAddress.address},{' '}
                                     {showAddress.ward}, {showAddress.district}, {showAddress.province}
                                     {showAddress.main === true && <span className="ms-2 text-danger">Mặc định</span>}
-                                    <a href="#" onClick={handleShowAll} className="ms-3">
+                                    <a href="#" onClick={() => handleShowAll(showAddress._id)} className="ms-3">
                                         Thay đổi
                                     </a>
                                 </p>
-                                <AllAddress
-                                    idSelect={handleSelect}
-                                    show={showAll}
-                                    handleCloseAll={handleCloseAll}
-                                    selectMain={showAddress._id}
-                                />
                             </div>
                         ) : (
                             <div>
@@ -177,6 +175,14 @@ const CheckoutPage = () => {
                     </Col>
                 </Row>
             </Container>
+            {idSelect && (
+                <AllAddress
+                    idSelect={handleSelect}
+                    show={showAll}
+                    handleCloseAll={handleCloseAll}
+                    selectMain={showAddress._id}
+                />
+            )}
         </div>
     );
 };

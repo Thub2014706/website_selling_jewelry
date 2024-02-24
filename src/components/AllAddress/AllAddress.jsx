@@ -17,22 +17,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
     const [showUpdate, setShowUpdate] = useState(false);
     const [idShow, setIdShow] = useState(null);
 
-    const handleCloseUpdate = () => setShowUpdate(false);
-    const handleShowUpdate = (id) => {
-        setShowUpdate(true);
-        setIdShow(id);
-        handleCloseAll();
-    };
-
     const [showAdd, setShowAdd] = useState(false);
-
-    const handleCloseAdd = () => {
-        setShowAdd(false);
-    };
-    const handleShowAdd = () => {
-        setShowAdd(true);
-        handleCloseAll();
-    };
 
     const [select, setSelect] = useState(null);
 
@@ -42,8 +27,29 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
 
     const handleCancel = () => {
         // handleCloseAll()
-        setSelect(selectMain)
-    }
+        setSelect(selectMain);
+    };
+
+    const handleCloseAdd = () => {
+        setSelect(null);
+        setShowAdd(false);
+    };
+
+    const handleShowAdd = () => {
+        setShowAdd(true);
+        handleCloseAll();
+        setSelect(null);
+    };
+    const handleCloseUpdate = () => {
+        setSelect(null);
+        setShowUpdate(false);
+    };
+    const handleShowUpdate = (id) => {
+        setShowUpdate(true);
+        setIdShow(id);
+        handleCloseAll();
+        setSelect(null);
+    };
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -55,13 +61,13 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
             }
         };
         fetchAll();
-    }, [handleCloseUpdate, handleCloseAdd]);
-    
+    }, [allAdress, selectMain, handleCloseUpdate, handleCloseAdd]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         idSelect(select);
-        // console.log(showAdd)
     };
+    console.log(select);
 
     return (
         <div>
@@ -112,8 +118,11 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
                     <Modal.Footer>
                         <Button
                             className="rounded-0 px-4"
-                            variant='outline-dark'
-                            onClick={() => {handleCancel(); handleCloseAll()}}
+                            variant="outline-dark"
+                            onClick={() => {
+                                handleCancel();
+                                handleCloseAll();
+                            }}
                         >
                             Huỷ
                         </Button>

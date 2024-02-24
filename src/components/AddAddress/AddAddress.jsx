@@ -88,7 +88,7 @@ const AddAdress = ({ show, handleClose }) => {
             setAllAddress(addresses);
         };
         fetchAddress();
-    }, []);
+    }, [allAddress]);
 
     return (
         <Modal centered backdrop="static" show={show} handleClose={handleClose}>
