@@ -67,7 +67,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
         e.preventDefault();
         idSelect(select);
     };
-    console.log(select);
+    // console.log(select);
 
     return (
         <div>

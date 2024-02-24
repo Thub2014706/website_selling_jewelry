@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal, ToastContainer } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import HandleStar from '../HandleStar/HandleStar';
 import { orderDetail } from '~/services/OrderService';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '~/createInstance';
 import { createComment } from '~/services/CommentService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddComment = ({ id, show, handleClose }) => {
