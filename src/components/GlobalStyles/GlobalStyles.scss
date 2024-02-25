@@ -86,14 +86,6 @@ body {
     background-size: cover;
 }
 
-.shop-now {
-    color: #ffffff;
-}
-
-.shop-now:hover {
-    color: #9a702a;
-}
-
 .menu:hover {
     background-color: var(--list-menu);
 }
@@ -162,60 +154,4 @@ body {
     }
 }
 
-.button-shop-now {
-    animation-name: shopNowMotion;
-    animation-duration: 1.2s; /* Đảm bảo thời gian animation tương đồng với listMenuDown */
-    animation-fill-mode: forwards;
-    animation-timing-function: ease;
-}
 
-@keyframes shopNowMotion {
-    0% {
-        bottom: 0;
-    }
-    100% {
-        bottom: 20%;
-    }
-}
-
-.title-shop-now {
-    animation-name: titleMotion;
-    animation-duration: 1.2s; /* Đảm bảo thời gian animation tương đồng với listMenuDown */
-    animation-fill-mode: forwards;
-    animation-timing-function: ease;
-}
-
-@keyframes titleMotion {
-    0% {
-        top: 0;
-    }
-    100% {
-        top: 30%;
-    }
-}
-
-.brand-new {
-    animation-name: brandMotion;
-    animation-duration: 1.2s; /* Đảm bảo thời gian animation tương đồng với listMenuDown */
-    animation-fill-mode: forwards;
-    animation-timing-function: ease;
-}
-
-@keyframes brandMotion {
-    0% {
-        font-size: 0;
-    }
-    100% {
-        font-size: 100px;
-    }
-}
-
-.thingiem {
-    position: absolute;
-
-    // width: '200px',
-    // height: '50px',
-    bottom: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}

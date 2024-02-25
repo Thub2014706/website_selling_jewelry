@@ -2,14 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Banner from '~/components/Banner/Banner';
 import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { allProduct } from '~/services/ProductService';
 import imgshopnow from '~/assets/images/imgshopnow.svg';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { removeSearch } from '~/redux/productSlice';
+import { useDispatch } from 'react-redux';
 
 const HomePage = () => {
     const [products, setProducts] = useState(null);
+
+    const navigate = useNavigate()
+
+    const dispatch = useDispatch();
 
     const bestSellers = () => {
         if (products !== null) {
@@ -25,6 +31,11 @@ const HomePage = () => {
         };
         fetchAllProduct();
     }, [AOS]);
+
+    const shopNow = () => {
+        dispatch(removeSearch());
+        navigate('/shop')
+    }
 
     return (
         <div style={{ position: 'relative', width: '100%' }}>
@@ -98,27 +109,29 @@ const HomePage = () => {
                                 transform: 'translate(-50%, -50%)',
                             }}
                         >
-                            <Button
-                                data-aos="fade-up"
-                                variant="outline-light"
-                                className="fst-italic rounded-pill"
-                                style={{
-                                    width: '200px',
-                                    height: '50px',
-                                }}
-                            >
-                                <h2 className="shop-now">Shop now</h2>
-                            </Button>
+                            {/* <Link to={'/shop'}> */}
+                                <Button
+                                    data-aos="fade-up"
+                                    variant="outline-light"
+                                    className="fst-italic rounded-pill"
+                                    style={{
+                                        width: '200px',
+                                        height: '50px',
+                                    }}
+                                    onClick={shopNow}
+                                >
+                                    <h2>Shop Now</h2>
+                                </Button>
+                            {/* </Link> */}
                         </div>
                     </div>
-                    {/* )} */}
                 </div>
             ) : (
                 <p>Loading...</p>
             )}
 
             {products !== null ? (
-                <Container>
+                <Container style={{zIndex: 100}}>
                     <Row>
                         {products.map((product, index) => (
                             <Col md={3} key={product._id}>
@@ -137,7 +150,6 @@ const HomePage = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            {/* </Container> */}
         </div>
     );
 };

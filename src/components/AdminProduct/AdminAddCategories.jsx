@@ -38,7 +38,10 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const handleAdd = async (e) => {
         e.preventDefault();
-        await createType(data, user?.accessToken, axiosJWT, toast);
+        const add = await createType(data, user?.accessToken, axiosJWT, toast);
+        if (add === 200) {
+            handleClose()
+        }
     };
 
     useEffect(() => {
@@ -64,6 +67,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Nhập tên phân loại mới"
+                                required
                             />
                         </Form.Group>
                         <Form.Select
@@ -85,7 +89,6 @@ const AdminAddCategories = ({ show, handleClose }) => {
                         <Button
                             className="px-4 rounded-0"
                             style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
-                            onClick={handleClose}
                             type="submit"
                         >
                             Thêm

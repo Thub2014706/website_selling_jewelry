@@ -89,14 +89,10 @@ const AdminAddProduct = ({ show, handleClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await addProduct(data, user?.accessToken, toast);
-        setName('');
-        setImage([]);
-        setVariants([]);
-        setType('');
-        setPrice('');
-        setInformation('');
-        setDiscount('');
+        const add = await addProduct(data, user?.accessToken, toast);
+        if (add === 200) {
+            handleClose()
+        }
     };
 
     const [types, setTypes] = useState(null);
@@ -298,7 +294,6 @@ const AdminAddProduct = ({ show, handleClose }) => {
                         <Button
                             className="px-4 rounded-0"
                             style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
-                            onClick={handleClose}
                             type="submit"
                         >
                             Thêm

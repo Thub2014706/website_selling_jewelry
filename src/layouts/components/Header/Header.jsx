@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import logo from '~/assets/images/logo3.png';
 import { Container, Row, Col, Navbar, Nav, Dropdown } from 'react-bootstrap';
 import Search from '../Search/Search';
-import TextStatus from '../TextStatus/TextStatus';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '~/redux/apiRequest';
 import { createAxios } from '~/createInstance';
-import { searchProducts } from '~/redux/productSlice';
+import { removeSearch, searchProducts } from '~/redux/productSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faCaretDown, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -37,11 +36,13 @@ const Header = () => {
             e.preventDefault();
             dispatch(searchProducts(search));
             navigate(`/search/${search}`);
+            // dispatch(removeSearch());
         }
     };
     const handleSearch = () => {
         dispatch(searchProducts(search));
         navigate(`/search/${search}`);
+        // dispatch(removeSearch());
     };
 
     const deleteSearch = () => {
@@ -59,17 +60,16 @@ const Header = () => {
     };
 
     return (
-        <div>
-            <TextStatus />
-            <Container fluid className="p-2" style={{ backgroundColor: 'var(--primary-color)' }}>
-                <Container>
-                    <Row>
+        <div style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+            <Container fluid className="py-2" style={{ backgroundColor: 'var(--primary-color)' }}>
+                <div>
+                    <Row className='px-3'>
                         <Col md="1">
                             <Link to={'/'}>
-                                <img src={logo} style={{ height: '50px' }} alt="" />
+                                <img src={logo} style={{ height: '45px' }} alt="" />
                             </Link>
                         </Col>
-                        <Col md="7">
+                        <Col md="6">
                             <Navbar sticky="top" expand="lg" className="text-white">
                                 <Navbar.Collapse>
                                     <Nav className="ms-4">
@@ -93,8 +93,8 @@ const Header = () => {
                                 </Navbar.Collapse>
                             </Navbar>
                         </Col>
-                        <Col md="4">
-                            <Row>
+                        <Col md="5">
+                            <Row className='float-end me-3'>
                                 <Search
                                     color="white"
                                     search={search}
@@ -206,7 +206,7 @@ const Header = () => {
                             </Row>
                         </Col>
                     </Row>
-                </Container>
+                </div>
             </Container>
         </div>
     );

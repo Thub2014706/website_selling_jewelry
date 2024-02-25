@@ -52,7 +52,7 @@ export const updateProduct = async (data, id, token, toast) => {
 
 export const addProduct = async (data, token, toast) => {
     try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         toast('Thêm sản phẩm thành công', {
@@ -66,9 +66,10 @@ export const addProduct = async (data, token, toast) => {
             progress: undefined,
             theme: 'light',
         });
+        return response.status
     } catch (error) {
         console.log(error);
-        toast('Không thể thêm', {
+        toast(error.response.data.message, {
             position: 'top-center',
             autoClose: 2000,
             type: 'error',
@@ -117,7 +118,7 @@ export const deleteProduct = async (id, token, toast, axiosJWT) => {
 
 export const createType = async (data, token, axiosJWT, toast) => {
     try {
-        await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/product/create-type`, data, {
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/product/create-type`, data, {
             headers: { authorization: `Bearer ${token}` },
         });
         toast('Thêm phân loại thành công', {
@@ -131,9 +132,10 @@ export const createType = async (data, token, axiosJWT, toast) => {
             progress: undefined,
             theme: 'light',
         });
+        return response.status
     } catch (error) {
-        console.log(error);
-        toast('Không thể thêm', {
+        console.log(error.response);
+        toast(error.response.data.message, {
             position: 'top-center',
             autoClose: 2000,
             type: 'error',

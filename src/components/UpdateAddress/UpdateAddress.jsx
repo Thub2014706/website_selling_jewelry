@@ -44,7 +44,6 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                 setPhone(data.phone);
                 setCheck(data.main);
                 setUnchanged(data.main);
-                console.log(data);
             }
         };
         fetchAddress();

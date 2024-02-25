@@ -9,8 +9,11 @@ const productSlice = createSlice({
         searchProducts: (state, action) => {
             state.search = action.payload;
         },
+        removeSearch: (state) => {
+            state.search = '';
+        }
     },
 });
 
-export const { searchProducts } = productSlice.actions;
+export const { searchProducts, removeSearch } = productSlice.actions;
 export default productSlice.reducer;

@@ -39,11 +39,11 @@ const Search = ({ color, search, searchInput, handleSearch, handleKeyDown, delet
                     onKeyDown={handleKeyDown}
                     placeholder="Tìm kiếm"
                 />
-                {search !== '' && (
+                {/* {search !== '' && (
                     <Button variant="link text-decoration-none" style={{ color: `${color}` }} onClick={deleteSearch}>
                         <FontAwesomeIcon  onClick={deleteSearch} style={{ color: 'var(--grey-color)' }} icon={faXmark} />
                     </Button>
-                )}
+                )} */}
                 <Button variant="link" onClick={handleSearch}>
                     <FontAwesomeIcon style={{ color: `${color}` }} icon={faMagnifyingGlass} />
                 </Button>

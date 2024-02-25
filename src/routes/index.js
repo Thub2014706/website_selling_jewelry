@@ -47,6 +47,10 @@ const publicRoutes = [
         component: ProductPage,
     },
     {
+        path: '/shop',
+        component: ProductPage,
+    },
+    {
         path: '/thunghiem',
         component: thunghiem,
     },
