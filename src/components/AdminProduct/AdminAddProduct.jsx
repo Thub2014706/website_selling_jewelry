@@ -99,7 +99,7 @@ const AdminAddProduct = ({ show, handleClose }) => {
 
     useEffect(() => {
         const fetchTypes = async () => {
-            const data = await allType(user?.accessToken, axiosJWT);
+            const data = await allType();
             setTypes(data);
             if (!show) {
                 setName('');
@@ -112,7 +112,7 @@ const AdminAddProduct = ({ show, handleClose }) => {
             }
         };
         fetchTypes();
-    }, [user?.accessToken, axiosJWT, show]);
+    }, [ show]);
 
     return (
         <div>

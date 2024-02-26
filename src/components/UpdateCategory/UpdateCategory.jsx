@@ -24,7 +24,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
     useEffect(() => {
         const fetchTypes = async () => {
             const dataUpdate = await typeDetail(id, axiosJWT, user?.accessToken);
-            const dataAll = await allType(user?.accessToken, axiosJWT);
+            const dataAll = await allType();
             setTypes(dataAll);
             setName(dataUpdate.name);
             setFather(dataUpdate.father);

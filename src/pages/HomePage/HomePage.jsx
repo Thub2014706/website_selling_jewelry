@@ -32,10 +32,10 @@ const HomePage = () => {
         fetchAllProduct();
     }, [AOS]);
 
-    const shopNow = () => {
-        dispatch(removeSearch());
-        navigate('/shop')
-    }
+    // const shopNow = () => {
+    //     dispatch(removeSearch());
+    //     navigate('/shop')
+    // }
 
     return (
         <div style={{ position: 'relative', width: '100%' }}>
@@ -109,7 +109,7 @@ const HomePage = () => {
                                 transform: 'translate(-50%, -50%)',
                             }}
                         >
-                            {/* <Link to={'/shop'}> */}
+                            <Link to={'/shop'}>
                                 <Button
                                     data-aos="fade-up"
                                     variant="outline-light"
@@ -118,11 +118,11 @@ const HomePage = () => {
                                         width: '200px',
                                         height: '50px',
                                     }}
-                                    onClick={shopNow}
+                                    // onClick={shopNow}
                                 >
                                     <h2>Shop Now</h2>
                                 </Button>
-                            {/* </Link> */}
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -22,11 +22,11 @@ const AdminCategory = () => {
 
     useEffect(() => {
         const fetchType = async () => {
-            const data = await allType(user?.accessToken, axiosJWT);
+            const data = await allType();
             setTypes(data);
         };
         fetchType();
-    }, [user?.accessToken, axiosJWT]);
+    }, []);
 
     const [show, setShow] = useState(false);
     const [idDelete, setIdDelete] = useState(null);

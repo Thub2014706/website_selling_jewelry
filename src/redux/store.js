@@ -10,13 +10,14 @@ const persistConfig = {
     key: 'root',
     version: 1,
     storage,
+    whitelist: ['auth', 'cart', 'address'],
 };
 
-const rootReducer = combineReducers({ 
-    auth: authReducer, 
-    cart: cartReducer ,
+const rootReducer = combineReducers({
+    auth: authReducer,
+    cart: cartReducer,
     product: productReducer,
-    address: addressReducer
+    address: addressReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

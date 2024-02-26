@@ -149,11 +149,9 @@ export const createType = async (data, token, axiosJWT, toast) => {
     }
 };
 
-export const allType = async (token, axiosJWT) => {
+export const allType = async () => {
     try {
-        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/product/getall-type`, {
-            headers: { authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/getall-type`);
         // console.log("dfghj",response.data)
         return response.data;
     } catch (error) {

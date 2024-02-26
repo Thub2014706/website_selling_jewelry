@@ -43,7 +43,8 @@ const publicRoutes = [
         component: CartPage,
     },
     {
-        path: '/search/:name',
+        path: '/search',
+        search: '?query=name',
         component: ProductPage,
     },
     {

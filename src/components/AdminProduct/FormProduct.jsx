@@ -105,7 +105,7 @@ const FormProduct = ({
 
     useEffect(() => {
         const fetchTypes = async () => {
-            const data = await allType(user?.accessToken, axiosJWT);
+            const data = await allType();
             setTypes(data);
         };
         fetchTypes();

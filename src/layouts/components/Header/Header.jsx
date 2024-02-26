@@ -30,18 +30,11 @@ const Header = () => {
         setSearch(e.target.value);
     };
     // console.log(search)
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            dispatch(searchProducts(search));
-            navigate(`/search/${search}`);
-            // dispatch(removeSearch());
-        }
-    };
-    const handleSearch = () => {
-        dispatch(searchProducts(search));
-        navigate(`/search/${search}`);
+    const handleSearch = (e) => {
+        e.preventDefault();
+        // dispatch(searchProducts(search));
+        navigate(`/search?query=${search}`);
+        // setSearch('')
         // dispatch(removeSearch());
     };
 
@@ -100,7 +93,6 @@ const Header = () => {
                                     search={search}
                                     searchInput={searchInput}
                                     handleSearch={handleSearch}
-                                    handleKeyDown={handleKeyDown}
                                     deleteSearch={deleteSearch}
                                 />
                                 <Col xs="auto" className="d-flex align-items-center mt-3" style={{ color: 'white' }}>

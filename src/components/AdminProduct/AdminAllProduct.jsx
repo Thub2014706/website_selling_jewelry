@@ -38,7 +38,7 @@ const AdminAllProduct = () => {
     useEffect(() => {
         const fetchAllProduct = async () => {
             const data = await allProduct();
-            const dataType = await allType(user?.accessToken, axiosJWT);
+            const dataType = await allType();
             setCategories(dataType);
             const timer = setTimeout(() => {
                 if (search !== '') {
