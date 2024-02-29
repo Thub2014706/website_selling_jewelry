@@ -6,6 +6,7 @@ import AdminUpdateProduct from '~/components/AdminProduct/AdminUpdateProduct';
 import thunghiem from '~/components/AdminProduct/FormProduct';
 import AdminPage from '~/pages/AdminPage/AdminPage';
 import CartPage from '~/pages/CartPage/CartPage';
+import CategoryPage from '~/pages/CategoryPage/CategoryPage';
 import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
@@ -13,7 +14,9 @@ import MyOrderPage from '~/pages/MyOrderPage/MyOrderPage';
 import NoPage from '~/pages/NoPage/NoPage';
 import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
 import ProductPage from '~/pages/ProductPage/ProductPage';
+import ProductSearchPage from '~/pages/ProductSearchPage/ProductSearchPage';
 import RegisterPage from '~/pages/RegisterPage/RegisterPage';
+import ShopPage from '~/pages/ShopPage/ShopPage';
 
 const publicRoutes = [
     {
@@ -45,11 +48,15 @@ const publicRoutes = [
     {
         path: '/search',
         search: '?query=name',
-        component: ProductPage,
+        component: ProductSearchPage,
     },
     {
         path: '/shop',
-        component: ProductPage,
+        component: ShopPage,
+    },
+    {
+        path: '/:name',
+        component: CategoryPage,
     },
     {
         path: '/thunghiem',

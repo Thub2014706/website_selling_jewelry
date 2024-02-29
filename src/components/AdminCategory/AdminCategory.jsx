@@ -26,7 +26,7 @@ const AdminCategory = () => {
             setTypes(data);
         };
         fetchType();
-    }, []);
+    }, [types]);
 
     const [show, setShow] = useState(false);
     const [idDelete, setIdDelete] = useState(null);

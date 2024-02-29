@@ -33,7 +33,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const data = {
         name,
-        father,
+        father: father === '' ? null : father,
     };
 
     const handleAdd = async (e) => {

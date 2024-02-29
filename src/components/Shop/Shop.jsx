@@ -2,127 +2,82 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
 import TitleImage from '~/components/TitleImage/TitleImage';
-import { allProduct, allSize, allType } from '~/services/ProductService';
+import { allProduct, allSize, allType, filterAll, filterByPrice, filterByStar } from '~/services/ProductService';
 import title from '~/assets/images/title3.png';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight, faListUl } from '@fortawesome/free-solid-svg-icons';
+import Star from '../Star/Star';
 
-const ProductPage = () => {
-    const location = useLocation();
+const Shop = ({ products }) => {
 
-    const search = new URLSearchParams(location.search).get('query'); //lấy giá trị chuỗi truy vấn trên url
+    const [valueFrom, setValueFrom] = useState('');
 
-    const [products, setProducts] = useState(null);
+    const [valueTo, setValueTo] = useState('');
 
-    const [types, setTypes] = useState(null);
-
-    const [size, setSize] = useState('');
-
-    const [sizes, setSizes] = useState(null);
-
-    const [button, setButton] = useState('button3');
-
-    const [type, setType] = useState('');
-    // console.log(types, products);
-
-    // console.log(types);
     const [priceFrom, setPriceFrom] = useState('');
 
     const [priceTo, setPriceTo] = useState('');
 
     const handleFrom = (e) => {
-        setPriceFrom(Number(e.target.value.replace(/[^\d]/g, '')));
+        setValueFrom(Number(e.target.value.replace(/[^\d]/g, '')));
     };
 
     const handleTo = (e) => {
-        setPriceTo(Number(e.target.value.replace(/[^\d]/g, '')));
+        setValueTo(Number(e.target.value.replace(/[^\d]/g, '')));
     };
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            const data = await allProduct();
-            const dataType = await allType();
-            const dataSize = await allSize()
-            setTypes(dataType.filter((item) => item.father === null));
-            setSizes(dataSize)
-            if (search) {
-                const newData = data.filter((item) =>
-                    item.name
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '')
-                        .toLowerCase()
-                        .includes(
-                            search
-                                .normalize('NFD')
-                                .replace(/[\u0300-\u036f]/g, '')
-                                .toLowerCase(),
-                        ),
-                );
-                setProducts(newData);
-            } else if (type === '' && size === '') {
-                setProducts(data);
-            } else if (type !== '') {
-                const findType = dataType.find((val) => val.name === type);
-                setProducts(data.filter((item) => item.type === findType._id));
-            } else if (size !== '') {
-                const value = data.filter((item) => item.variants.some((mini) => mini.size === size));
-                // console.log(value)
-                setProducts(value);
-            }
-        };
-        fetchProducts();
-    }, [search, type, size]);
-    // console.log(sizes);
+    const [data, setData] = useState(null);
+    const [numberStar, setNumberStar] = useState('')
 
-    const [dataPrice, setDataPrice] = useState(null);
-
-    const handleApply = () => {
-        const value = products.filter((item) => item.price <= priceTo && item.price >= priceFrom);
-        setDataPrice(value);
+    const handleApply = async () => {
+        setPriceFrom(valueFrom)
+        setPriceTo(valueTo)
+        const value = await filterAll({ priceFrom: valueFrom, priceTo: valueTo, numberStar });
+        setData(value);
     };
+
+
+    const handleStar = async (numberStar) => {
+        setNumberStar(numberStar)
+        const value = await filterAll({ priceFrom, priceTo, numberStar });
+        setData(value);
+    };
+
+    const [button, setButton] = useState('button3');
 
     const showPage = () => {
-        if (dataPrice !== null) {
-            if (button === 'button1') {
-                return dataPrice.sort((a, b) => b.discount - a.discount);
-            }
-            if (button === 'button2') {
-                return dataPrice.sort((a, b) => b.selled - a.selled);
-            }
-            if (button === 'button3') {
-                return dataPrice.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-            }
-            if (button === 'button4') {
-                return dataPrice.sort((a, b) => a.price - b.price);
-            }
-            if (button === 'button5') {
-                return dataPrice.sort((a, b) => b.price - a.price);
-            }
-        } else {
-            if (button === 'button1') {
-                return products.sort((a, b) => b.discount - a.discount);
-            }
-            if (button === 'button2') {
-                return products.sort((a, b) => b.selled - a.selled);
-            }
-            if (button === 'button3') {
-                return products.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-            }
-            if (button === 'button4') {
-                return products.sort((a, b) => a.price - b.price);
-            }
-            if (button === 'button5') {
-                return products.sort((a, b) => b.price - a.price);
-            }
+        let copy = [...products];
+        if (data !== null) {
+            copy = data;
         }
-        return products;
+        switch (button) {
+            case 'button1':
+                copy = copy.sort((a, b) => b.discount - a.discount);
+                break;
+            case 'button2':
+                copy = copy.sort((a, b) => b.selled - a.selled);
+                break;
+            case 'button3':
+                copy = copy.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                break;
+            case 'button4':
+                copy = copy.sort((a, b) => a.price - b.price);
+                break;
+            case 'button5':
+                copy = copy.sort((a, b) => b.price - a.price);
+                break;
+
+            default:
+                break;
+        }
+        return copy;
     };
 
     const array = [];
 
-    if (sizes !== null) {
-        sizes.map((item) =>
+    if (products !== null) {
+        [...products].map((item) =>
             item.variants.map((miniItem) => {
                 if (!array.includes(miniItem.size) && miniItem.inStock !== 0) {
                     array.push(miniItem.size);
@@ -137,8 +92,9 @@ const ProductPage = () => {
             <Container>
                 {products !== null && (
                     <Row className="mt-3">
+                        {/* <Col sm={3}></Col> */}
                         <Col sm={3}>
-                            <Row className="p-3">
+                            {/* <Row className="p-3">
                                 <h5 className="mt-1">
                                     <FontAwesomeIcon icon={faListUl} className="me-2" /> Tất cả danh mục
                                 </h5>
@@ -167,7 +123,7 @@ const ProductPage = () => {
                                             </span>
                                         </Button>
                                     ))}
-                            </Row>
+                            </Row> */}
                             <Row>
                                 <h5>Khoảng giá</h5>
                                 <Form>
@@ -175,8 +131,8 @@ const ProductPage = () => {
                                         <Col>
                                             <Form.Control
                                                 type="text"
-                                                value={priceFrom.toLocaleString('it-IT')}
-                                                onChange={handleFrom}
+                                                value={valueFrom.toLocaleString('it-IT')}
+                                                onChange={(handleFrom)}
                                                 placeholder="Từ"
                                                 className="rounded-0"
                                             />
@@ -185,14 +141,14 @@ const ProductPage = () => {
                                         <Col>
                                             <Form.Control
                                                 type="text"
-                                                value={priceTo.toLocaleString('it-IT')}
+                                                value={valueTo.toLocaleString('it-IT')}
                                                 onChange={handleTo}
                                                 placeholder="Đến"
                                                 className="rounded-0"
                                             />
                                         </Col>
                                     </Row>
-                                    <Button variant="outline-danger" onClick={handleApply} className="mt-2 rounded-0">
+                                    <Button variant="outline-danger" onClick={() => handleApply()} className="mt-2 rounded-0">
                                         Áp dụng
                                     </Button>
                                 </Form>
@@ -202,10 +158,45 @@ const ProductPage = () => {
                                 {array
                                     .sort((a, b) => a - b)
                                     .map((item) => (
-                                        <Button key={item} onClick={() => setSize(item)} variant="link">
+                                        <Button
+                                            key={item}
+                                            variant="outline-dark rounded-0"
+                                            className="me-2"
+                                            style={{ width: '50px' }}
+                                        >
                                             <h6>{item}</h6>
                                         </Button>
                                     ))}
+                            </Row>
+                            <Row>
+                                <h5 className="mt-3">Đánh giá</h5>
+                                <a href="#" onClick={() => handleStar(5)}>
+                                    <Star number={5} />
+                                </a>
+                                <a href="#" onClick={() => handleStar(4)}>
+                                    <span className="mt-3 d-flex">
+                                        <Star number={4} />
+                                        <p className="ms-2">trở lên</p>
+                                    </span>
+                                </a>
+                                <a href="#" onClick={() => handleStar(3)}>
+                                    <span className="d-flex">
+                                        <Star number={3} />
+                                        <p className="ms-2">trở lên</p>
+                                    </span>
+                                </a>
+                                <a href="#" onClick={() => handleStar(2)}>
+                                    <span className="d-flex">
+                                        <Star number={2} />
+                                        <p className="ms-2">trở lên</p>
+                                    </span>
+                                </a>
+                                <a href="#" onClick={() => handleStar(1)}>
+                                    <span className="d-flex">
+                                        <Star number={1} />
+                                        <p className="ms-2">trở lên</p>
+                                    </span>
+                                </a>
                             </Row>
                         </Col>
                         <Col sm={9}>
@@ -258,4 +249,4 @@ const ProductPage = () => {
     );
 };
 
-export default ProductPage;
+export default Shop;

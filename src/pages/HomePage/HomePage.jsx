@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 const HomePage = () => {
     const [products, setProducts] = useState(null);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
@@ -131,7 +131,7 @@ const HomePage = () => {
             )}
 
             {products !== null ? (
-                <Container style={{zIndex: 100}}>
+                <Container style={{ zIndex: 100 }}>
                     <Row>
                         {products.map((product, index) => (
                             <Col md={3} key={product._id}>

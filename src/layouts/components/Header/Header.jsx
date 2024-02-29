@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import logo from '~/assets/images/logo3.png';
 import { Container, Row, Col, Navbar, Nav, Dropdown } from 'react-bootstrap';
 import Search from '../Search/Search';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '~/redux/apiRequest';
 import { createAxios } from '~/createInstance';
 import { removeSearch, searchProducts } from '~/redux/productSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faCaretDown, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { allType } from '~/services/ProductService';
 
 const Header = () => {
     // localStorage.removeItem('user');
@@ -52,42 +53,53 @@ const Header = () => {
         setShow(false);
     };
 
+    const [types, setTypes] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await allType();
+            setTypes(data);
+        };
+        fetchData();
+    }, []);
+
     return (
         <div style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
             <Container fluid className="py-2" style={{ backgroundColor: 'var(--primary-color)' }}>
                 <div>
-                    <Row className='px-3'>
+                    <Row className="px-3">
                         <Col md="1">
                             <Link to={'/'}>
                                 <img src={logo} style={{ height: '45px' }} alt="" />
                             </Link>
                         </Col>
                         <Col md="6">
-                            <Navbar sticky="top" expand="lg" className="text-white">
-                                <Navbar.Collapse>
-                                    <Nav className="ms-4">
-                                        <Nav.Link className="text-white me-5 nav" href="#">
-                                            TRANG SỨC
-                                        </Nav.Link>
-                                        <Nav.Link className="text-white me-5 nav" href="#">
-                                            TRANG SỨC CƯỚI
-                                        </Nav.Link>
-                                        <Nav.Link className="text-white me-5 nav" href="#">
-                                            ĐỒNG HỒ
-                                        </Nav.Link>
-                                        <Nav.Link className="text-white me-5 nav" href="#">
-                                            QUÀ TẶNG
-                                        </Nav.Link>
-                                        {/* <Nav.Link className="text-white me-5" href="#">PHỤ KIỆN</Nav.Link> */}
-                                        <Nav.Link className="text-white me-5 nav" href="#">
-                                            BLOG
-                                        </Nav.Link>
-                                    </Nav>
-                                </Navbar.Collapse>
-                            </Navbar>
+                            {types !== null && (
+                                <Navbar sticky="top" expand="lg" className="text-white">
+                                    <Navbar.Collapse>
+                                        <Nav className="ms-4">
+                                            {types.map(
+                                                (item) =>
+                                                    item.father === null && (
+                                                        <NavLink
+                                                            key={item._id}
+                                                            className="text-white me-5 mt-2 nav"
+                                                            to={`/${item.name}`}
+                                                        >
+                                                            {item.name.toUpperCase()}
+                                                        </NavLink>
+                                                    ),
+                                            )}
+                                            <Nav.Link className="text-white me-5 nav" href="#">
+                                                BLOG
+                                            </Nav.Link>
+                                        </Nav>
+                                    </Navbar.Collapse>
+                                </Navbar>
+                            )}
                         </Col>
                         <Col md="5">
-                            <Row className='float-end me-3'>
+                            <Row className="float-end me-3">
                                 <Search
                                     color="white"
                                     search={search}

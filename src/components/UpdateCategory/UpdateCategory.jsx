@@ -39,7 +39,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
 
     const data = {
         name,
-        father,
+        father: father === '' ? null : father,
     };
 
     const handleUpdate = async (e) => {
