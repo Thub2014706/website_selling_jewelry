@@ -10,7 +10,6 @@ import { faCaretRight, faListUl } from '@fortawesome/free-solid-svg-icons';
 import Star from '../Star/Star';
 
 const Shop = ({ products }) => {
-
     const [valueFrom, setValueFrom] = useState('');
 
     const [valueTo, setValueTo] = useState('');
@@ -28,21 +27,37 @@ const Shop = ({ products }) => {
     };
 
     const [data, setData] = useState(null);
-    const [numberStar, setNumberStar] = useState('')
+    const [numberStar, setNumberStar] = useState('');
+    const [size, setSize] = useState([]);
 
     const handleApply = async () => {
-        setPriceFrom(valueFrom)
-        setPriceTo(valueTo)
-        const value = await filterAll({ priceFrom: valueFrom, priceTo: valueTo, numberStar });
+        setPriceFrom(valueFrom);
+        setPriceTo(valueTo);
+        const value = await filterAll({ priceFrom: valueFrom, priceTo: valueTo, numberStar, size });
         setData(value);
     };
-
 
     const handleStar = async (numberStar) => {
-        setNumberStar(numberStar)
-        const value = await filterAll({ priceFrom, priceTo, numberStar });
+        // if ()
+        setNumberStar(numberStar);
+        const value = await filterAll({ priceFrom, priceTo, numberStar, size });
         setData(value);
     };
+
+    const handleSize = async (thisSize) => {
+        if (size.findIndex((item) => item === thisSize) < 0) {
+            const copy = [...size, thisSize];
+            setSize(copy);
+            const value = await filterAll({ priceFrom, priceTo, numberStar, size: copy });
+            setData(value);
+        } else {
+            const data = size.filter((item) => item !== thisSize);
+            setSize(data);
+            const value = await filterAll({ priceFrom, priceTo, numberStar, size: data });
+            setData(value);
+        }
+    };
+    console.log(size);
 
     const [button, setButton] = useState('button3');
 
@@ -132,7 +147,7 @@ const Shop = ({ products }) => {
                                             <Form.Control
                                                 type="text"
                                                 value={valueFrom.toLocaleString('it-IT')}
-                                                onChange={(handleFrom)}
+                                                onChange={handleFrom}
                                                 placeholder="Từ"
                                                 className="rounded-0"
                                             />
@@ -148,7 +163,11 @@ const Shop = ({ products }) => {
                                             />
                                         </Col>
                                     </Row>
-                                    <Button variant="outline-danger" onClick={() => handleApply()} className="mt-2 rounded-0">
+                                    <Button
+                                        variant="outline-danger"
+                                        onClick={() => handleApply()}
+                                        className="mt-2 rounded-0"
+                                    >
                                         Áp dụng
                                     </Button>
                                 </Form>
@@ -163,6 +182,7 @@ const Shop = ({ products }) => {
                                             variant="outline-dark rounded-0"
                                             className="me-2"
                                             style={{ width: '50px' }}
+                                            onClick={() => handleSize(item)}
                                         >
                                             <h6>{item}</h6>
                                         </Button>
@@ -170,28 +190,28 @@ const Shop = ({ products }) => {
                             </Row>
                             <Row>
                                 <h5 className="mt-3">Đánh giá</h5>
-                                <a href="#" onClick={() => handleStar(5)}>
+                                <a href="#" onClick={() => handleStar(numberStar === '' ? 5 : '')}>
                                     <Star number={5} />
                                 </a>
-                                <a href="#" onClick={() => handleStar(4)}>
+                                <a href="#" onClick={() => handleStar(numberStar === '' ? 4 : '')}>
                                     <span className="mt-3 d-flex">
                                         <Star number={4} />
                                         <p className="ms-2">trở lên</p>
                                     </span>
                                 </a>
-                                <a href="#" onClick={() => handleStar(3)}>
+                                <a href="#" onClick={() => handleStar(numberStar === '' ? 3 : '')}>
                                     <span className="d-flex">
                                         <Star number={3} />
                                         <p className="ms-2">trở lên</p>
                                     </span>
                                 </a>
-                                <a href="#" onClick={() => handleStar(2)}>
+                                <a href="#" onClick={() => handleStar(numberStar === '' ? 2 : '')}>
                                     <span className="d-flex">
                                         <Star number={2} />
                                         <p className="ms-2">trở lên</p>
                                     </span>
                                 </a>
-                                <a href="#" onClick={() => handleStar(1)}>
+                                <a href="#" onClick={() => handleStar(numberStar === '' ? 1 : '')}>
                                     <span className="d-flex">
                                         <Star number={1} />
                                         <p className="ms-2">trở lên</p>

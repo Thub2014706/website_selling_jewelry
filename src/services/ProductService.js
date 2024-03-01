@@ -313,18 +313,18 @@ export const filterByStar = async (numberStar) => {
 export const filterAll = async (data) => {
     try {
         const { priceFrom, priceTo, numberStar, size } = data;
-        console.log(priceFrom, priceTo, numberStar, size);
-        let url = `${process.env.REACT_APP_API_URL}/api/product/filter-all?`
+        // console.log(priceFrom, priceTo, numberStar, size);
+        let url = `${process.env.REACT_APP_API_URL}/api/product/filter-all?`;
         if (priceFrom && priceTo) {
-            url = url + `priceFrom=${priceFrom}&priceTo=${priceTo}&`
-        } 
-        if (numberStar) {
-            url = url + `numberStar=${numberStar}&`
-        } 
-        if (size) {
-            url = url + `size=${size}`
+            url = url + `priceFrom=${priceFrom}&priceTo=${priceTo}&`;
         }
-        const response = await axios.get(url)
+        if (numberStar) {
+            url = url + `numberStar=${numberStar}&`;
+        }
+        if (size && Array.isArray(size)) {
+            size.map((item) => (url = url + `size=${item}&`));
+        }
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         console.log(error);
