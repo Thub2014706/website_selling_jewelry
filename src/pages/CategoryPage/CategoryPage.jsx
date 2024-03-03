@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Shop from '~/components/Shop/Shop';
+// import Shop from '~/components/Shop/Shop';
 import { allProduct, allType, filterByType } from '~/services/ProductService';
 
 const CategoryPage = () => {
@@ -23,7 +23,7 @@ const CategoryPage = () => {
 
     return (
         <div>
-            <Shop products={products} />
+            {/* <Shop products={products} /> */}
         </div>
     );
 };

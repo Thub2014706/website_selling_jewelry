@@ -13,8 +13,6 @@ import LoginPage from '~/pages/LoginPage/LoginPage';
 import MyOrderPage from '~/pages/MyOrderPage/MyOrderPage';
 import NoPage from '~/pages/NoPage/NoPage';
 import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
-import ProductPage from '~/pages/ProductPage/ProductPage';
-import ProductSearchPage from '~/pages/ProductSearchPage/ProductSearchPage';
 import RegisterPage from '~/pages/RegisterPage/RegisterPage';
 import ShopPage from '~/pages/ShopPage/ShopPage';
 
@@ -48,7 +46,7 @@ const publicRoutes = [
     {
         path: '/search',
         search: '?query=name',
-        component: ProductSearchPage,
+        component: ShopPage,
     },
     {
         path: '/shop',

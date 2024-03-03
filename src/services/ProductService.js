@@ -312,9 +312,12 @@ export const filterByStar = async (numberStar) => {
 
 export const filterAll = async (data) => {
     try {
-        const { priceFrom, priceTo, numberStar, size } = data;
-        // console.log(priceFrom, priceTo, numberStar, size);
+        const { search, priceFrom, priceTo, numberStar, size } = data;
+        console.log(search, priceFrom, priceTo, numberStar, size);
         let url = `${process.env.REACT_APP_API_URL}/api/product/filter-all?`;
+        if (search) {
+            url = url + `search=${search}&`;
+        }
         if (priceFrom && priceTo) {
             url = url + `priceFrom=${priceFrom}&priceTo=${priceTo}&`;
         }

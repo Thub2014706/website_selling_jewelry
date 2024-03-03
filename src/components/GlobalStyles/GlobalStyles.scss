@@ -154,4 +154,24 @@ body {
     }
 }
 
+.checkbox {
+    position: relative;
+    border: 1px solid #c0c0c0;
+    border-radius: 1px;
+    background-color: #eeeeee;
+    width: 18px;
+    height: 18px;
+}
 
+.check {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.select-star {
+    // background-color: #dddddd;
+    border: 1px solid black;
+    border-radius: 8px;
+}

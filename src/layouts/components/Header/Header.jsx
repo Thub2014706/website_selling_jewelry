@@ -33,10 +33,8 @@ const Header = () => {
     // console.log(search)
     const handleSearch = (e) => {
         e.preventDefault();
-        // dispatch(searchProducts(search));
         navigate(`/search?query=${search}`);
         // setSearch('')
-        // dispatch(removeSearch());
     };
 
     const deleteSearch = () => {
