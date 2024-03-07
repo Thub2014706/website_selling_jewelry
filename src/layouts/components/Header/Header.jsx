@@ -9,7 +9,10 @@ import { createAxios } from '~/createInstance';
 import { removeSearch, searchProducts } from '~/redux/productSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faCaretDown, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { allType } from '~/services/ProductService';
+import { allType, typeByFather } from '~/services/ProductService';
+import green from '~/assets/images/green.jpg';
+import watch from '~/assets/images/watch.jpg';
+import jewery from '~/assets/images/jewerynav.jpg';
 
 const Header = () => {
     // localStorage.removeItem('user');
@@ -53,6 +56,21 @@ const Header = () => {
 
     const [types, setTypes] = useState(null);
 
+    const [dataShow, setDataShow] = useState(null);
+
+    const [showNav, setShowNav] = useState(false);
+
+    const handleShowNav = async (name) => {
+        const data = await typeByFather(name);
+        setDataShow(data);
+        setShowNav(true);
+    };
+
+    const handleHideNav = () => {
+        setDataShow(null);
+        setShowNav(false);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await allType();
@@ -61,39 +79,38 @@ const Header = () => {
         fetchData();
     }, []);
 
+    const [select, setSelect] = useState('');
     return (
         <div style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
-            <Container fluid className="py-2" style={{ backgroundColor: 'var(--primary-color)' }}>
+            <Container fluid style={{ backgroundColor: 'var(--primary-color)' }}>
                 <div>
                     <Row className="px-3">
                         <Col md="1">
-                            <Link to={'/'}>
-                                <img src={logo} style={{ height: '45px' }} alt="" />
+                            <Link to={'/'} onClick={() => {setSelect(''); setSearch('')}}>
+                                <img src={logo} style={{ height: '45px', marginTop: '3px' }} alt="" />
                             </Link>
                         </Col>
                         <Col md="6">
                             {types !== null && (
-                                <Navbar sticky="top" expand="lg" className="text-white">
-                                    <Navbar.Collapse>
-                                        <Nav className="ms-4">
-                                            {types.map(
-                                                (item) =>
-                                                    item.father === null && (
-                                                        <NavLink
-                                                            key={item._id}
-                                                            className="text-white me-5 mt-2 nav"
-                                                            to={`/${item.name}`}
-                                                        >
-                                                            {item.name.toUpperCase()}
-                                                        </NavLink>
-                                                    ),
-                                            )}
-                                            <Nav.Link className="text-white me-5 nav" href="#">
-                                                BLOG
-                                            </Nav.Link>
-                                        </Nav>
-                                    </Navbar.Collapse>
-                                </Navbar>
+                                <ul style={{ display: 'flex', height: '100%' }}>
+                                    {types.map(
+                                        (item) =>
+                                            item.father === null && (
+                                                <li
+                                                    onMouseEnter={() => {
+                                                        handleShowNav(item.name);
+                                                    }}
+                                                    onMouseLeave={() => handleHideNav()}
+                                                    style={{ alignItems: 'center' }}
+                                                    key={item._id}
+                                                    className="text-white px-4 nav"
+                                                >
+                                                    {item.name.toUpperCase()}
+                                                    <FontAwesomeIcon icon={faChevronDown} className="ms-2" />
+                                                </li>
+                                            ),
+                                    )}
+                                </ul>
                             )}
                         </Col>
                         <Col md="5">
@@ -123,8 +140,8 @@ const Header = () => {
                                                 href="javascript:void(0)"
                                                 className="list-user text-white text-decoration-none"
                                                 style={{ display: 'flex', alignItems: 'center' }}
-                                                onMouseOver={handleShow}
-                                                onMouseOut={handleHide}
+                                                onMouseEnter={handleShow}
+                                                onMouseLeave={handleHide}
                                             >
                                                 <ion-icon
                                                     name="person-outline"
@@ -136,8 +153,8 @@ const Header = () => {
                                             </a>
                                             {show && (
                                                 <div
-                                                    onMouseOver={handleShow}
-                                                    onMouseOut={handleHide}
+                                                    onMouseEnter={handleShow}
+                                                    onMouseLeave={handleHide}
                                                     style={{
                                                         position: 'absolute',
                                                         zIndex: '100',
@@ -152,7 +169,7 @@ const Header = () => {
                                                     >
                                                         <li className="mb-2">
                                                             <Link
-                                                                to={`/myorder/${user.data.id}`}
+                                                                to={`/myorder`}
                                                                 className="text-black text-decoration-none"
                                                             >
                                                                 Đơn hàng của bạn
@@ -210,6 +227,65 @@ const Header = () => {
                     </Row>
                 </div>
             </Container>
+            {showNav && dataShow !== null && (
+                <Container
+                    fluid
+                    className="w-100"
+                    onMouseEnter={() => handleShowNav(dataShow[0]?.father)}
+                    onMouseLeave={() => handleHideNav()}
+                    style={{
+                        display: 'block',
+                        position: 'absolute',
+                        left: 0,
+                        zIndex: 1000,
+                        backgroundColor: 'var(--primary-color)',
+                    }}
+                >
+                    <Row className="py-4">
+                        <Col md={{ span: 2, offset: 3 }}>
+                            <h5 className="text-white">Danh mục</h5>
+                            <ul style={{ listStyle: 'none' }}>
+                                {dataShow.map((item) => (
+                                    <Link
+                                        to={`/${item.name}`}
+                                        className="text-decoration-none"
+                                        onClick={() => setSelect(item.name)}
+                                    >
+                                        <li
+                                            key={item._id}
+                                            className="dropdown-nav py-2"
+                                            style={{ color: select === item.name ? 'var(--font-color)' : '' }}
+                                        >
+                                            {item.name}
+                                        </li>
+                                    </Link>
+                                ))}
+                            </ul>
+                        </Col>
+                        <Col md={2}>
+                            <h5 className="text-white">Danh mục</h5>
+                            <ul>
+                                {dataShow.map((item) => (
+                                    <li key={item._id} className="text-white">
+                                        {item.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </Col>
+                        <Col md={3}>
+                            {dataShow[0]?.father === 'Phụ kiện' && (
+                                <img src={green} style={{ height: '200px' }} alt="" />
+                            )}
+                            {dataShow[0]?.father === 'Đồng hồ' && (
+                                <img src={watch} style={{ height: '200px' }} alt="" />
+                            )}
+                            {dataShow[0]?.father === 'Trang sức' && (
+                                <img src={jewery} style={{ height: '200px' }} alt="" />
+                            )}
+                        </Col>
+                    </Row>
+                </Container>
+            )}
         </div>
     );
 };

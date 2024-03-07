@@ -53,8 +53,8 @@ const publicRoutes = [
         component: ShopPage,
     },
     {
-        path: '/:name',
-        component: CategoryPage,
+        path: '/:type',
+        component: ShopPage,
     },
     {
         path: '/thunghiem',
@@ -68,7 +68,7 @@ const privateRoutes = [
         component: CheckoutPage,
     },
     {
-        path: '/myorder/:id',
+        path: '/myorder',
         component: MyOrderPage,
     },
 ];

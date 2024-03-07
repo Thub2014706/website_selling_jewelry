@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
 import TitleImage from '~/components/TitleImage/TitleImage';
-import { allProduct, filterAll } from '~/services/ProductService';
+import { allProduct, allSize, allType, filterAll } from '~/services/ProductService';
 import title from '~/assets/images/title3.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Star from '~/components/Star/Star';
@@ -13,6 +13,10 @@ const ShopPage = () => {
     const [products, setProducts] = useState(null);
 
     const location = useLocation();
+    // const history = useHistory()
+
+    const { type } = useParams();
+    console.log(type)
 
     const search = new URLSearchParams(location.search).get('query'); //lấy giá trị chuỗi truy vấn trên url
 
@@ -34,26 +38,26 @@ const ShopPage = () => {
         setValueTo(Number(e.target.value.replace(/[^\d]/g, '')));
     };
 
-    const [data, setData] = useState(null);
+    // const [data, setData] = useState(null);
     const [numberStar, setNumberStar] = useState('');
     const [size, setSize] = useState([]);
 
     const handleApply = async () => {
         setPriceFrom(valueFrom);
         setPriceTo(valueTo);
-        const value = await filterAll({ search, priceFrom: valueFrom, priceTo: valueTo, numberStar, size });
-        setData(value);
+        const value = await filterAll({ type, search, priceFrom: valueFrom, priceTo: valueTo, numberStar, size });
+        setProducts(value);
     };
 
     const handleStar = async (number) => {
         if (number === numberStar) {
             setNumberStar('');
-            const value = await filterAll({ search, priceFrom, priceTo, size });
-            setData(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, size });
+            setProducts(value);
         } else {
             setNumberStar(number);
-            const value = await filterAll({ search, priceFrom, priceTo, numberStar: number, size });
-            setData(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar: number, size });
+            setProducts(value);
         }
     };
 
@@ -61,34 +65,48 @@ const ShopPage = () => {
         if (size.findIndex((item) => item === thisSize) < 0) {
             const copy = [...size, thisSize];
             setSize(copy);
-            const value = await filterAll({ search, priceFrom, priceTo, numberStar, size: copy });
-            setData(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: copy });
+            setProducts(value);
         } else {
             const data = size.filter((item) => item !== thisSize);
             setSize(data);
-            const value = await filterAll({ search, priceFrom, priceTo, numberStar, size: data });
-            setData(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: data });
+            setProducts(value);
         }
     };
     // console.log(size);
 
+    const [sizes, setSizes] = useState(null);
+
     useEffect(() => {
         const fetchProducts = async () => {
-            const data = await allProduct();
-            setProducts(data);
-            const value = await filterAll({ search });
-            setData(value);
+            if (search) {
+                const data = await filterAll({ search });
+                setProducts(data);
+                setSizes(data);
+            } else
+            if (type) {
+                const data = await filterAll({ type });
+                setProducts(data);
+                setSizes(data);
+            }
+            else {
+                const data = await filterAll({});
+                setProducts(data);
+                setSizes(data);
+                console.log(data)
+            }
         };
         fetchProducts();
-    }, [search]);
+    }, [search, type]);
 
     const [button, setButton] = useState('button3');
 
     const showPage = () => {
         let copy = [...products];
-        if (data !== null) {
-            copy = data;
-        }
+        // if (data !== null) {
+        //     copy = data;
+        // }
         switch (button) {
             case 'button1':
                 copy = copy.sort((a, b) => b.discount - a.discount);
@@ -118,8 +136,8 @@ const ShopPage = () => {
 
     const array = [];
 
-    if (products !== null) {
-        [...products].map((item) =>
+    if (sizes !== null) {
+        [...sizes].map((item) =>
             item.variants.map((miniItem) => {
                 if (!array.includes(miniItem.size) && miniItem.inStock !== 0) {
                     array.push(miniItem.size);
@@ -130,41 +148,11 @@ const ShopPage = () => {
 
     return (
         <div>
-            <TitleImage title="SHOP" img={title} />
+            <TitleImage title={type ? type.toUpperCase() : 'SHOP'} img={title} />
             <Container>
                 {products !== null && (
                     <Row className="mt-3">
                         <Col sm={3}>
-                            {/* <Row className="p-3">
-                                <h5 className="mt-1">
-                                    <FontAwesomeIcon icon={faListUl} className="me-2" /> Tất cả danh mục
-                                </h5>
-                                <hr />
-                                {types !== null &&
-                                    types.map((item) => (
-                                        <Button
-                                            key={item._id}
-                                            variant="link"
-                                            className="text-black text-decoration-none"
-                                            onClick={() => setType(item.name)}
-                                        >
-                                            <span className="d-flex">
-                                                <FontAwesomeIcon
-                                                    icon={faCaretRight}
-                                                    className="me-2"
-                                                    color={type === item.name ? 'var(--font-color)' : 'white'}
-                                                />
-                                                <h6
-                                                    style={{
-                                                        color: type === item.name ? 'var(--font-color)' : 'black',
-                                                    }}
-                                                >
-                                                    {item.name}
-                                                </h6>
-                                            </span>
-                                        </Button>
-                                    ))}
-                            </Row> */}
                             <Row>
                                 <h5>Khoảng giá</h5>
                                 <Form className="">

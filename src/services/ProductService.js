@@ -159,6 +159,16 @@ export const allType = async () => {
     }
 };
 
+export const typeByFather = async (father) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-type-by-father?father=${father}`);
+        // console.log("dfghj",response.data)
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const deleteType = async (token, toast, axiosJWT, id) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/product/delete-type/${id}`, {
@@ -276,45 +286,14 @@ export const filterByStar = async (numberStar) => {
     }
 };
 
-// export const filterAll = async (data) => {
-//     try {
-//         const { priceFrom, priceTo, numberStar, size } = data;
-//         if (priceFrom && priceTo && numberStar && size) {
-//             const response = await axios.get(
-//                 `${process.env.REACT_APP_API_URL}/api/product/filter-all?priceFrom=${priceFrom}&priceTo=${priceTo}&numberStar=${numberStar}&size=${size}`,
-//             );
-//             return response.data;
-//         } else if (priceFrom && priceTo && numberStar) {
-//             const response = await axios.get(
-//                 `${process.env.REACT_APP_API_URL}/api/product/filter-all?priceFrom=${priceFrom}&priceTo=${priceTo}&numberStar=${numberStar}`,
-//             );
-//             return response.data;
-//         } else if (priceFrom && priceTo) {
-//             const response = await axios.get(
-//                 `${process.env.REACT_APP_API_URL}/api/product/filter-all?priceFrom=${priceFrom}&priceTo=${priceTo}`,
-//             );
-//             return response.data;
-//         } else if (numberStar) {
-//             const response = await axios.get(
-//                 `${process.env.REACT_APP_API_URL}/api/product/filter-all?priceFrom=&numberStar=${numberStar}`,
-//             );
-//             return response.data;
-//         } else if (size) {
-//             const response = await axios.get(
-//                 `${process.env.REACT_APP_API_URL}/api/product/filter-all?priceFrom=&size=${size}`,
-//             );
-//             return response.data;
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-
 export const filterAll = async (data) => {
     try {
-        const { search, priceFrom, priceTo, numberStar, size } = data;
+        const { type, search, priceFrom, priceTo, numberStar, size } = data;
         console.log(search, priceFrom, priceTo, numberStar, size);
         let url = `${process.env.REACT_APP_API_URL}/api/product/filter-all?`;
+        if (type) {
+            url = url + `type=${type}&`;
+        }
         if (search) {
             url = url + `search=${search}&`;
         }

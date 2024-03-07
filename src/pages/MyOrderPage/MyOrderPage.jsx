@@ -14,10 +14,11 @@ import { allCommentByUser } from '~/services/CommentService';
 import ButtonStatus from '~/components/ButtonStatus/ButtonStatus';
 
 const MyOrderPage = () => {
-    const { id } = useParams();
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.auth.login.currentUser);
+    
+    const id = user?.data.id
 
     let axiosJWT = createAxios(user, dispatch);
 

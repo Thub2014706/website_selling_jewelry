@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '~/components/Banner/Banner';
-import { Button, Carousel, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
 import { Link, useNavigate } from 'react-router-dom';
 import { allProduct } from '~/services/ProductService';
 import imgshopnow from '~/assets/images/imgshopnow.svg';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { removeSearch } from '~/redux/productSlice';
-import { useDispatch } from 'react-redux';
 
 const HomePage = () => {
     const [products, setProducts] = useState(null);
-
-    const navigate = useNavigate();
-
-    const dispatch = useDispatch();
 
     const bestSellers = () => {
         if (products !== null) {

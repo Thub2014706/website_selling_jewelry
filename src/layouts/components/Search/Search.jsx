@@ -29,7 +29,7 @@ const Search = ({ color, search, searchInput, handleSearch, handleKeyDown, delet
 
     return (
         <Col xs="auto">
-            <div className="search p-2" style={{ borderBottom: `1px solid ${color}` }}>
+            <div className="search p-2 mb-2" style={{ borderBottom: `1px solid ${color}`, }}>
                 <Form onSubmit={handleSearch}>
                     <input
                         className="search-input"
