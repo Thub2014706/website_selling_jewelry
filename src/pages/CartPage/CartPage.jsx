@@ -5,6 +5,7 @@ import { Button, ButtonGroup, Card, Col, Container, Row, Table } from 'react-boo
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import img1 from '~/assets/images/title_cart1.png';
+import ImgSample from '~/components/ImgSample/ImgSample';
 import TitleImage from '~/components/TitleImage/TitleImage';
 import { decrease, increase, inputValue, removeFromCart, setDiscount, setTotal, setTotalPay } from '~/redux/cartSlice';
 
@@ -12,7 +13,7 @@ const CartPage = () => {
     const dispatch = useDispatch();
 
     const products = useSelector((state) => state.cart.cartItems);
-    console.log(products)
+    console.log(products);
 
     const removeItem = (products) => {
         dispatch(removeFromCart(products));
@@ -49,7 +50,7 @@ const CartPage = () => {
 
     return (
         <div>
-            <TitleImage title='GIỎ HÀNG' img={img1} />
+            <TitleImage title="GIỎ HÀNG" img={img1} />
             <Container>
                 {products.length !== 0 ? (
                     // SẢN PHẨM ĐẶT
@@ -59,7 +60,7 @@ const CartPage = () => {
                             <Table>
                                 <thead>
                                     <tr className="text-center">
-                                        <th>Sản phẩm</th>
+                                        <th className="w-50">Sản phẩm</th>
                                         <th>Đơn giá</th>
                                         <th>Số lượng</th>
                                         <th>Tổng</th>
@@ -75,12 +76,19 @@ const CartPage = () => {
                                                     to={`/product/${item.product._id}`}
                                                     className="text-decoration-none text-black"
                                                 >
-                                                    <img
-                                                        src={item.product.image[0]}
-                                                        style={{ height: '60px' }}
-                                                        className="me-3"
-                                                    />
-                                                    {item.product.name}, Phân loại: ({item.idSize.size}cm)
+                                                    <Row>
+                                                        <Col sm={2}>
+                                                            <ImgSample
+                                                                pathImg={item.product.image[0]}
+                                                                style={{ height: '60px' }}
+                                                                className="me-3"
+                                                            />
+                                                        </Col>
+                                                        <Col sm={10}>
+                                                            <p className="text-long" title={item.product.name} style={{maxWidth: '450px'}}>{item.product.name}</p>
+                                                            Phân loại: {item.idSize.size}(cm)
+                                                        </Col>
+                                                    </Row>
                                                 </Link>
                                             </td>
                                             <td className="text-center align-middle" key={item.product._id}>

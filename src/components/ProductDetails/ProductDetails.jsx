@@ -10,8 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import parse from 'html-react-parser';
 import { productDetail } from '~/services/ProductService';
 import { allCommentByProduct } from '~/services/CommentService';
-import { createAxios } from '~/createInstance';
+
 import Star from '../Star/Star';
+import ImgSample from '../ImgSample/ImgSample';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
@@ -191,9 +192,16 @@ const ProductDetails = () => {
                     <Row>
                         <Col md={1}>
                             {product.image.map((img, index) => (
-                                <img
+                                // <img
+                                //     onClick={() => setPhoto(index)}
+                                //     src={img}
+                                //     className={`d-block mx-auto w-75 border rounded mt-2 ${
+                                //         photo === index ? 'border-secondary shadow' : ''
+                                //     }`}
+                                // />
+                                <ImgSample
                                     onClick={() => setPhoto(index)}
-                                    src={img}
+                                    pathImg={img}
                                     className={`d-block mx-auto w-75 border rounded mt-2 ${
                                         photo === index ? 'border-secondary shadow' : ''
                                     }`}
@@ -201,7 +209,7 @@ const ProductDetails = () => {
                             ))}
                         </Col>
                         <Col md={5}>
-                            <img src={product.image[photo]} alt="" className="d-block mx-auto w-100" />
+                            <ImgSample pathImg={product.image[photo]} className="d-block mx-auto w-100" />
                         </Col>
 
                         <Col md={6} className="mt-5 ps-5">
@@ -305,13 +313,13 @@ const ProductDetails = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <h3 className='text-center fst-italic'>Thông tin sản phẩm</h3>
+                            <h3 className="text-center fst-italic">Thông tin sản phẩm</h3>
                             <div>{parse(product.information)}</div>
                         </Col>
-                    {/* </Row>
+                        {/* </Row>
                     <Row> */}
                         <Col>
-                            <h3 className='text-center fst-italic'>Đánh giá sản phẩm</h3>
+                            <h3 className="text-center fst-italic">Đánh giá sản phẩm</h3>
                             {comments !== null && comments.length > 0 ? (
                                 <div>
                                     <h5 style={{ color: 'var(--font-color)' }}>{comments.length} đánh giá</h5>
@@ -326,7 +334,7 @@ const ProductDetails = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <h5 className='text-center'>Chưa có đánh giá nào</h5>
+                                <h5 className="text-center">Chưa có đánh giá nào</h5>
                             )}
                         </Col>
                     </Row>

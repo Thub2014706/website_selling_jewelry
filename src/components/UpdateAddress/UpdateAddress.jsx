@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import subVn from 'sub-vn';
-import { createAxios } from '~/createInstance';
+
 import { getDetail, updateAddress } from '~/services/AddressService';
 import { Button, Form, Row, Col, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
@@ -27,7 +27,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
 
     useEffect(() => {
         const fetchAddress = async () => {
-            const data = await getDetail(axiosJWT, user?.accessToken, id);
+            const data = await getDetail(user?.accessToken, id);
             if (data) {
                 const idProvince = provinces.find((item) => item.name === data.province);
                 const codeProvince = idProvince.code;
@@ -100,11 +100,11 @@ const UpdateAdress = ({ id, show, handleClose }) => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const handlesubmit = async (e) => {
         e.preventDefault();
-        await updateAddress(axiosJWT, data, user?.accessToken, id, toast);
+        await updateAddress(data, user?.accessToken, id, toast);
     };
     return (
         <div>
@@ -128,13 +128,17 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 />
                             </Col>
                         </Form.Group>
-    
+
                         <Form.Group className="mb-3" as={Row}>
                             <Form.Label column sm={4}>
                                 Tỉnh
                             </Form.Label>
                             <Col sm={8}>
-                                <Form.Select value={province} onChange={handleProvince} aria-label="Default select example">
+                                <Form.Select
+                                    value={province}
+                                    onChange={handleProvince}
+                                    aria-label="Default select example"
+                                >
                                     <option value="">---Chọn Tỉnh---</option>
                                     {provinces.map((item) => (
                                         <option value={item.code}>{item.name}</option>
@@ -142,13 +146,17 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 </Form.Select>
                             </Col>
                         </Form.Group>
-    
+
                         <Form.Group className="mb-3" as={Row}>
                             <Form.Label column sm={4}>
                                 Quận / Huyện
                             </Form.Label>
                             <Col sm={8}>
-                                <Form.Select value={district} onChange={handleDistrict} aria-label="Default select example">
+                                <Form.Select
+                                    value={district}
+                                    onChange={handleDistrict}
+                                    aria-label="Default select example"
+                                >
                                     <option value="">---Chọn Quận / Huyện---</option>
                                     {districts.map((item) => (
                                         <option value={item.code}>{item.name}</option>
@@ -156,7 +164,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 </Form.Select>
                             </Col>
                         </Form.Group>
-    
+
                         <Form.Group className="mb-3" as={Row}>
                             <Form.Label column sm={4}>
                                 Xã / Phường
@@ -170,7 +178,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 </Form.Select>
                             </Col>
                         </Form.Group>
-    
+
                         <Form.Group className="mb-3" controlId="formBasicEmail" as={Row}>
                             <Form.Label column sm={4}>
                                 Địa chỉ
@@ -184,7 +192,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 />
                             </Col>
                         </Form.Group>
-    
+
                         <Form.Group className="mb-3" controlId="formBasicEmail" as={Row}>
                             <Form.Label column sm={4}>
                                 Số điện thoại
@@ -198,7 +206,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                                 />
                             </Col>
                         </Form.Group>
-    
+
                         {unchanged === true ? (
                             <Col sm={{ offset: 2, span: 10 }}>
                                 <Form.Check
@@ -229,11 +237,7 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button
-                            className="rounded-0 px-4"
-                            variant='outline-dark'
-                            onClick={handleClose}
-                        >
+                        <Button className="rounded-0 px-4" variant="outline-dark" onClick={handleClose}>
                             Huỷ
                         </Button>
                         <Button
@@ -248,7 +252,6 @@ const UpdateAdress = ({ id, show, handleClose }) => {
                 </Form>
             </Modal>
         </div>
-       
     );
 };
 

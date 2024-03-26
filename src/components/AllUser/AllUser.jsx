@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { allUser } from '~/services/UserService';
 
 const AllUser = () => {
@@ -9,12 +9,12 @@ const AllUser = () => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [allData, setAllData] = useState(null);
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await allUser(axiosJWT, user?.accessToken);
+            const data = await allUser(user?.accessToken);
             setAllData(data);
         };
         fetchUser();
@@ -22,7 +22,7 @@ const AllUser = () => {
     return (
         <div>
             {allData !== null && (
-                <Table bordered striped className='text-center'>
+                <Table bordered striped className="text-center">
                     <thead>
                         <tr>
                             <th>STT</th>

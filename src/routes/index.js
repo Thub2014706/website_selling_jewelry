@@ -1,12 +1,6 @@
-import AdminOrder from '~/components/AdminOrder/AdminOrder';
-import AdminAddCategories from '~/components/AdminProduct/AdminAddCategories';
-import AdminAddProduct from '~/components/AdminProduct/AdminAddProduct';
-import AdminAllProduct from '~/components/AdminProduct/AdminAllProduct';
-import AdminUpdateProduct from '~/components/AdminProduct/AdminUpdateProduct';
 import thunghiem from '~/components/AdminProduct/FormProduct';
 import AdminPage from '~/pages/AdminPage/AdminPage';
 import CartPage from '~/pages/CartPage/CartPage';
-import CategoryPage from '~/pages/CategoryPage/CategoryPage';
 import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
@@ -14,6 +8,7 @@ import MyOrderPage from '~/pages/MyOrderPage/MyOrderPage';
 import NoPage from '~/pages/NoPage/NoPage';
 import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
 import RegisterPage from '~/pages/RegisterPage/RegisterPage';
+import ShipperPage from '~/pages/ShipperPage/ShipperPage';
 import ShopPage from '~/pages/ShopPage/ShopPage';
 
 const publicRoutes = [
@@ -79,31 +74,24 @@ const adminRoutes = [
         component: AdminPage,
         layout: null,
     },
+    // {
+    //     path: '/admin/get-products',
+    //     component: AdminAllProduct,
+    //     layout: null,
+    // },
+    // {
+    //     path: '/admin/allorder',
+    //     component: AdminOrder,
+    //     layout: null,
+    // },
+];
+
+const shipperRoutes = [
     {
-        path: '/admin/get-products',
-        component: AdminAllProduct,
-        layout: null,
-    },
-    // {
-    //     path: '/admin/update-product/:id',
-    //     component: AdminUpdateProduct,
-    //     layout: null,
-    // },
-    // {
-    //     path: '/admin/add-product',
-    //     component: AdminAddProduct,
-    //     layout: null,
-    // },
-    // {
-    //     path: '/admin/add-categories',
-    //     component: AdminAddCategories,
-    //     layout: null,
-    // },
-    {
-        path: '/admin/allorder',
-        component: AdminOrder,
+        path: '/ship',
+        component: ShipperPage,
         layout: null,
     },
 ];
 
-export { publicRoutes, privateRoutes, adminRoutes };
+export { publicRoutes, privateRoutes, adminRoutes, shipperRoutes };

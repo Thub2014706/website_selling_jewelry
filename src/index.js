@@ -7,12 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
-import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <React.StrictMode>
+    <React.StrictMode>
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
                     <GlobalStyles />
@@ -20,7 +18,6 @@ root.render(
                 </PersistGate>
             </Provider>
         </React.StrictMode>
-    </BrowserRouter>,
         
 );
 

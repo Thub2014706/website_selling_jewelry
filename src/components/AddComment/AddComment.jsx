@@ -3,10 +3,11 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import HandleStar from '../HandleStar/HandleStar';
 import { orderDetail } from '~/services/OrderService';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { createComment } from '~/services/CommentService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ImgSample from '../ImgSample/ImgSample';
 
 const AddComment = ({ id, show, handleClose }) => {
     const [order, setOrder] = useState(null);
@@ -14,7 +15,7 @@ const AddComment = ({ id, show, handleClose }) => {
 
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    let axiosJWT = createAxios(user, dispatch);
+    // let axiosJWT = createAxios(user, dispatch);
 
     const [shortComment, setShortComment] = useState([]);
 
@@ -22,7 +23,7 @@ const AddComment = ({ id, show, handleClose }) => {
 
     useEffect(() => {
         const fetchOrder = async () => {
-            const data = await orderDetail(axiosJWT, id, user?.accessToken);
+            const data = await orderDetail( id, user?.accessToken);
             setOrder(data);
             setShortComment(shortComment.fill(''));
         };
@@ -45,7 +46,7 @@ const AddComment = ({ id, show, handleClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await createComment(axiosJWT, user?.accessToken, data, id, toast);
+        await createComment(user?.accessToken, data, id, toast);
     };
 
     // const handleShow = () => {
@@ -63,7 +64,7 @@ const AddComment = ({ id, show, handleClose }) => {
                     </Modal.Header>
                     <Modal.Body>
                         {order !== null &&
-                            order.cart.map((item, index) => {
+                            order.data.cart.map((item, index) => {
                                 data.push({
                                     user: {
                                         iduser: user?.accessToken,
@@ -77,12 +78,17 @@ const AddComment = ({ id, show, handleClose }) => {
 
                                 return (
                                     <div key={item._id} className="mb-2">
-                                        <span className='d-flex mb-2'>
-                                            <img src={item.image} className='me-2' style={{ height: '50px' }} alt="" />
-                                            <p className='mt-2'>{item.name}</p>
+                                        <span className="d-flex mb-2">
+                                            <ImgSample
+                                                pathImg={item.image}
+                                                className="me-2"
+                                                style={{ height: '50px' }}
+                                                alt=""
+                                            />
+                                            <p className="mt-2">{item.name}</p>
                                         </span>
-                                        <span className='d-flex'>
-                                            <p className='me-2'>Đánh giá sao:</p>
+                                        <span className="d-flex">
+                                            <p className="me-2">Đánh giá sao:</p>
                                             <HandleStar key={index} value={(val) => onStar(index, val)} />
                                         </span>
                                         <Form.Control

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import subVn from 'sub-vn';
-import { createAxios } from '~/createInstance';
+
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { addAddress, getAllByUser } from '~/services/AddressService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AddAdress = ({ show, handleClose }) => {
+const AddAdress = ({ show, handleClose, disabled }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const [name, setName] = useState('');
@@ -75,35 +75,36 @@ const AddAdress = ({ show, handleClose }) => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const handlesubmit = async (e) => {
         e.preventDefault();
-        const add = await addAddress(axiosJWT, data, user?.accessToken, toast);
+        const add = await addAddress(data, user?.accessToken, toast);
         if (add === 200) {
             handleClose();
         }
         // console.log(add)
     };
 
-    const [allAddress, setAllAddress] = useState(null);
+    // const [allAddress, setAllAddress] = useState(null);
 
     useEffect(() => {
         const fetchAddress = async () => {
-            const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
-            setAllAddress(addresses);
+            // const addresses = await getAllByUser(user?.accessToken, user?.data.id);
+            // setAllAddress(addresses);
             if (!show) {
-                setName('')
-                setProvince('')
-                setDistrict('')
-                setWard('')
-                setAddress('')
-                setPhone('')
-                setCheck(true)
+                setName('');
+                setProvince('');
+                setDistrict('');
+                setWard('');
+                setAddress('');
+                setPhone('');
+                setCheck(true);
             }
         };
         fetchAddress();
-    }, [allAddress]);
+    }, []);
+    // console.log(allAddress)
 
     return (
         <div>
@@ -216,32 +217,20 @@ const AddAdress = ({ show, handleClose }) => {
                             </Col>
                         </Form.Group>
 
-                        {allAddress !== null && allAddress.length === 0 ? (
-                            <Col sm={{ offset: 2, span: 10 }}>
-                                <Form.Check
-                                    className="mb-3"
-                                    type="checkbox"
-                                    disabled
-                                    value={check}
-                                    id="check"
-                                    checked={check}
-                                    onChange={handleCheck}
-                                    label="Đặt làm địa chỉ mặc định"
-                                />
-                            </Col>
-                        ) : (
-                            <Col sm={{ offset: 2, span: 10 }}>
-                                <Form.Check
-                                    className="mb-3"
-                                    type="checkbox"
-                                    value={check}
-                                    id="check"
-                                    checked={check}
-                                    onChange={handleCheck}
-                                    label="Đặt làm địa chỉ mặc định"
-                                />
-                            </Col>
-                        )}
+                        {/* {allAddress !== null && ( */}
+                        <Col sm={{ offset: 2, span: 10 }}>
+                            <Form.Check
+                                className="mb-3"
+                                type="checkbox"
+                                disabled={disabled}
+                                value={check}
+                                id="check"
+                                checked={check}
+                                onChange={handleCheck}
+                                label="Đặt làm địa chỉ mặc định"
+                            />
+                        </Col>
+                        {/* )} */}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button className="rounded-0 px-4" variant="outline-dark" onClick={handleClose}>

@@ -3,17 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 const productSlice = createSlice({
     name: 'product',
     initialState: {
-        search: '',
+        orders: null
     },
     reducers: {
-        searchProducts: (state, action) => {
-            state.search = action.payload;
+        getOrders: (state, action) => {
+            state.orders = action.payload;
         },
-        removeSearch: (state) => {
-            state.search = '';
-        }
     },
 });
 
-export const { searchProducts, removeSearch } = productSlice.actions;
+export const { getOrders } = productSlice.actions;
 export default productSlice.reducer;

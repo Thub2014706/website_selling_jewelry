@@ -49,6 +49,8 @@ const HomePage = () => {
                                                     name={product.name}
                                                     price={product.price}
                                                     discount={product.discount}
+                                                    numberStar={product.numberStar}
+                                                    selled={product.selled}
                                                 />
                                             </Link>
                                         </Col>
@@ -135,6 +137,7 @@ const HomePage = () => {
                                         name={product.name}
                                         price={product.price}
                                         discount={product.discount}
+                                        numberStar={product.numberStar}
                                     />
                                 </Link>
                             </Col>

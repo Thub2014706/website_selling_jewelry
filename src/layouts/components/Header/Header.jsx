@@ -5,7 +5,7 @@ import Search from '../Search/Search';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '~/redux/apiRequest';
-import { createAxios } from '~/createInstance';
+
 import { removeSearch, searchProducts } from '~/redux/productSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightFromBracket, faCaretDown, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -23,10 +23,10 @@ const Header = () => {
 
     const length = useSelector((state) => state.cart.cartItems.length);
 
-    let axiosJWT = createAxios(user, dispatch);
+    // let axiosJWT = createAxios(user, dispatch);
 
     const handleLogout = () => {
-        logout(dispatch, user?.accessToken, axiosJWT);
+        logout(dispatch, user?.accessToken);
     };
 
     const [search, setSearch] = useState('');
@@ -77,7 +77,8 @@ const Header = () => {
             setTypes(data);
         };
         fetchData();
-    }, []);
+    }, [user]);
+    // console.log('uuu', user);
 
     const [select, setSelect] = useState('');
     return (
@@ -86,7 +87,13 @@ const Header = () => {
                 <div>
                     <Row className="px-3">
                         <Col md="1">
-                            <Link to={'/'} onClick={() => {setSelect(''); setSearch('')}}>
+                            <Link
+                                to={'/'}
+                                onClick={() => {
+                                    setSelect('');
+                                    setSearch('');
+                                }}
+                            >
                                 <img src={logo} style={{ height: '45px', marginTop: '3px' }} alt="" />
                             </Link>
                         </Col>
@@ -157,7 +164,7 @@ const Header = () => {
                                                     onMouseLeave={handleHide}
                                                     style={{
                                                         position: 'absolute',
-                                                        zIndex: '100',
+                                                        zIndex: '10000',
                                                     }}
                                                 >
                                                     <ul
@@ -247,6 +254,7 @@ const Header = () => {
                             <ul style={{ listStyle: 'none' }}>
                                 {dataShow.map((item) => (
                                     <Link
+                                        key={item._id}
                                         to={`/${item.name}`}
                                         className="text-decoration-none"
                                         onClick={() => setSelect(item.name)}

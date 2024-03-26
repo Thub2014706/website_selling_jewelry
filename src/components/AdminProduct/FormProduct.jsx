@@ -6,7 +6,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addProduct, allType } from '~/services/ProductService';
-import { createAxios } from '~/createInstance';
 
 const FormProduct = ({
     showName,
@@ -22,7 +21,7 @@ const FormProduct = ({
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [name, setName] = useState(showName ? showName : '');
     const [image, setImage] = useState(showImage ? showImage : []);

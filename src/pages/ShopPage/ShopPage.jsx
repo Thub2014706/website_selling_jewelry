@@ -4,7 +4,7 @@ import Product from '~/components/Product/Product';
 import TitleImage from '~/components/TitleImage/TitleImage';
 import { allProduct, allSize, allType, filterAll } from '~/services/ProductService';
 import title from '~/assets/images/title3.png';
-import { Link, useLocation, useParams, useHistory } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Star from '~/components/Star/Star';

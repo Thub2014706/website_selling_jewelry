@@ -1,4 +1,16 @@
 import axios from 'axios';
+import { axiosJWT } from '~/redux/apiRequest';
+
+export const typeDetail = async (id, token) => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/product/detail-type/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 export const allProduct = async () => {
     try {
@@ -20,8 +32,8 @@ export const productDetail = async (id) => {
 
 export const updateProduct = async (data, id, token, toast) => {
     try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/product/update-product/${id}`, data, {
-            headers: { authorization: `Bearer ${token}` },
+        const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/product/update-product/${id}`, data, {
+            headers: { authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         });
         toast('Cập nhật sản phẩm thành công', {
             position: 'top-center',
@@ -34,6 +46,7 @@ export const updateProduct = async (data, id, token, toast) => {
             progress: undefined,
             theme: 'light',
         });
+        return response.status
     } catch (error) {
         console.log(error);
         toast('Cập nhật sản phẩm không thành công', {
@@ -50,10 +63,19 @@ export const updateProduct = async (data, id, token, toast) => {
     }
 };
 
+export const getImage = async (name) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/image/${name}`)
+        return response.config.url;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const addProduct = async (data, token, toast) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
-            headers: { authorization: `Bearer ${token}` },
+        const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/product/add-product`, data, {
+            headers: { authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         });
         toast('Thêm sản phẩm thành công', {
             position: 'top-center',
@@ -83,7 +105,7 @@ export const addProduct = async (data, token, toast) => {
     }
 };
 
-export const deleteProduct = async (id, token, toast, axiosJWT) => {
+export const deleteProduct = async (id, token, toast) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/product/delete-product/${id}`, {
             headers: { authorization: `Bearer ${token}` },
@@ -116,7 +138,7 @@ export const deleteProduct = async (id, token, toast, axiosJWT) => {
     }
 };
 
-export const createType = async (data, token, axiosJWT, toast) => {
+export const createType = async (data, token, toast) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/product/create-type`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -161,7 +183,9 @@ export const allType = async () => {
 
 export const typeByFather = async (father) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-type-by-father?father=${father}`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/product/get-type-by-father?father=${father}`,
+        );
         // console.log("dfghj",response.data)
         return response.data;
     } catch (error) {
@@ -169,7 +193,7 @@ export const typeByFather = async (father) => {
     }
 };
 
-export const deleteType = async (token, toast, axiosJWT, id) => {
+export const deleteType = async (token, toast, id) => {
     try {
         await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/product/delete-type/${id}`, {
             headers: { authorization: `Bearer ${token}` },
@@ -202,7 +226,7 @@ export const deleteType = async (token, toast, axiosJWT, id) => {
     }
 };
 
-export const updateType = async (token, toast, data, axiosJWT, id) => {
+export const updateType = async (token, toast, data, id) => {
     try {
         await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/product/update-type/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -235,16 +259,6 @@ export const updateType = async (token, toast, data, axiosJWT, id) => {
     }
 };
 
-export const typeDetail = async (id, axiosJWT, token) => {
-    try {
-        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/product/detail-type/${id}`, {
-            headers: { authorization: `Bearer ${token}` },
-        });
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-};
 
 export const allSize = async () => {
     try {

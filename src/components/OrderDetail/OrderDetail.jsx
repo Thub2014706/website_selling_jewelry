@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 
-const OrderDetail = ({ show, handleClose, orderShow, shipping }) => {
+const OrderDetail = ({ show, handleClose, orderShow }) => {
     return (
         <Modal show={show} size="lg" onHide={handleClose}>
             <Modal.Header closeButton>
@@ -12,20 +12,20 @@ const OrderDetail = ({ show, handleClose, orderShow, shipping }) => {
                     <Col sm={3} className="fw-bold">
                         Họ tên người nhận:
                     </Col>
-                    <Col sm={9}>{shipping.name}</Col>
+                    <Col sm={9}>{orderShow.ship.name}</Col>
                 </Row>
                 <Row>
                     <Col sm={3} className="fw-bold">
                         Số điện thoại:
                     </Col>
-                    <Col sm={9}>{shipping.phone}</Col>
+                    <Col sm={9}>{orderShow.ship.phone}</Col>
                 </Row>
                 <Row>
                     <Col sm={3} className="fw-bold">
                         Địa chỉ:
                     </Col>
                     <Col sm={9}>
-                        {shipping.address}, {shipping.ward}, {shipping.district}, {shipping.province}
+                        {orderShow.ship.address}, {orderShow.ship.ward}, {orderShow.ship.district}, {orderShow.ship.province}
                     </Col>
                 </Row>
                 <Table className="mt-3">
@@ -38,7 +38,7 @@ const OrderDetail = ({ show, handleClose, orderShow, shipping }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderShow.cart.map((pro, index) => (
+                        {orderShow.data.cart.map((pro, index) => (
                             <tr key={index} className="align-middle">
                                 <td>
                                     <img src={pro.image} style={{ height: '50px' }} alt="" />
@@ -62,7 +62,7 @@ const OrderDetail = ({ show, handleClose, orderShow, shipping }) => {
                     </tbody>
                 </Table>
                 <p className="text-end">
-                    Tổng đơn: {orderShow.total.toLocaleString('it-IT')}
+                    Tổng đơn: {orderShow.data.total.toLocaleString('it-IT')}
                     <span>&#8363;</span>
                 </p>
             </Modal.Body>

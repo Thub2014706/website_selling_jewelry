@@ -3,7 +3,6 @@ import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import ModalSelect from '~/components/ModalSelect/ModalSelect';
-import { createAxios } from '~/createInstance';
 import { allOrderByUser, cancelOrder } from '~/services/OrderService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,33 +11,62 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import AddComment from '~/components/AddComment/AddComment';
 import { allCommentByUser } from '~/services/CommentService';
 import ButtonStatus from '~/components/ButtonStatus/ButtonStatus';
+import ImgSample from '~/components/ImgSample/ImgSample';
 
 const MyOrderPage = () => {
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.auth.login.currentUser);
-    
-    const id = user?.data.id
 
-    let axiosJWT = createAxios(user, dispatch);
-
-    const [allOrder, setAllOrder] = useState(null);
+    const id = user?.data.id;
 
     const [select, setSelect] = useState('all');
+
+    const [allOrder, setAllOrder] = useState(null);
 
     const [comments, setComments] = useState(null);
 
     useEffect(() => {
         const fetchOrder = async () => {
-            const data = await allOrderByUser(axiosJWT, id, user?.accessToken);
-            setAllOrder(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-            const dataComment = await allCommentByUser(axiosJWT, user?.accessToken, id);
+            if (select === 'all') {
+                const data = await allOrderByUser(id, user?.accessToken);
+                setAllOrder(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+            }
+            const dataComment = await allCommentByUser(user?.accessToken, id);
             setComments(dataComment);
-            // console.log(dataComment)
         };
         fetchOrder();
     }, [allOrder]);
-    // console.log(allOrder);
+
+    const handleAll = async () => {
+        setSelect('all');
+        const data = await allOrderByUser(id, user?.accessToken);
+        setAllOrder(data);
+    };
+
+    const handleRocessing = async (value) => {
+        setSelect('rocessing');
+        const data = await allOrderByUser(id, user?.accessToken, value.toString());
+        setAllOrder(data);
+    };
+
+    const handleTransport = async (value) => {
+        setSelect('transport');
+        const data = await allOrderByUser(id, user?.accessToken, value.toString());
+        setAllOrder(data);
+    };
+
+    const handleDelivered = async (value) => {
+        setSelect('delivered');
+        const data = await allOrderByUser(id, user?.accessToken, value.toString());
+        setAllOrder(data);
+    };
+
+    const handleCancelled = async (value) => {
+        setSelect('cancelled');
+        const data = await allOrderByUser(id, user?.accessToken, value.toString());
+        setAllOrder(data);
+    };
 
     const [show, setShow] = useState(false);
 
@@ -52,28 +80,8 @@ const MyOrderPage = () => {
     const handleClose = () => setShow(false);
 
     const handleCancel = async () => {
-        await cancelOrder(axiosJWT, idOrder, user?.accessToken, toast);
+        await cancelOrder(idOrder, user?.accessToken, toast);
         setShow(false);
-    };
-
-    const Pages = () => {
-        if (allOrder !== null) {
-            if (select === 'all') {
-                return allOrder;
-            }
-            if (select === 'rocessing') {
-                return allOrder.filter((item) => item.status === 'Đang xử lý');
-            }
-            if (select === 'transport') {
-                return allOrder.filter((item) => item.status === 'Đang vận chuyển');
-            }
-            if (select === 'delivered') {
-                return allOrder.filter((item) => item.status === 'Đã giao');
-            }
-            if (select === 'cancelled') {
-                return allOrder.filter((item) => item.status === 'Đã hủy');
-            }
-        }
     };
 
     const [showComment, setShowComment] = useState(false);
@@ -97,7 +105,7 @@ const MyOrderPage = () => {
                         <Button
                             variant="link"
                             className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => setSelect('all')}
+                            onClick={() => handleAll()}
                         >
                             <h5 style={{ color: select === 'all' ? 'var(--font-color)' : '' }}>Tất cả</h5>
                         </Button>
@@ -106,7 +114,7 @@ const MyOrderPage = () => {
                         <Button
                             variant="link"
                             className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => setSelect('rocessing')}
+                            onClick={() => handleRocessing('rocessing')}
                         >
                             <h5 style={{ color: select === 'rocessing' ? 'var(--font-color)' : '' }}>Đang xử lý</h5>
                         </Button>
@@ -115,7 +123,7 @@ const MyOrderPage = () => {
                         <Button
                             variant="link"
                             className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => setSelect('transport')}
+                            onClick={() => handleTransport('transport')}
                         >
                             <h5 style={{ color: select === 'transport' ? 'var(--font-color)' : '' }}>
                                 Đang vận chuyển
@@ -126,7 +134,7 @@ const MyOrderPage = () => {
                         <Button
                             variant="link"
                             className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => setSelect('delivered')}
+                            onClick={() => handleDelivered('delivered')}
                         >
                             <h5 style={{ color: select === 'delivered' ? 'var(--font-color)' : '' }}>Đã giao hàng</h5>
                         </Button>
@@ -135,7 +143,7 @@ const MyOrderPage = () => {
                         <Button
                             variant="link"
                             className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => setSelect('cancelled')}
+                            onClick={() => handleCancelled('cancelled')}
                         >
                             <h5 style={{ color: select === 'cancelled' ? 'var(--font-color)' : '' }}>Đã hủy</h5>
                         </Button>
@@ -143,16 +151,23 @@ const MyOrderPage = () => {
                 </Row>
             </Container>
             {allOrder !== null && comments !== null ? (
-                Pages().length > 0 ? (
-                    Pages().map((item) => (
+                allOrder.length > 0 ? (
+                    allOrder.map((item) => (
                         <Container className="shadow px-5 py-3 mt-4">
-                            <h5>Trạng thái: {item.status}</h5>
+                            <span className="d-flex">
+                                <h5>Trạng thái: </h5>
+                                <h6 style={{ color: '#26AA99' }} className="ms-2 mt-1">
+                                    {item.variants[item.variants.length - 1].status !== 'Giao hàng'
+                                        ? item.variants[item.variants.length - 1].status
+                                        : 'Đơn hàng đang trên đường giao đến bạn, hãy giữ máy nhé!'}
+                                </h6>
+                            </span>
                             <Table>
                                 {item.cart.map((pro, index) => (
                                     <tbody>
                                         <tr key={index}>
                                             <td>
-                                                <img src={pro.image} style={{ height: '100px' }} alt="" />
+                                                <ImgSample pathImg={pro.image} style={{ height: '100px' }} />
                                             </td>
                                             <td>
                                                 <span>
@@ -186,11 +201,14 @@ const MyOrderPage = () => {
                                     <span>&#8363;</span>
                                 </span>
                             </h5>
-                            {item.status === 'Đang xử lý' && (
+                            {item.variants[item.variants.length - 1].status === 'Đang xử lý' && (
                                 <ButtonStatus title="Huỷ đơn" handleButton={() => handleShow(item._id)} />
                             )}
-                            {item.status === 'Đang vận chuyển' && <ButtonStatus title="Đã nhận hàng" />}
-                            {item.status === 'Đã giao' &&
+                            {(item.variants[item.variants.length - 1].status === 'Đang vận chuyển' ||
+                                item.variants[item.variants.length - 1].status === 'Giao hàng') && (
+                                <ButtonStatus title="Đã nhận hàng" />
+                            )}
+                            {item.variants[item.variants.length - 1].status === 'Đã giao' &&
                                 (!comments.find((miniItem) => miniItem.order === item._id) ? (
                                     <ButtonStatus title="Đánh giá" handleButton={() => handleShowComment(item._id)} />
                                 ) : (

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { getAllByUser } from '~/services/AddressService';
 import UpdateAdress from '../UpdateAddress/UpdateAddress';
 import AddAdress from '../AddAddress/AddAddress';
 
-const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
+const AllAddress = ({ idSelect, show, allAddress, handleCloseAll, selectMain }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
-    const [allAdress, setAllAddress] = useState(null);
+    // const [allAddress, setAllAddress] = useState(null);
 
     const [showUpdate, setShowUpdate] = useState(false);
     const [idShow, setIdShow] = useState(null);
@@ -53,15 +53,12 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
 
     useEffect(() => {
         const fetchAll = async () => {
-            const data = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
-            setAllAddress(data);
-            // const main = data.find((item) => item.main === true);
             if (select === null) {
                 setSelect(selectMain);
             }
         };
         fetchAll();
-    }, [allAdress, selectMain, handleCloseUpdate, handleCloseAdd]);
+    }, [allAddress, selectMain, handleCloseUpdate, handleCloseAdd]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -77,8 +74,8 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
                         <Modal.Title>Địa chỉ của tôi</Modal.Title>
                     </Modal.Header>
                     <Modal.Body style={{ height: '70vh', overflowY: 'auto' }}>
-                        {allAdress !== null ? (
-                            allAdress.map((item, index) => (
+                        {allAddress !== null ? (
+                            allAddress.map((item, index) => (
                                 <p>
                                     <Form.Check
                                         inline
@@ -138,7 +135,7 @@ const AllAddress = ({ idSelect, show, handleCloseAll, selectMain }) => {
                 </Form>
             </Modal>
             {idShow && <UpdateAdress id={idShow} show={showUpdate} handleClose={handleCloseUpdate} />}
-            <AddAdress show={showAdd} handleClose={handleCloseAdd} />
+            <AddAdress show={showAdd} handleClose={handleCloseAdd} disabled={false} />
         </div>
     );
 };

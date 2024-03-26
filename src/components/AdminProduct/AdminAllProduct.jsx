@@ -8,18 +8,19 @@ import { allProduct, allType, deleteProduct } from '~/services/ProductService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../ModalSelect/ModalSelect';
-import { createAxios } from '~/createInstance';
+
 import Search from '~/layouts/components/Search/Search';
 import { searchProducts } from '~/redux/productSlice';
 import AdminUpdateProduct from './AdminUpdateProduct';
 import AdminAddProduct from './AdminAddProduct';
+import ImgSample from '../ImgSample/ImgSample';
 
 const AdminAllProduct = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const dispatch = useDispatch();
 
-    let axiosJWT = createAxios(user, dispatch);
+    // let axiosJWT = createAxios(user, dispatch);
 
     const [products, setProducts] = useState(null);
 
@@ -40,26 +41,26 @@ const AdminAllProduct = () => {
             const data = await allProduct();
             const dataType = await allType();
             setCategories(dataType);
-            const timer = setTimeout(() => {
-                if (search !== '') {
-                    const newData = data.filter((item) =>
-                        item.name
-                            .normalize('NFD')
-                            .replace(/[\u0300-\u036f]/g, '')
-                            .toLowerCase()
-                            .includes(
-                                search
-                                    .normalize('NFD')
-                                    .replace(/[\u0300-\u036f]/g, '')
-                                    .toLowerCase(),
-                            ),
-                    );
-                    setProducts(newData);
-                } else {
-                    setProducts(data);
-                }
-            }, 1200);
-            return () => clearTimeout(timer);
+            // const timer = setTimeout(() => {
+            //     if (search !== '') {
+            //         const newData = data.filter((item) =>
+            //             item.name
+            //                 .normalize('NFD')
+            //                 .replace(/[\u0300-\u036f]/g, '')
+            //                 .toLowerCase()
+            //                 .includes(
+            //                     search
+            //                         .normalize('NFD')
+            //                         .replace(/[\u0300-\u036f]/g, '')
+            //                         .toLowerCase(),
+            //                 ),
+            //         );
+            //         setProducts(newData);
+            //     } else {
+            setProducts(data);
+            // }
+            // }, 1200);
+            // return () => clearTimeout(timer);
         };
         fetchAllProduct();
     }, [products]);
@@ -86,7 +87,7 @@ const AdminAllProduct = () => {
     };
 
     const handleDelete = async () => {
-        await deleteProduct(idP, user.accessToken, toast, axiosJWT);
+        await deleteProduct(idP, user.accessToken, toast);
         setShow(false);
     };
 
@@ -153,7 +154,8 @@ const AdminAllProduct = () => {
                                     <tr key={product._id} className="align-middle">
                                         <td className="text-center">{index + 1}</td>
                                         <td className="text-center">
-                                            <img src={product.image[0]} style={{ height: '50px' }} alt="" />
+                                            <ImgSample pathImg={product.image[0]} style={{ height: '50px' }} />
+                                            {/* <ImgSample img={product.image[0]} style={{ height: '50px' }} /> */}
                                         </td>
                                         <td>{product.name}</td>
                                         <td className="text-center">

@@ -13,7 +13,6 @@ import {
 } from './authSlice';
 import { clearCart } from './cartSlice';
 
-
 // export const refreshToken = async () => {
 //     console.log('token');
 //     try {
@@ -55,14 +54,34 @@ import { clearCart } from './cartSlice';
 //     );
 // };
 
+axios.defaults.withCredentials = true;
+
+export const axiosJWT = axios.create();
+
+export const refreshToken = async () => {
+    // console.log('tokennnn');
+    try {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/refresh-token`);
+        // console.log('thu nghiem', response);
+        return response.data;
+    } catch (error) {
+        console.log('loi', error);
+    }
+};
+
 export const loginUser = async (user, dispatch, navigate, toast) => {
     dispatch(loginStart());
     try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
-        dispatch(loginSuccess(res.data));
-        // setInterceptor(res.data, dispatch);
-        console.log(res.data)
-        navigate('/');
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/signin`, user);
+        dispatch(loginSuccess(response.data));
+        console.log('hgfds', response.data);
+        if (response.data.data.isAdmin === true) {
+            navigate('/admin');
+        } else if (response.data.data.shipper === true) {
+            navigate('/ship');
+        } else {
+            navigate('/');
+        }
     } catch (error) {
         dispatch(loginFailed());
         if (error.response) {
@@ -121,7 +140,7 @@ export const registerUser = async (user, dispatch, navigate, toast) => {
     }
 };
 
-export const logout = async (dispatch, token, axiosJWT) => {
+export const logout = async (dispatch, token) => {
     dispatch(logoutStart());
     try {
         await axiosJWT.post(
@@ -131,10 +150,9 @@ export const logout = async (dispatch, token, axiosJWT) => {
                 headers: { authorization: `Bearer ${token}` },
             },
         );
-        dispatch(clearCart())
+        dispatch(clearCart());
         dispatch(logoutSuccess());
     } catch (error) {
         dispatch(logoutFailed());
     }
 };
-

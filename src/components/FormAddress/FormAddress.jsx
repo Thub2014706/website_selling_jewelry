@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import subVn from 'sub-vn';
-import { createAxios } from '~/createInstance';
+
 import { addAddress } from '~/services/AddressService';
 
 const FormAddress = () => {
@@ -67,11 +67,11 @@ const FormAddress = () => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const handlesubmit = async (e) => {
         e.preventDefault();
-        await addAddress(axiosJWT, data, user?.accessToken);
+        await addAddress(data, user?.accessToken);
     };
 
     return (

@@ -3,28 +3,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { getAllAddress } from '~/services/AddressService';
 import { allOrder, orderDetail } from '~/services/OrderService';
 import OrderDetail from '../OrderDetail/OrderDetail';
+import TimeFormat from '../TimeFormat/TimeFormat';
 
 const AdminOrder = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const dispatch = useDispatch();
 
-    let axiosJWT = createAxios(user, dispatch);
+    // let axiosJWT = createAxios(user, dispatch);
 
     const [orders, setOrders] = useState(null);
 
-    const [addresses, setAddresses] = useState(null);
-
     useEffect(() => {
         const fetch = async () => {
-            const dataOrder = await allOrder(axiosJWT, user?.accessToken);
-            const dataAddress = await getAllAddress(axiosJWT, user?.accessToken);
+            const dataOrder = await allOrder(user?.accessToken);
             setOrders(dataOrder);
-            setAddresses(dataAddress);
         };
         fetch();
     }, []);
@@ -33,20 +30,18 @@ const AdminOrder = () => {
 
     const [orderShow, setOrderShow] = useState(null);
 
-    const [idShipping, setIdShipping] = useState(null);
-    const handleShow = async (idItem, idShip) => {
-        setIdShipping(idShip)
+    const handleShow = async (idItem) => {
+        console.log(idItem);
         setShow(true);
-        const data = await orderDetail(axiosJWT, idItem, user?.accessToken);
+        const data = await orderDetail(idItem, user?.accessToken);
         setOrderShow(data);
     };
 
     const handleClose = () => setShow(false);
 
-
     return (
         <div>
-            {orders !== null && addresses !== null ? (
+            {orders !== null ? (
                 <Table bordered striped>
                     <thead>
                         <tr className="text-center">
@@ -62,24 +57,29 @@ const AdminOrder = () => {
                     </thead>
                     <tbody>
                         {orders.map((item, index) => {
-                            let idAddress = addresses.find((val) => val._id === item.shipping);
                             return (
                                 <tr className="text-center" key={item._id}>
                                     <td>{index + 1}</td>
-                                    <td>{item._id}</td>
-                                    <td>{idAddress.name}</td>
+                                    <td>{item.data._id}</td>
+                                    <td>{item.ship.name}</td>
                                     <td>
-                                        {idAddress.address}, {idAddress.ward}, {idAddress.district},{' '}
-                                        {idAddress.province}
+                                        {item.ship.address}, {item.ship.ward}, {item.ship.district},{' '}
+                                        {item.ship.province}
                                     </td>
-                                    <td>{item.createdAt}</td>
                                     <td>
-                                        {item.total.toLocaleString('it-IT')}
+                                        <TimeFormat time={item.data.createdAt} />
+                                    </td>
+                                    <td>
+                                        {item.data.total.toLocaleString('it-IT')}
                                         <span>&#8363;</span>
                                     </td>
-                                    <td>{item.status}</td>
+                                    <td>{item.data.variants.status}</td>
                                     <td>
-                                        <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item._id, idAddress)} />
+                                        <FontAwesomeIcon
+                                            icon={faEye}
+                                            onClick={() => handleShow(item.data._id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
                                     </td>
                                 </tr>
                             );
@@ -89,9 +89,7 @@ const AdminOrder = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            {orderShow && (
-                <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} shipping={idShipping} />
-            )}
+            {orderShow && <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} />}
         </div>
     );
 };

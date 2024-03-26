@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
+import { Badge, Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addProduct, allType } from '~/services/ProductService';
-import { createAxios } from '~/createInstance';
+
 import AdminAddCategories from './AdminAddCategories';
+import { faCircleXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { saveImageOld } from '~/redux/productSlice';
 
 const AdminAddProduct = ({ show, handleClose }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [name, setName] = useState('');
     const [image, setImage] = useState([]);
-    const [variants, setVariants] = useState([]);
+    const [imageEncode, setImageEncode] = useState([]);
+    const [size, setSize] = useState([]);
+    const [inStock, setInStock] = useState([]);
     const [type, setType] = useState('');
     const [price, setPrice] = useState('');
     const [information, setInformation] = useState('');
     const [discount, setDiscount] = useState('');
 
-    const addLink = () => {
-        const link = [...image, ''];
-        setImage(link);
+    const deleteImg = (img, i) => {
+        const copyImg = [...image];
+        const copyEncode = [...imageEncode];
+        URL.revokeObjectURL(img);
+        setImage(copyImg.filter((val, index) => index !== i));
+        setImageEncode(copyEncode.filter((val, index) => index !== i));
     };
+    // console.log(image)
 
-    const deleteLink = (i) => {
-        const link = [...image];
-        setImage(link.filter((val, index) => index !== i));
-    };
-
-    const handleImg = (e, i) => {
-        const inputData = [...image];
-        inputData[i] = e.target.value;
-        setImage(inputData);
+    const handleImg = (e) => {
+        const newFiles = e.target.files;
+        const updatedImage = [...image, ...newFiles];
+        setImage(updatedImage);
+        setImageEncode(Array.from(updatedImage).map((item) => URL.createObjectURL(item)));
     };
 
     const handleType = (e) => {
@@ -45,22 +50,30 @@ const AdminAddProduct = ({ show, handleClose }) => {
     };
 
     const addSize = () => {
-        const add = [...variants, { size: '', inStock: '' }];
-        setVariants(add);
+        const addSize = [...size, ''];
+        const addInStock = [...inStock, ''];
+        setSize(addSize);
+        setInStock(addInStock);
     };
 
     const deleteSize = (i) => {
-        const copyAdd = [...variants];
-        setVariants(copyAdd.filter((value, index) => index !== i));
+        const copySize = [...size];
+        const copyInStock = [...inStock];
+        setSize(copySize.filter((value, index) => index !== i));
+        setInStock(copyInStock.filter((value, index) => index !== i));
     };
 
-    const handleVariants = (e, i) => {
-        const { name, value } = e.target;
-        const inSize = name === 'size' ? value : variants[i].size;
-        const inInStock = name === 'inStock' ? value.replace(/[^\d]/g, '') : variants[i].inStock;
-        const copyAdd = [...variants];
-        copyAdd[i] = { size: inSize, inStock: inInStock };
-        setVariants(copyAdd);
+    const handleSize = (e, i) => {
+        const value = e.target.value;
+        const copyAdd = [...size];
+        copyAdd[i] = value;
+        setSize(copyAdd);
+    };
+
+    const handleInStock = (e, i) => {
+        const copyAdd = [...inStock];
+        copyAdd[i] = e.target.value;
+        setInStock(copyAdd);
     };
 
     const handlePrice = (e) => {
@@ -76,22 +89,30 @@ const AdminAddProduct = ({ show, handleClose }) => {
         const data = editor.getData();
         setInformation(data);
     };
+    const variants = [];
 
-    const data = {
-        name,
-        image,
-        type,
-        variants,
-        price,
-        information,
-        discount,
-    };
+    for (let i = 0; i < size.length; i++) {
+        variants.push({
+            size: size[i],
+            inStock: inStock[i],
+        });
+    }
+    // console.log(variants)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const add = await addProduct(data, user?.accessToken, toast);
+        const formData = new FormData();
+
+        formData.append('name', name);
+        image.forEach((image) => formData.append('image', image));
+        formData.append('type', type);
+        formData.append('variants', JSON.stringify(variants));
+        formData.append('price', price);
+        formData.append('information', information);
+        formData.append('discount', discount);
+        const add = await addProduct(formData, user?.accessToken, toast);
         if (add === 200) {
-            handleClose()
+            handleClose();
         }
     };
 
@@ -104,7 +125,9 @@ const AdminAddProduct = ({ show, handleClose }) => {
             if (!show) {
                 setName('');
                 setImage([]);
-                setVariants([]);
+                setImageEncode([]);
+                setSize([]);
+                setInStock([]);
                 setType('');
                 setPrice('');
                 setInformation('');
@@ -112,13 +135,13 @@ const AdminAddProduct = ({ show, handleClose }) => {
             }
         };
         fetchTypes();
-    }, [ show]);
+    }, [show]);
 
     return (
         <div>
             <ToastContainer />
             <Modal show={show} centered size="lg" onHide={handleClose}>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} enctype="multipart/form-data">
                     <Modal.Header closeButton>
                         <Modal.Title>Thêm sản phẩm</Modal.Title>
                     </Modal.Header>
@@ -144,36 +167,36 @@ const AdminAddProduct = ({ show, handleClose }) => {
                                 Hình ảnh
                             </Form.Label>
                             <Col sm={10}>
-                                Thêm link hình ảnh
-                                <Button variant="outline-dark" className="rounded-0 ms-3" onClick={() => addLink()}>
-                                    +
-                                </Button>
+                                <Form.Control
+                                    type="file"
+                                    name="image"
+                                    multiple
+                                    accept=".jpg, .png"
+                                    required
+                                    onChange={(e) => handleImg(e)}
+                                />
                             </Col>
-                            {image.map((data, index) => (
-                                <Col sm={{ span: 10, offset: 2 }} className="mt-3">
-                                    <Form.Group as={Row}>
-                                        <Col sm={11}>
-                                            <Form.Control
-                                                type="url"
-                                                name="image"
-                                                value={data}
-                                                placeholder="Nhập link hình ảnh"
-                                                required
-                                                onChange={(e) => handleImg(e, index)}
-                                            />
-                                        </Col>
-                                        <Col sm={1}>
-                                            <Button
-                                                variant="outline-dark"
-                                                className="rounded-0"
-                                                onClick={() => deleteLink(index)}
-                                            >
-                                                x
-                                            </Button>
-                                        </Col>
-                                    </Form.Group>
-                                </Col>
-                            ))}
+
+                            <Col sm={{ span: 10, offset: 2 }} className="mt-3">
+                                {imageEncode.map((item, index) => (
+                                    <div className="p-2" style={{ position: 'relative', display: 'inline-block' }}>
+                                        <img key={index} src={item} style={{ height: '90px', width: 'auto' }} />
+                                        <Badge
+                                            bg="secondary"
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 0,
+                                                borderRadius: '50%',
+                                                cursor: 'pointer',
+                                            }}
+                                            onClick={() => deleteImg(item, index)}
+                                        >
+                                            <FontAwesomeIcon icon={faXmark} />
+                                        </Badge>
+                                    </div>
+                                ))}
+                            </Col>
                         </Form.Group>
 
                         <Form.Group as={Row} className="mb-3">
@@ -192,32 +215,32 @@ const AdminAddProduct = ({ show, handleClose }) => {
                         <Form.Group as={Row} className="mb-3">
                             <Form.Label column={2}>Kích cỡ - Kho</Form.Label>
                             <Col sm={10}>
-                                Thêm kích cỡ và kho
+                                Thêm kích cỡ
                                 <Button variant="outline-dark" className="rounded-0 ms-3" onClick={() => addSize()}>
                                     +
                                 </Button>
                             </Col>
-                            {variants.map((data, index) => (
+                            {size.map((data, index) => (
                                 <Col sm={{ span: 10, offset: 2 }} className="mt-3 w-100">
                                     <Form.Group as={Row}>
                                         <Col sm="auto">
                                             <Form.Control
                                                 type="text"
                                                 name="size"
-                                                value={data.size}
+                                                value={data}
                                                 placeholder="Nhập kích cỡ"
                                                 required
-                                                onChange={(e) => handleVariants(e, index)}
+                                                onChange={(e) => handleSize(e, index)}
                                             />
                                         </Col>
                                         <Col sm="auto">
                                             <Form.Control
                                                 type="text"
                                                 name="inStock"
-                                                value={data.inStock}
+                                                value={inStock[index]}
                                                 placeholder="Nhập số lượng kho"
                                                 required
-                                                onChange={(e) => handleVariants(e, index)}
+                                                onChange={(e) => handleInStock(e, index)}
                                             />
                                         </Col>
                                         <Col sm={1}>

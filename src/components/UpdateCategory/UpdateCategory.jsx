@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { allType, typeDetail, updateType } from '~/services/ProductService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +11,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [types, setTypes] = useState(null);
 
@@ -23,7 +23,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
 
     useEffect(() => {
         const fetchTypes = async () => {
-            const dataUpdate = await typeDetail(id, axiosJWT, user?.accessToken);
+            const dataUpdate = await typeDetail(id, user?.accessToken);
             const dataAll = await allType();
             setTypes(dataAll);
             setName(dataUpdate.name);
@@ -44,7 +44,7 @@ const UpdateCategory = ({ id, show, handleClose }) => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        await updateType(user?.accessToken, toast, data, axiosJWT, id);
+        await updateType(user?.accessToken, toast, data, id);
     };
 
     return (

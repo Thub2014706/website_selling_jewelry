@@ -3,7 +3,7 @@ import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import AllAddress from '~/components/AllAddress/AllAddress';
 import AddAdress from '~/components/AddAddress/AddAddress';
-import { createAxios } from '~/createInstance';
+
 import { getAllByUser } from '~/services/AddressService';
 import img1 from '~/assets/images/title_cart2.png';
 import TitleImage from '~/components/TitleImage/TitleImage';
@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { clearCart } from '~/redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import ImgSample from '~/components/ImgSample/ImgSample';
 
 const CheckoutPage = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const CheckoutPage = () => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
     const [showAddress, setShowAddress] = useState(null);
     const [select, setSelect] = useState(null);
     const handleSelect = (id) => {
@@ -43,13 +44,13 @@ const CheckoutPage = () => {
 
     const handleCloseAll = () => setShowAll(false);
     const handleShowAll = (id) => {
-        setIdSelect(id)
+        setIdSelect(id);
         setShowAll(true);
     };
 
     useEffect(() => {
         const fetchAddress = async () => {
-            const addresses = await getAllByUser(axiosJWT, user?.accessToken, user?.data.id);
+            const addresses = await getAllByUser(user?.accessToken, user?.data.id);
             setAllAddress(addresses);
             if (products && products.length > 0) {
                 const copy = [...allProduct];
@@ -78,7 +79,7 @@ const CheckoutPage = () => {
         };
         fetchAddress();
     }, [allAddress, handleCloseAll, showAddress]);
-    // console.log(showAddress);
+    console.log(allAddress);
 
     const total = useSelector((state) => state.cart.totalPay);
 
@@ -88,13 +89,14 @@ const CheckoutPage = () => {
         cart: allProduct,
         user: user?.data.id,
         shipping: showAddress?._id,
+        status: 'Đang xử lý',
     };
     // console.log(data);
 
     const handleOrder = async () => {
-        await createOrder(axiosJWT, data, user?.accessToken, toast);
+        await createOrder(data, user?.accessToken, toast);
         setTimeout(() => {
-            navigate(`/myorder/${user?.data.id}`);
+            navigate(`/myorder`);
             dispatch(clearCart());
         }, 2000);
     };
@@ -128,7 +130,7 @@ const CheckoutPage = () => {
                                 >
                                     Thêm địa chỉ
                                 </Button>
-                                <AddAdress show={show} handleClose={handleClose} />
+                                <AddAdress show={show} handleClose={handleClose} disabled={true} />
                             </div>
                         )}
                     </Col>
@@ -141,10 +143,9 @@ const CheckoutPage = () => {
                                         {products.map((item) => (
                                             <tr className="align-middle">
                                                 <td>
-                                                    <img
-                                                        src={item.product.image[0]}
+                                                    <ImgSample
+                                                        pathImg={item.product.image[0]}
                                                         style={{ height: '50px' }}
-                                                        alt=""
                                                     />
                                                 </td>
                                                 <td>
@@ -179,6 +180,7 @@ const CheckoutPage = () => {
                 <AllAddress
                     idSelect={handleSelect}
                     show={showAll}
+                    allAddress={allAddress}
                     handleCloseAll={handleCloseAll}
                     selectMain={showAddress._id}
                 />

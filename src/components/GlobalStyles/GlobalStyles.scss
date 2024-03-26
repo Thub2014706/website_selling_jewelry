@@ -78,7 +78,7 @@ body {
     transition: opacity 0.6s ease, transform 2s cubic-bezier(0, 0, 0.44, 1.18);
 }
 
-.card-img:hover {
+.card:hover .card-img {
     transform: scale(1.1);
 }
 
@@ -195,3 +195,51 @@ body {
 .dropdown-nav:hover {
     color: var(--font-color);
 }
+
+.input-login::placeholder {
+    color: rgb(255, 255, 255) !important;
+    opacity: 1 !important; /* Firefox */
+}
+.input-login::-ms-input-placeholder {
+    /* Edge 12 -18 */
+    color: rgb(255, 255, 255) !important;
+}
+
+.card-login {
+    width: 25%;
+    background: transparent !important;
+    color: white !important;
+    border-color: white !important;
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.input-login {
+    border-radius: 40px !important;
+    background: transparent !important;
+    color: white !important;
+    height: 40px;
+}
+
+.input-group-login {
+    position: relative;
+}
+
+.icon-login {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+.input-group-login input {
+    padding-right: 40px; /* Đảm bảo nội dung không bị che bởi icon */
+}
+
+.text-long {
+    white-space: nowrap; // không xuống dòng
+    overflow: hidden; // ẩn nội dung bị thừa
+    text-overflow: ellipsis; // thêm dấu ... đằng sau
+    // max-width: 450px;
+  }
+  

@@ -3,7 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createAxios } from '~/createInstance';
+
 import { allType, createType } from '~/services/ProductService';
 
 const AdminAddCategories = ({ show, handleClose }) => {
@@ -11,7 +11,7 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [types, setTypes] = useState(null);
 
@@ -38,9 +38,9 @@ const AdminAddCategories = ({ show, handleClose }) => {
 
     const handleAdd = async (e) => {
         e.preventDefault();
-        const add = await createType(data, user?.accessToken, axiosJWT, toast);
+        const add = await createType(data, user?.accessToken, toast);
         if (add === 200) {
-            handleClose()
+            handleClose();
         }
     };
 

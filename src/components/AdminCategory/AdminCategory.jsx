@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { allType, deleteType } from '~/services/ProductService';
 import ModalSelect from '../ModalSelect/ModalSelect';
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,7 +16,7 @@ const AdminCategory = () => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [types, setTypes] = useState(null);
 
@@ -41,7 +41,7 @@ const AdminCategory = () => {
     };
 
     const handleDelete = async () => {
-        await deleteType(user.accessToken, toast, axiosJWT, idDelete);
+        await deleteType(user.accessToken, toast, idDelete);
         setShow(false);
     };
 

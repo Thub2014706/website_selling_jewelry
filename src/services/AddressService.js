@@ -1,4 +1,6 @@
-export const addAddress = async (axiosJWT, data, token, toast) => {
+import { axiosJWT } from '~/redux/apiRequest';
+
+export const addAddress = async (data, token, toast) => {
     try {
         const response = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/api/address/add-address`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -15,7 +17,7 @@ export const addAddress = async (axiosJWT, data, token, toast) => {
             progress: undefined,
             theme: 'light',
         });
-        return response.status
+        return response.status;
     } catch (error) {
         console.log(error);
         toast('Thêm địa chỉ thành công', {
@@ -32,7 +34,7 @@ export const addAddress = async (axiosJWT, data, token, toast) => {
     }
 };
 
-export const updateAddress = async (axiosJWT, data, token, id, toast) => {
+export const updateAddress = async (data, token, id, toast) => {
     try {
         const response = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/api/address/update-address/${id}`, data, {
             headers: { authorization: `Bearer ${token}` },
@@ -66,7 +68,7 @@ export const updateAddress = async (axiosJWT, data, token, id, toast) => {
     }
 };
 
-export const getDetail = async (axiosJWT, token, id) => {
+export const getDetail = async (token, id) => {
     try {
         const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/address/detail-address/${id}`, {
             headers: { authorization: `Bearer ${token}` },
@@ -77,7 +79,7 @@ export const getDetail = async (axiosJWT, token, id) => {
     }
 };
 
-export const getAllByUser = async (axiosJWT, token, id) => {
+export const getAllByUser = async (token, id) => {
     try {
         const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/address/getall-by-user/${id}`, {
             headers: { authorization: `Bearer ${token}` },
@@ -88,7 +90,7 @@ export const getAllByUser = async (axiosJWT, token, id) => {
     }
 };
 
-export const getAllAddress = async (axiosJWT, token) => {
+export const getAllAddress = async (token) => {
     try {
         const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/address/getall`, {
             headers: { authorization: `Bearer ${token}` },

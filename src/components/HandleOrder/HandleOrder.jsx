@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAxios } from '~/createInstance';
+
 import { allOrder, orderDetail, updateStatus } from '~/services/OrderService';
 import OrderDetail from '../OrderDetail/OrderDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,21 +13,18 @@ const HandleOrder = () => {
 
     const dispatch = useDispatch();
 
-    const axiosJWT = createAxios(user, dispatch);
+    // const axiosJWT = createAxios(user, dispatch);
 
     const [orders, setOrders] = useState(null);
-
-    const [addresses, setAddresses] = useState(null);
+    // console.log(axiosJWT)
 
     useEffect(() => {
         const fetch = async () => {
-            const dataOrder = await allOrder(axiosJWT, user?.accessToken);
-            const dataAddress = await getAllAddress(axiosJWT, user?.accessToken);
+            const dataOrder = await allOrder(user?.accessToken);
             setOrders(dataOrder);
-            setAddresses(dataAddress);
         };
         fetch();
-    }, [orders, axiosJWT, user?.accessToken]);
+    }, [orders, user?.accessToken]);
 
     const [show, setShow] = useState(false);
 
@@ -35,14 +32,16 @@ const HandleOrder = () => {
 
     const handleShow = async (id) => {
         setShow(true);
-        const data = await orderDetail(axiosJWT, id, user?.accessToken);
+        const data = await orderDetail(id, user?.accessToken);
         setOrderShow(data);
     };
 
     const handleClose = () => setShow(false);
 
-    const handleClick = async (id) => {
-        await updateStatus(axiosJWT, id, user?.accessToken);
+    const handleClick = async (id, status) => {
+        // console.log(status);
+        const data = { status: status.toString() }
+        await updateStatus(id, data);
     };
 
     return orders !== null ? (
@@ -60,30 +59,29 @@ const HandleOrder = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((item1, index) => {
-                                let idAddress = addresses.find((val) => val._id === item1.shipping);
-                                return item1.status === 'Đang xử lý' && (
-                                    <tr key={item1._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{item1._id}</td>
-                                        <td>
-                                            <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item1._id)} />
-                                        </td>
-                                        <td>
-                                            <Button variant="warning" onClick={() => handleClick(item1._id)}>
-                                                Vận chuyển
-                                            </Button>
-                                        </td>
-                                        {orderShow && (
-                                            <OrderDetail
-                                                show={show}
-                                                handleClose={handleClose}
-                                                orderShow={orderShow}
-                                                shipping={idAddress}
-                                            />
-                                        )}
-                                    </tr>
-                                )
+                            {orders.map((item, index) => {
+                                return (
+                                    item.data.variants[item.data.variants.length - 1].status === 'Đang xử lý' && (
+                                        <tr key={item.data._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.data._id}</td>
+                                            <td>
+                                                <FontAwesomeIcon
+                                                    icon={faEye}
+                                                    onClick={() => handleShow(item.data._id)}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Button
+                                                    variant="warning"
+                                                    onClick={() => handleClick(item.data._id, 'Đang vận chuyển')}
+                                                >
+                                                    Vận chuyển
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    )
+                                );
                             })}
                         </tbody>
                     </Table>
@@ -97,34 +95,31 @@ const HandleOrder = () => {
                                 <th>STT</th>
                                 <th>ID đơn hàng</th>
                                 <th>Chi tiết</th>
-                                <th>Xử lý</th>
+                                {/* <th>Xử lý</th> */}
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((item1, index) => {
-                                let idAddress = addresses.find((val) => val._id === item1.shipping);
-                                return item1.status === 'Đang vận chuyển' && (
-                                    <tr key={item1._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{item1._id}</td>
-                                        <td>
-                                            <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item1._id)} />
-                                        </td>
-                                        <td>
-                                            <Button variant="warning" onClick={() => handleClick(item1._id)}>
-                                                Đã giao
-                                            </Button>
-                                        </td>
-                                        {orderShow && (
-                                            <OrderDetail
-                                                show={show}
-                                                handleClose={handleClose}
-                                                orderShow={orderShow}
-                                                shipping={idAddress}
-                                            />
-                                        )}
-                                    </tr>
-                                ) 
+                            {orders.map((item, index) => {
+                                return (
+                                    item.data.variants[item.data.variants.length - 1].status === 'Đang vận chuyển' && (
+                                        <tr key={item.data._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.data._id}</td>
+                                            <td>
+                                                <FontAwesomeIcon
+                                                    icon={faEye}
+                                                    onClick={() => handleShow(item.data._id)}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                            </td>
+                                            {/* <td>
+                                                <Button variant="warning" onClick={() => handleClick(item.data._id)}>
+                                                    Đã giao
+                                                </Button>
+                                            </td> */}
+                                        </tr>
+                                    )
+                                );
                                 // : (
                                 //     <tr>
                                 //         <td colSpan={4}>Không có đơn nào</td>
@@ -144,39 +139,30 @@ const HandleOrder = () => {
                                 <th>STT</th>
                                 <th>ID đơn hàng</th>
                                 <th>Chi tiết</th>
-                                {/* <th>Xử lý</th> */}
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((item1, index) => {
-                                let idAddress = addresses.find((val) => val._id === item1.shipping);
-                                return item1.status === 'Đã giao' && (
-                                    <tr key={item1._id}>
-                                        <td>{index + 1}</td>
-                                        <td>{item1._id}</td>
-                                        <td>
-                                            <FontAwesomeIcon icon={faEye} onClick={() => handleShow(item1._id)} />
-                                        </td>
-                                        {/* <td>
-                                                <Button variant="warning" onClick={() => handleClick(item1._id)}>
-                                                    Đã giao
-                                                </Button>
-                                            </td> */}
-                                        {orderShow && (
-                                            <OrderDetail
-                                                show={show}
-                                                handleClose={handleClose}
-                                                orderShow={orderShow}
-                                                shipping={idAddress}
-                                            />
-                                        )}
-                                    </tr>
-                                )
+                            {orders.map((item, index) => {
+                                return (
+                                    item.data.variants[item.data.variants.length - 1].status === 'Đã giao' && (
+                                        <tr key={item.data._id}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.data._id}</td>
+                                            <td>
+                                                <FontAwesomeIcon
+                                                    icon={faEye}
+                                                    onClick={() => handleShow(item.data._id)}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )
+                                );
                             })}
                         </tbody>
                     </Table>
                 </Col>
             </Row>
+            {orderShow && <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} />}
         </Container>
     ) : (
         <p>Loading...</p>
