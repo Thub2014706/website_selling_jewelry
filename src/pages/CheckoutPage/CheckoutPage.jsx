@@ -91,14 +91,28 @@ const CheckoutPage = () => {
         shipping: showAddress?._id,
         status: 'Đang xử lý',
     };
-    // console.log(data);
+    console.log(showAddress);
 
     const handleOrder = async () => {
-        await createOrder(data, user?.accessToken, toast);
-        setTimeout(() => {
-            navigate(`/myorder`);
-            dispatch(clearCart());
-        }, 2000);
+        if (showAddress) {
+            await createOrder(data, user?.accessToken, toast);
+            setTimeout(() => {
+                navigate(`/myorder`);
+                dispatch(clearCart());
+            }, 2000);
+        } else {
+            toast('Hãy thêm địa chỉ', {
+                position: 'top-center',
+                autoClose: 2000,
+                type: 'warning',
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+            });
+        }
     };
 
     return (

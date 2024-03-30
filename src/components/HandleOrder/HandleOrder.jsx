@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { allOrder, orderDetail, updateStatus } from '~/services/OrderService';
+import {
+    allDelivered,
+    allOrder,
+    allRocessing,
+    allTransport,
+    allUnfinished,
+    orderDetail,
+    transportUpdate,
+} from '~/services/OrderService';
 import OrderDetail from '../OrderDetail/OrderDetail';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { getAllAddress } from '~/services/AddressService';
+import HandleOrderTable from '../HandleOrderTable/HandleOrderTable';
 
 const HandleOrder = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -16,12 +22,20 @@ const HandleOrder = () => {
     // const axiosJWT = createAxios(user, dispatch);
 
     const [orders, setOrders] = useState(null);
+    const [orders1, setOrders1] = useState(null);
+    const [orders2, setOrders2] = useState(null);
+    const [orders3, setOrders3] = useState(null);
+    const [orders4, setOrders4] = useState(null);
     // console.log(axiosJWT)
 
     useEffect(() => {
         const fetch = async () => {
             const dataOrder = await allOrder(user?.accessToken);
             setOrders(dataOrder);
+            setOrders1(await allRocessing());
+            setOrders2(await allTransport());
+            setOrders3(await allUnfinished());
+            setOrders4(await allDelivered());
         };
         fetch();
     }, [orders, user?.accessToken]);
@@ -38,128 +52,48 @@ const HandleOrder = () => {
 
     const handleClose = () => setShow(false);
 
-    const handleClick = async (id, status) => {
-        // console.log(status);
-        const data = { status: status.toString() }
-        await updateStatus(id, data);
+    const handleClick = async (id) => {
+        // console.log(id);
+        await transportUpdate(id, user?.accessToken);
     };
 
-    return orders !== null ? (
+    return orders1 !== null && orders2 !== null && orders3 !== null && orders4 !== null ? (
         <Container fluid>
             <Row>
                 <Col>
                     <h5>Đơn hàng xử lý</h5>
-                    <Table bordered striped className="text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>ID đơn hàng</th>
-                                <th>Chi tiết</th>
-                                <th>Xử lý</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((item, index) => {
-                                return (
-                                    item.data.variants[item.data.variants.length - 1].status === 'Đang xử lý' && (
-                                        <tr key={item.data._id}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.data._id}</td>
-                                            <td>
-                                                <FontAwesomeIcon
-                                                    icon={faEye}
-                                                    onClick={() => handleShow(item.data._id)}
-                                                />
-                                            </td>
-                                            <td>
-                                                <Button
-                                                    variant="warning"
-                                                    onClick={() => handleClick(item.data._id, 'Đang vận chuyển')}
-                                                >
-                                                    Vận chuyển
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    )
-                                );
-                            })}
-                        </tbody>
-                    </Table>
+                    <HandleOrderTable
+                        orders={orders1}
+                        handleShow={handleShow}
+                        handleClick={handleClick}
+                    />
                 </Col>
 
                 <Col>
                     <h5>Đơn hàng đang vận chuyển</h5>
-                    <Table bordered striped className="text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>ID đơn hàng</th>
-                                <th>Chi tiết</th>
-                                {/* <th>Xử lý</th> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((item, index) => {
-                                return (
-                                    item.data.variants[item.data.variants.length - 1].status === 'Đang vận chuyển' && (
-                                        <tr key={item.data._id}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.data._id}</td>
-                                            <td>
-                                                <FontAwesomeIcon
-                                                    icon={faEye}
-                                                    onClick={() => handleShow(item.data._id)}
-                                                    style={{ cursor: 'pointer' }}
-                                                />
-                                            </td>
-                                            {/* <td>
-                                                <Button variant="warning" onClick={() => handleClick(item.data._id)}>
-                                                    Đã giao
-                                                </Button>
-                                            </td> */}
-                                        </tr>
-                                    )
-                                );
-                                // : (
-                                //     <tr>
-                                //         <td colSpan={4}>Không có đơn nào</td>
-                                //     </tr>
-                                // );
-                            })}
-                        </tbody>
-                    </Table>
+                    <HandleOrderTable
+                        orders={orders2}
+                        handleShow={handleShow}
+                        // handleClick={handleClick}
+                    />
                 </Col>
             </Row>
             <Row>
                 <Col>
+                    <h5>Đơn hàng chưa hoàn thành</h5>
+                    <HandleOrderTable
+                        orders={orders3}
+                        handleShow={handleShow}
+                        // handleClick={handleClick}
+                    />
+                </Col>
+                <Col>
                     <h5>Đơn hàng đã giao</h5>
-                    <Table bordered striped className="text-center align-middle">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>ID đơn hàng</th>
-                                <th>Chi tiết</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((item, index) => {
-                                return (
-                                    item.data.variants[item.data.variants.length - 1].status === 'Đã giao' && (
-                                        <tr key={item.data._id}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.data._id}</td>
-                                            <td>
-                                                <FontAwesomeIcon
-                                                    icon={faEye}
-                                                    onClick={() => handleShow(item.data._id)}
-                                                />
-                                            </td>
-                                        </tr>
-                                    )
-                                );
-                            })}
-                        </tbody>
-                    </Table>
+                    <HandleOrderTable
+                        orders={orders4}
+                        handleShow={handleShow}
+                        // handleClick={handleClick}
+                    />
                 </Col>
             </Row>
             {orderShow && <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} />}

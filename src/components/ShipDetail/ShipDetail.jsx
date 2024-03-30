@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Button, Card, Col, Row, Table } from 'react-bootstrap';
-import { updateStatus } from '~/services/OrderService';
+import { deliveringUpdate } from '~/services/OrderService';
 
 const ShipDetail = ({ order }) => {
     const handleClick = async (id, status) => {
-        await updateStatus(id, { status: status.toString() });
+        await deliveringUpdate(id, { status: status.toString() });
     };
     useEffect(() => {}, [order]);
 

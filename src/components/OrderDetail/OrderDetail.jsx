@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
+import TimeFormat from '../TimeFormat/TimeFormat';
 
 const OrderDetail = ({ show, handleClose, orderShow }) => {
     return (
@@ -25,9 +26,20 @@ const OrderDetail = ({ show, handleClose, orderShow }) => {
                         Địa chỉ:
                     </Col>
                     <Col sm={9}>
-                        {orderShow.ship.address}, {orderShow.ship.ward}, {orderShow.ship.district}, {orderShow.ship.province}
+                        {orderShow.ship.address}, {orderShow.ship.ward}, {orderShow.ship.district},{' '}
+                        {orderShow.ship.province}
                     </Col>
                 </Row>
+                {orderShow.data.variants.map((item) => (
+                    <Row>
+                        <Col sm={3} className="fw-bold">
+                            Thời gian {item.status}:
+                        </Col>
+                        <Col sm={9}>
+                            <TimeFormat time={item.date} />
+                        </Col>
+                    </Row>
+                ))}
                 <Table className="mt-3">
                     <thead>
                         <tr>

@@ -3,7 +3,16 @@ import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import ModalSelect from '~/components/ModalSelect/ModalSelect';
-import { allOrderByUser, cancelOrder } from '~/services/OrderService';
+import {
+    allOrderByUser,
+    cancelOrder,
+    cancelledByUser,
+    deliveringByUser,
+    finishedByUser,
+    finishedUpdate,
+    rocessingByUser,
+    transportByUser,
+} from '~/services/OrderService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +21,8 @@ import AddComment from '~/components/AddComment/AddComment';
 import { allCommentByUser } from '~/services/CommentService';
 import ButtonStatus from '~/components/ButtonStatus/ButtonStatus';
 import ImgSample from '~/components/ImgSample/ImgSample';
+import OrderStatus from '~/constants/OrderStatus';
+import SelectMyOrder from '~/components/SelectMyOrder/SelectMyOrder';
 
 const MyOrderPage = () => {
     const dispatch = useDispatch();
@@ -25,48 +36,6 @@ const MyOrderPage = () => {
     const [allOrder, setAllOrder] = useState(null);
 
     const [comments, setComments] = useState(null);
-
-    useEffect(() => {
-        const fetchOrder = async () => {
-            if (select === 'all') {
-                const data = await allOrderByUser(id, user?.accessToken);
-                setAllOrder(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-            }
-            const dataComment = await allCommentByUser(user?.accessToken, id);
-            setComments(dataComment);
-        };
-        fetchOrder();
-    }, [allOrder]);
-
-    const handleAll = async () => {
-        setSelect('all');
-        const data = await allOrderByUser(id, user?.accessToken);
-        setAllOrder(data);
-    };
-
-    const handleRocessing = async (value) => {
-        setSelect('rocessing');
-        const data = await allOrderByUser(id, user?.accessToken, value.toString());
-        setAllOrder(data);
-    };
-
-    const handleTransport = async (value) => {
-        setSelect('transport');
-        const data = await allOrderByUser(id, user?.accessToken, value.toString());
-        setAllOrder(data);
-    };
-
-    const handleDelivered = async (value) => {
-        setSelect('delivered');
-        const data = await allOrderByUser(id, user?.accessToken, value.toString());
-        setAllOrder(data);
-    };
-
-    const handleCancelled = async (value) => {
-        setSelect('cancelled');
-        const data = await allOrderByUser(id, user?.accessToken, value.toString());
-        setAllOrder(data);
-    };
 
     const [show, setShow] = useState(false);
 
@@ -96,58 +65,99 @@ const MyOrderPage = () => {
 
     const handleCloseComment = () => setShowComment(false);
 
+    const handleUpdateDelivered = async (id) => {
+        await finishedUpdate(id);
+    };
+
+    useEffect(() => {
+        const fetchOrder = async () => {
+            switch (select) {
+                case 'all':
+                    const data1 = await allOrderByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data1.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                case 'rocessing':
+                    const data2 = await rocessingByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data2.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                case 'transport':
+                    const data3 = await transportByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data3.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                case 'delivering':
+                    const data4 = await deliveringByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data4.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                case 'delivered':
+                    const data5 = await finishedByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data5.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                case 'cancelled':
+                    const data6 = await cancelledByUser(id, user?.accessToken);
+                    setAllOrder(
+                        data6.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                    );
+                    break;
+                default:
+                    break;
+            }
+            const dataComment = await allCommentByUser(user?.accessToken, id);
+            setComments(dataComment);
+        };
+        fetchOrder();
+    }, [allOrder]);
+
     return (
         <div>
             <ToastContainer />
             <Container>
                 <Row className="shadow py-3 mt-3">
-                    <Col style={{ borderBottom: select === 'all' ? '1px solid var(--font-color)' : '' }}>
-                        <Button
-                            variant="link"
-                            className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => handleAll()}
-                        >
-                            <h5 style={{ color: select === 'all' ? 'var(--font-color)' : '' }}>Tất cả</h5>
-                        </Button>
-                    </Col>
-                    <Col style={{ borderBottom: select === 'rocessing' ? '1px solid var(--font-color)' : '' }}>
-                        <Button
-                            variant="link"
-                            className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => handleRocessing('rocessing')}
-                        >
-                            <h5 style={{ color: select === 'rocessing' ? 'var(--font-color)' : '' }}>Đang xử lý</h5>
-                        </Button>
-                    </Col>
-                    <Col style={{ borderBottom: select === 'transport' ? '1px solid var(--font-color)' : '' }}>
-                        <Button
-                            variant="link"
-                            className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => handleTransport('transport')}
-                        >
-                            <h5 style={{ color: select === 'transport' ? 'var(--font-color)' : '' }}>
-                                Đang vận chuyển
-                            </h5>
-                        </Button>
-                    </Col>
-                    <Col style={{ borderBottom: select === 'delivered' ? '1px solid var(--font-color)' : '' }}>
-                        <Button
-                            variant="link"
-                            className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => handleDelivered('delivered')}
-                        >
-                            <h5 style={{ color: select === 'delivered' ? 'var(--font-color)' : '' }}>Đã giao hàng</h5>
-                        </Button>
-                    </Col>
-                    <Col style={{ borderBottom: select === 'cancelled' ? '1px solid var(--font-color)' : '' }}>
-                        <Button
-                            variant="link"
-                            className="mx-auto d-grid text-black text-decoration-none"
-                            onClick={() => handleCancelled('cancelled')}
-                        >
-                            <h5 style={{ color: select === 'cancelled' ? 'var(--font-color)' : '' }}>Đã hủy</h5>
-                        </Button>
-                    </Col>
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'all' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('all')}
+                        styleTitle={{ color: select === 'all' ? 'var(--font-color)' : '' }}
+                        title="Tất cả"
+                    />
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'rocessing' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('rocessing')}
+                        styleTitle={{ color: select === 'rocessing' ? 'var(--font-color)' : '' }}
+                        title="Đang xử lý"
+                    />
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'transport' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('transport')}
+                        styleTitle={{ color: select === 'transport' ? 'var(--font-color)' : '' }}
+                        title="Đang vận chuyển"
+                    />
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'delivering' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('delivering')}
+                        styleTitle={{ color: select === 'delivering' ? 'var(--font-color)' : '' }}
+                        title="Đang giao hàng"
+                    />
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'delivered' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('delivered')}
+                        styleTitle={{ color: select === 'delivered' ? 'var(--font-color)' : '' }}
+                        title="Hoàn thành"
+                    />
+                    <SelectMyOrder
+                        styleCol={{ borderBottom: select === 'cancelled' ? '1px solid var(--font-color)' : '' }}
+                        onClick={() => setSelect('cancelled')}
+                        styleTitle={{ color: select === 'cancelled' ? 'var(--font-color)' : '' }}
+                        title="Đã hủy"
+                    />
                 </Row>
             </Container>
             {allOrder !== null && comments !== null ? (
@@ -157,7 +167,7 @@ const MyOrderPage = () => {
                             <span className="d-flex">
                                 <h5>Trạng thái: </h5>
                                 <h6 style={{ color: '#26AA99' }} className="ms-2 mt-1">
-                                    {item.variants[item.variants.length - 1].status !== 'Giao hàng'
+                                    {item.variants[item.variants.length - 1].status !== OrderStatus[2]
                                         ? item.variants[item.variants.length - 1].status
                                         : 'Đơn hàng đang trên đường giao đến bạn, hãy giữ máy nhé!'}
                                 </h6>
@@ -201,14 +211,19 @@ const MyOrderPage = () => {
                                     <span>&#8363;</span>
                                 </span>
                             </h5>
-                            {item.variants[item.variants.length - 1].status === 'Đang xử lý' && (
+                            {item.variants[item.variants.length - 1].status === OrderStatus[0] && (
                                 <ButtonStatus title="Huỷ đơn" handleButton={() => handleShow(item._id)} />
                             )}
-                            {(item.variants[item.variants.length - 1].status === 'Đang vận chuyển' ||
-                                item.variants[item.variants.length - 1].status === 'Giao hàng') && (
-                                <ButtonStatus title="Đã nhận hàng" />
+                            {[OrderStatus[1], OrderStatus[2], OrderStatus[3]].includes(
+                                item.variants[item.variants.length - 1].status,
+                            ) && <ButtonStatus title="Đã nhận hàng" disabled={true} />}
+                            {OrderStatus[4] === item.variants[item.variants.length - 1].status && (
+                                <ButtonStatus
+                                    title="Đã nhận hàng"
+                                    handleButton={() => handleUpdateDelivered(item._id)}
+                                />
                             )}
-                            {item.variants[item.variants.length - 1].status === 'Đã giao' &&
+                            {item.variants[item.variants.length - 1].status === OrderStatus[6] &&
                                 (!comments.find((miniItem) => miniItem.order === item._id) ? (
                                     <ButtonStatus title="Đánh giá" handleButton={() => handleShowComment(item._id)} />
                                 ) : (

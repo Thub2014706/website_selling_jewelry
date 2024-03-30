@@ -1,64 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row, Table } from 'react-bootstrap';
-import { allOrderConfirm, allOrderTransport, updateStatus } from '~/services/OrderService';
-import ShipDetail from '../ShipDetail/ShipDetail';
+import {
+    allOrderConfirm,
+    allOrderTransport,
+    cancelOrder,
+    deliveredUpdate,
+    deliveringUpdate,
+    unfinishedUpdate,
+} from '~/services/OrderService';
 import { useSelector } from 'react-redux';
 import NoteModal from '../NoteModal/NoteModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ModalSelect from '../ModalSelect/ModalSelect';
 
 const ShipperHandle = ({ statusOrder }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
     const [detail, setDetail] = useState(null);
-    const [orders, setOrders] = useState(null)
-
-    useEffect(() => {
-        const fetch = async () => {
-            const data1 = await allOrderTransport()
-            const data2 = await allOrderConfirm()
-            if (statusOrder === 'prepare') {
-                setOrders(data1)
-            }
-            if (statusOrder === 'confirm') {
-                setOrders(data2)
-            }
-        }
-        fetch()
-    }, [orders])
+    const [orders, setOrders] = useState(null);
 
     const handleDetail = (data) => {
         setDetail(data);
     };
 
-    const handleClick = async (id, status) => {
+    const handleDelivering = async (id) => {
         const data = {
-            status: status.toString(),
             shipper: user.data.id,
         };
-        await updateStatus(id, data);
+        await deliveringUpdate(id, data);
     };
 
-    const [show, setShow] = useState(false)
+    const handleDelivered = async (id) => {
+        const data = {
+            shipper: user.data.id,
+        };
+        // console.log('gh')
+        await deliveredUpdate(id, data);
+    };
 
-    const [idNote, setIdNote] = useState(null)
+    const [show, setShow] = useState(false);
 
-    
-    const handleClose = () => setShow(false)
-    
+    const [showNote, setShowNote] = useState(false);
+
+    const [idNote, setIdNote] = useState(null);
+    const [idShow, setIdShow] = useState(null)
+
+    const handleCloseStock = () => {
+        setShowNote(false);
+        setIdNote(null)
+    };
+
+    const handleClose = () => {
+        setShow(false);
+        setIdShow(null)
+    };
+
     const handleStock = (id) => {
-        setShow(true)
-        setIdNote(id)
-    }
-    
+        setShowNote(true);
+        setIdNote(id);
+    };
+
     const handleSave = async (text) => {
         // console.log(text)
         const data = {
-            status: 'Chưa hoàn thành',
             shipper: user.data.id,
-            note: text 
+            note: text,
         };
-        await updateStatus(idNote, data);
-        setIdNote(null)
+        await unfinishedUpdate(idNote, data);
+        setShowNote(false)
         toast('Đã lưu', {
             position: 'top-center',
             autoClose: 2000,
@@ -71,7 +80,36 @@ const ShipperHandle = ({ statusOrder }) => {
             theme: 'light',
         });
         // setNote(text)
-    }
+    };
+
+    // const [show, setShow] = useState(false)
+
+    const handleShow = (id) => {
+        setShow(true);
+        setIdShow(id)
+    };
+
+    const handleCancel = async () => {
+        const data = {
+            shipper: user.data.id,
+        };
+        await cancelOrder(idShow, user?.accessToken, toast, data);
+        setShow(false);
+    };
+    
+    useEffect(() => {
+        const fetch = async () => {
+            const data1 = await allOrderTransport();
+            const data2 = await allOrderConfirm();
+            if (statusOrder === 'prepare') {
+                setOrders(data1);
+            }
+            if (statusOrder === 'confirm') {
+                setOrders(data2);
+            }
+        };
+        fetch();
+    }, [orders, idNote, idShow]);
 
     return (
         <Row>
@@ -85,6 +123,7 @@ const ShipperHandle = ({ statusOrder }) => {
                             <th>Địa chỉ</th>
                             <th>Tổng thu</th>
                             <th>Xử lý</th>
+                            <th>Ghi chú</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,32 +142,39 @@ const ShipperHandle = ({ statusOrder }) => {
                                     </td>
                                     <td>{item.data.total.toLocaleString('it-IT')}đ</td>
                                     <td>
-                                        {item.data.variants[item.data.variants.length - 1].status ===
-                                        'Đang vận chuyển' ? (
-                                            <Button
-                                                onClick={() => handleClick(item.data._id, 'Giao hàng')}
-                                                variant="dark"
-                                            >
+                                        {statusOrder === 'prepare' ? (
+                                            <Button onClick={() => handleDelivering(item.data._id)} variant="dark">
                                                 Nhập đơn giao
                                             </Button>
                                         ) : (
-                                            <div className='d-flex'>
+                                            <div className="d-flex">
                                                 <Button
-                                                    onClick={() => handleClick(item.data._id, 'Đã giao')}
+                                                    onClick={() => handleDelivered(item.data._id)}
                                                     variant="dark"
                                                 >
                                                     Đã giao
                                                 </Button>
-                                                <Button
-                                                    onClick={() => handleStock(item.data._id)}
-                                                    variant="dark"
-                                                    className='ms-3'
-                                                >
-                                                    Trở lại kho
-                                                </Button>
+                                                {item.data.variants.length < 6 ? (
+                                                    <Button
+                                                        onClick={() => handleStock(item.data._id)}
+                                                        variant="dark"
+                                                        className="ms-3"
+                                                    >
+                                                        Trở lại kho
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        onClick={() => handleShow(item.data._id)}
+                                                        variant="dark"
+                                                        className="ms-3"
+                                                    >
+                                                        Huỷ đơn
+                                                    </Button>
+                                                )}
                                             </div>
                                         )}
                                     </td>
+                                    <td>{item.data.variants[item.data.variants.length - 1].note}</td>
                                 </tr>
                             ))
                         ) : (
@@ -136,7 +182,15 @@ const ShipperHandle = ({ statusOrder }) => {
                         )}
                     </tbody>
                 </Table>
-                {idNote !== null && <NoteModal show={show} handleClose={handleClose} handleSave={handleSave} />}
+                <ModalSelect
+                    show={show}
+                    text="Bạn có chắc muốn hủy đơn hàng này"
+                    accept="Hủy đơn"
+                    cancel="Thoát"
+                    handleAction={handleCancel}
+                    handleClose={handleClose}
+                />
+                {idNote !== null && <NoteModal show={showNote} handleClose={handleCloseStock} handleSave={handleSave} />}
             </Col>
             {/* <Col>{detail?.data.status === 'Đang vận chuyển' ? <ShipDetail order={detail} /> : <p></p>}</Col> */}
         </Row>
