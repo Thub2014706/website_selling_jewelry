@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { clearCart } from '~/redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import ImgSample from '~/components/ImgSample/ImgSample';
+import OrderStatus from '~/constants/OrderStatus';
 
 const CheckoutPage = () => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const CheckoutPage = () => {
     const handleSelect = (id) => {
         setSelect(id);
     };
-    // console.log(select)
+    // console.log(allProduct)
     const [allAddress, setAllAddress] = useState(null);
 
     const [show, setShow] = useState(false);
@@ -78,7 +79,7 @@ const CheckoutPage = () => {
             }
         };
         fetchAddress();
-    }, [allAddress, handleCloseAll, showAddress]);
+    }, [showAddress, allAddress, handleCloseAll, showAddress]);
     console.log(allAddress);
 
     const total = useSelector((state) => state.cart.totalPay);
@@ -88,10 +89,17 @@ const CheckoutPage = () => {
         amount: products.length,
         cart: allProduct,
         user: user?.data.id,
-        shipping: showAddress?._id,
-        status: 'Đang xử lý',
+        shipping: {
+            name: showAddress?.name,
+            province: showAddress?.province,
+            district: showAddress?.district,
+            ward: showAddress?.ward,
+            address: showAddress?.address,
+            phone: showAddress?.phone,
+        },
+        status: OrderStatus[0],
     };
-    console.log(showAddress);
+    // console.log(showAddress);
 
     const handleOrder = async () => {
         if (showAddress) {
@@ -196,7 +204,7 @@ const CheckoutPage = () => {
                     show={showAll}
                     allAddress={allAddress}
                     handleCloseAll={handleCloseAll}
-                    selectMain={showAddress._id}
+                    selectMain={showAddress?._id}
                 />
             )}
         </div>

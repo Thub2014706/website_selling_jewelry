@@ -1,4 +1,4 @@
-import { faChartPie, faChevronDown, faChevronUp, faClipboard, faFilePen } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faChevronDown, faChevronUp, faClipboard, faFilePen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Accordion, Button, Card, Col, Container, Dropdown, ListGroup, Row } from 'react-bootstrap';
@@ -11,6 +11,7 @@ import AllUser from '~/components/AllUser/AllUser';
 import HandleOrder from '~/components/HandleOrder/HandleOrder';
 import ListMenu from '~/components/ListMenu/ListMenu';
 import MenuSelect from '~/components/MenuSelect/MenuSelect';
+import Statistical from '~/components/Statistical/Statistical';
 
 const AdminPage = () => {
     const [showPage, setShowPage] = useState('');
@@ -26,6 +27,8 @@ const AdminPage = () => {
             return <AdminCategory />;
         } else if (showPage === 'handleOrder') {
             return <HandleOrder />;
+        } else if (showPage === 'statistical') {
+            return <Statistical />;
         }
     };
 
@@ -92,12 +95,19 @@ const AdminPage = () => {
                     {/* Xử lý đơn hàng */}
                     <MenuSelect
                         title="Xử lý đơn hàng"
+                        icon={faFilePen}
                         handleClick={() => setShowPage('handleOrder')}
                         styleMenu={{ backgroundColor: showPage === 'handleOrder' ? 'var(--list-menu)' : '' }}
                     />
 
                     {/* Thống kê */}
-                    <ListMenu title="Thống kê" icon={faChartPie}>
+                    <MenuSelect
+                        title="Thống kê"
+                        icon={faChartLine}
+                        handleClick={() => setShowPage('statistical')}
+                        styleMenu={{ backgroundColor: showPage === 'statistical' ? 'var(--list-menu)' : '' }}
+                    />
+                    {/* <ListMenu title="Thống kê" icon={faChartPie}>
                         <li className="mb-3">
                             <a className="text-decoration-none text-white" href="javascript:void(0)">
                                 quanly
@@ -113,7 +123,7 @@ const AdminPage = () => {
                                 quanly
                             </a>
                         </li>
-                    </ListMenu>
+                    </ListMenu> */}
                 </Col>
 
                 <Col sm={10} className="p-3">

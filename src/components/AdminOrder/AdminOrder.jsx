@@ -1,96 +1,144 @@
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Table } from 'react-bootstrap';
+import { Button, Col, Container, Pagination, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getAllAddress } from '~/services/AddressService';
-import { allOrder, orderDetail } from '~/services/OrderService';
+import {
+    allCancel,
+    allDelivered,
+    allFinished,
+    allOrder,
+    allRocessing,
+    allTransport,
+    allUnfinished,
+    orderDetail,
+    transportUpdate,
+} from '~/services/OrderService';
 import OrderDetail from '../OrderDetail/OrderDetail';
-import TimeFormat from '../TimeFormat/TimeFormat';
+import HandleOrderTable from '../HandleOrderTable/HandleOrderTable';
 
 const AdminOrder = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    const dispatch = useDispatch();
-
-    // let axiosJWT = createAxios(user, dispatch);
-
     const [orders, setOrders] = useState(null);
+    const [orders1, setOrders1] = useState(null);
+    const [orders2, setOrders2] = useState(null);
+    const [orders3, setOrders3] = useState(null);
+    const [orders4, setOrders4] = useState(null);
+    const [orders5, setOrders5] = useState(null);
+    const [orders6, setOrders6] = useState(null);
+    // console.log(axiosJWT)
 
     useEffect(() => {
         const fetch = async () => {
             const dataOrder = await allOrder(user?.accessToken);
             setOrders(dataOrder);
+            setOrders1(await allRocessing());
+            setOrders2(await allTransport());
+            setOrders3(await allUnfinished());
+            setOrders4(await allDelivered());
+            setOrders5(await allFinished());
+            setOrders6(await allCancel());
         };
         fetch();
-    }, []);
+    }, [orders, user?.accessToken]);
 
     const [show, setShow] = useState(false);
 
     const [orderShow, setOrderShow] = useState(null);
 
-    const handleShow = async (idItem) => {
-        console.log(idItem);
+    const handleShow = async (id) => {
         setShow(true);
-        const data = await orderDetail(idItem, user?.accessToken);
+        const data = await orderDetail(id, user?.accessToken);
         setOrderShow(data);
     };
 
     const handleClose = () => setShow(false);
 
-    return (
-        <div>
-            {orders !== null ? (
-                <Table bordered striped>
-                    <thead>
-                        <tr className="text-center">
-                            <th>STT</th>
-                            <th>ID đơn hàng</th>
-                            <th>Tên người nhận</th>
-                            <th>Địa chỉ</th>
-                            <th>Ngày đặt hàng</th>
-                            <th>Tổng đơn</th>
-                            <th>Trạng thái</th>
-                            <th>Chi tiết</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((item, index) => {
-                            return (
-                                <tr className="text-center" key={item._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.data._id}</td>
-                                    <td>{item.ship.name}</td>
-                                    <td>
-                                        {item.ship.address}, {item.ship.ward}, {item.ship.district},{' '}
-                                        {item.ship.province}
-                                    </td>
-                                    <td>
-                                        <TimeFormat time={item.data.createdAt} />
-                                    </td>
-                                    <td>
-                                        {item.data.total.toLocaleString('it-IT')}
-                                        <span>&#8363;</span>
-                                    </td>
-                                    <td>{item.data.variants.status}</td>
-                                    <td>
-                                        <FontAwesomeIcon
-                                            icon={faEye}
-                                            onClick={() => handleShow(item.data._id)}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </Table>
-            ) : (
-                <p>Loading...</p>
-            )}
+    const handleClick = async (id) => {
+        // console.log(id);
+        await transportUpdate(id, user?.accessToken);
+    };
+
+    return orders1 !== null && orders2 !== null && orders3 !== null && orders4 !== null ? (
+        <Container fluid>
+            <Row>
+                <Col>
+                    <h5>Đơn hàng xử lý</h5>
+                    <HandleOrderTable orders={orders1} handleShow={handleShow} handleClick={handleClick} />
+                </Col>
+
+                <Col>
+                    <h5>Đơn hàng đang vận chuyển</h5>
+                    <HandleOrderTable orders={orders2} handleShow={handleShow} />
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <h5>Đơn hàng chưa hoàn thành</h5>
+                    <HandleOrderTable orders={orders3} handleShow={handleShow} />
+                </Col>
+                <Col>
+                    <h5>Đơn hàng đã giao</h5>
+                    <HandleOrderTable orders={orders4} handleShow={handleShow} />
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <h5>Đơn hàng xác nhận đã hoàn thành</h5>
+                    <HandleOrderTable orders={orders5} handleShow={handleShow} />
+                </Col>
+                <Col>
+                    <h5>Đơn hàng đã hủy</h5>
+                    <HandleOrderTable orders={orders6} handleShow={handleShow} />
+                </Col>
+            </Row>
             {orderShow && <OrderDetail show={show} handleClose={handleClose} orderShow={orderShow} />}
-        </div>
+            <Pagination count={10} color="secondary" />
+        </Container>
+    ) : (
+        // <Container fluid>
+        //     <Row className="shadow p-3">
+        //         <Col>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Đang xử lý
+        //             </Button>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Đang vận chuyển
+        //             </Button>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Chưa hoàn thành
+        //             </Button>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Đã giao
+        //             </Button>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Đã xác nhận
+        //             </Button>
+        //             <Button
+        //                 className="rounded-0 me-2"
+        //                 style={{ backgroundColor: 'var(--list-menu)', border: 'none', width: '150px' }}
+        //             >
+        //                 Đã hủy
+        //             </Button>
+        //         </Col>
+        //     </Row>
+        // </Container>
+        <p>Loading...</p>
     );
 };
 

@@ -28,7 +28,7 @@ const ListMenu = ({ children, title, icon }) => {
                     </div>
                 </div>
             </a>
-            <ul
+            {click && <ul
                 className={`mt-1 h5 ${numberClick > 0 && click && 'list'} ${numberClick > 0 && !click && 'unlist'}`}
                 style={{
                     listStyle: 'none',
@@ -37,7 +37,7 @@ const ListMenu = ({ children, title, icon }) => {
                 }}
             >
                 {children}
-            </ul>
+            </ul>}
         </div>
     );
 };

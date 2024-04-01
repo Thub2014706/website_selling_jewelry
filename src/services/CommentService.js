@@ -18,7 +18,7 @@ export const createComment = async ( token, data, id, toast) => {
             theme: 'light',
         });
     } catch (error) {
-        console.log(error);
+        console.log(data);
         toast('Đánh giá không thành công', {
             position: 'top-center',
             autoClose: 2000,

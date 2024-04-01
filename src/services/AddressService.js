@@ -20,7 +20,7 @@ export const addAddress = async (data, token, toast) => {
         return response.status;
     } catch (error) {
         console.log(error);
-        toast('Thêm địa chỉ thành công', {
+        toast(error.response.data.message, {
             position: 'top-center',
             autoClose: 2000,
             type: 'success',

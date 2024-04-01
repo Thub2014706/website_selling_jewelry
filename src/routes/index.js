@@ -74,16 +74,6 @@ const adminRoutes = [
         component: AdminPage,
         layout: null,
     },
-    // {
-    //     path: '/admin/get-products',
-    //     component: AdminAllProduct,
-    //     layout: null,
-    // },
-    // {
-    //     path: '/admin/allorder',
-    //     component: AdminOrder,
-    //     layout: null,
-    // },
 ];
 
 const shipperRoutes = [

@@ -13,24 +13,24 @@ const OrderDetail = ({ show, handleClose, orderShow }) => {
                     <Col sm={3} className="fw-bold">
                         Họ tên người nhận:
                     </Col>
-                    <Col sm={9}>{orderShow.ship.name}</Col>
+                    <Col sm={9}>{orderShow.shipping.name}</Col>
                 </Row>
                 <Row>
                     <Col sm={3} className="fw-bold">
                         Số điện thoại:
                     </Col>
-                    <Col sm={9}>{orderShow.ship.phone}</Col>
+                    <Col sm={9}>{orderShow.shipping.phone}</Col>
                 </Row>
                 <Row>
                     <Col sm={3} className="fw-bold">
                         Địa chỉ:
                     </Col>
                     <Col sm={9}>
-                        {orderShow.ship.address}, {orderShow.ship.ward}, {orderShow.ship.district},{' '}
-                        {orderShow.ship.province}
+                        {orderShow.shipping.address}, {orderShow.shipping.ward}, {orderShow.shipping.district},{' '}
+                        {orderShow.shipping.province}
                     </Col>
                 </Row>
-                {orderShow.data.variants.map((item) => (
+                {orderShow.variants.map((item) => (
                     <Row>
                         <Col sm={3} className="fw-bold">
                             Thời gian {item.status}:
@@ -50,7 +50,7 @@ const OrderDetail = ({ show, handleClose, orderShow }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderShow.data.cart.map((pro, index) => (
+                        {orderShow.cart.map((pro, index) => (
                             <tr key={index} className="align-middle">
                                 <td>
                                     <img src={pro.image} style={{ height: '50px' }} alt="" />
@@ -74,7 +74,7 @@ const OrderDetail = ({ show, handleClose, orderShow }) => {
                     </tbody>
                 </Table>
                 <p className="text-end">
-                    Tổng đơn: {orderShow.data.total.toLocaleString('it-IT')}
+                    Tổng đơn: {orderShow.total.toLocaleString('it-IT')}
                     <span>&#8363;</span>
                 </p>
             </Modal.Body>

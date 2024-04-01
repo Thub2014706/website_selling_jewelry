@@ -13,6 +13,7 @@ import { allCommentByProduct } from '~/services/CommentService';
 
 import Star from '../Star/Star';
 import ImgSample from '../ImgSample/ImgSample';
+import TimeFormat from '../TimeFormat/TimeFormat';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
@@ -328,6 +329,9 @@ const ProductDetails = () => {
                                             <span className="d-flex">
                                                 <h5 className="me-2">{item.user.username}</h5>
                                                 <Star number={item.star} />
+                                                <p className='ms-2'>
+                                                    <TimeFormat time={item.createdAt} />
+                                                </p>
                                             </span>
                                             <p>{item.shortComment}</p>
                                         </div>

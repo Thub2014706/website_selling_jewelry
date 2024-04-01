@@ -17,29 +17,34 @@ const HandleOrderTable = ({ orders, handleShow, handleClick }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders !==null &&
-                    orders.map((item, index) => {
-                        return (
-                            <tr key={item._id}>
-                                <td>{index + 1}</td>
-                                <td>{item._id}</td>
-                                <td>
-                                    <FontAwesomeIcon
-                                        icon={faEye}
-                                        onClick={() => handleShow(item._id)}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                </td>
-                                {handleClick && (
+                    {orders?.length > 0 ? (
+                        orders.map((item, index) => {
+                            return (
+                                <tr key={item._id}>
+                                    <td>{index + 1}</td>
+                                    <td>{item._id}</td>
                                     <td>
-                                        <Button variant="warning" onClick={() => handleClick(item._id)}>
-                                            Vận chuyển
-                                        </Button>
+                                        <FontAwesomeIcon
+                                            icon={faEye}
+                                            onClick={() => handleShow(item._id)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
                                     </td>
-                                )}
-                            </tr>
-                        );
-                    })}
+                                    {handleClick && (
+                                        <td>
+                                            <Button variant="warning" onClick={() => handleClick(item._id)}>
+                                                Vận chuyển
+                                            </Button>
+                                        </td>
+                                    )}
+                                </tr>
+                            );
+                        })
+                    ) : (
+                        <tr>
+                            <td colSpan={4}>Không có đơn nào</td>
+                        </tr>
+                    )}
                 </tbody>
             </Table>
         </div>

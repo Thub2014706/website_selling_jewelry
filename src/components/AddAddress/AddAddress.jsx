@@ -103,7 +103,7 @@ const AddAdress = ({ show, handleClose, disabled }) => {
             }
         };
         fetchAddress();
-    }, []);
+    }, [show]);
     // console.log(allAddress)
 
     return (

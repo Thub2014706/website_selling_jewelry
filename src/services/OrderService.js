@@ -265,3 +265,21 @@ export const allUnfinished = async () => {
         console.log(error);
     }
 };
+
+export const allFinished = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/all-finished`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const allCancel = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/all-cancel`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

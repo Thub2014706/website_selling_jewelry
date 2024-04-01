@@ -28,7 +28,7 @@ const AddComment = ({ id, show, handleClose }) => {
             setShortComment(shortComment.fill(''));
         };
         fetchOrder();
-    }, [id]);
+    }, [id, show]);
 
     const handleComment = (e, i) => {
         const copy = [...shortComment];
@@ -42,17 +42,14 @@ const AddComment = ({ id, show, handleClose }) => {
         setStar(copy);
     };
 
+    // console.log(id)
+
     const data = [];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         await createComment(user?.accessToken, data, id, toast);
     };
-
-    // const handleShow = () => {
-    //     shortComment.fill('')
-    //     // show
-    // }
 
     return (
         <div>
@@ -64,7 +61,7 @@ const AddComment = ({ id, show, handleClose }) => {
                     </Modal.Header>
                     <Modal.Body>
                         {order !== null &&
-                            order.data.cart.map((item, index) => {
+                            order.cart.map((item, index) => {
                                 data.push({
                                     user: {
                                         iduser: user?.accessToken,

@@ -67,7 +67,7 @@ const ShipperHandle = ({ statusOrder }) => {
             note: text,
         };
         await unfinishedUpdate(idNote, data);
-        setShowNote(false)
+        // setShowNote(false)
         toast('Đã lưu', {
             position: 'top-center',
             autoClose: 2000,
@@ -130,33 +130,33 @@ const ShipperHandle = ({ statusOrder }) => {
                         {orders !== null ? (
                             orders.map((item, index) => (
                                 <tr
-                                    key={item.data._id}
+                                    key={item._id}
                                     onClick={() => handleDetail(item)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <td>{index + 1}</td>
-                                    <td>{item.data._id}</td>
+                                    <td>{item._id}</td>
                                     <td>
-                                        {item.ship.phone}, {item.ship.address}, {item.ship.ward}, {item.ship.district},{' '}
-                                        {item.ship.province}
+                                        {item.shipping.phone}, {item.shipping.address}, {item.shipping.ward}, {item.shipping.district},{' '}
+                                        {item.shipping.province}
                                     </td>
-                                    <td>{item.data.total.toLocaleString('it-IT')}đ</td>
+                                    <td>{item.total.toLocaleString('it-IT')}đ</td>
                                     <td>
                                         {statusOrder === 'prepare' ? (
-                                            <Button onClick={() => handleDelivering(item.data._id)} variant="dark">
+                                            <Button onClick={() => handleDelivering(item._id)} variant="dark">
                                                 Nhập đơn giao
                                             </Button>
                                         ) : (
                                             <div className="d-flex">
                                                 <Button
-                                                    onClick={() => handleDelivered(item.data._id)}
+                                                    onClick={() => handleDelivered(item._id)}
                                                     variant="dark"
                                                 >
                                                     Đã giao
                                                 </Button>
-                                                {item.data.variants.length < 6 ? (
+                                                {item.variants.length < 6 ? (
                                                     <Button
-                                                        onClick={() => handleStock(item.data._id)}
+                                                        onClick={() => handleStock(item._id)}
                                                         variant="dark"
                                                         className="ms-3"
                                                     >
@@ -164,7 +164,7 @@ const ShipperHandle = ({ statusOrder }) => {
                                                     </Button>
                                                 ) : (
                                                     <Button
-                                                        onClick={() => handleShow(item.data._id)}
+                                                        onClick={() => handleShow(item._id)}
                                                         variant="dark"
                                                         className="ms-3"
                                                     >
@@ -174,7 +174,7 @@ const ShipperHandle = ({ statusOrder }) => {
                                             </div>
                                         )}
                                     </td>
-                                    <td>{item.data.variants[item.data.variants.length - 1].note}</td>
+                                    <td>{item.variants[item.variants.length - 1].note}</td>
                                 </tr>
                             ))
                         ) : (
@@ -192,7 +192,6 @@ const ShipperHandle = ({ statusOrder }) => {
                 />
                 {idNote !== null && <NoteModal show={showNote} handleClose={handleCloseStock} handleSave={handleSave} />}
             </Col>
-            {/* <Col>{detail?.data.status === 'Đang vận chuyển' ? <ShipDetail order={detail} /> : <p></p>}</Col> */}
         </Row>
     );
 };
