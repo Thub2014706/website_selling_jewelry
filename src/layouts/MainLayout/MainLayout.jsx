@@ -5,10 +5,10 @@ import TextStatus from '../components/TextStatus/TextStatus';
 
 const MainLayout = ({ children }) => {
     return (
-        <div>
+        <div className="min-vh-100 d-flex flex-column justify-content-between">
             <TextStatus />
             <Header />
-            <main>{children}</main>
+            <main className="mb-auto">{children}</main>
             <Footer />
         </div>
     );

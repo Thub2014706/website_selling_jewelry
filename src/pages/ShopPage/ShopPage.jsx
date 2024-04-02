@@ -124,7 +124,7 @@ const ShopPage = () => {
                 break;
             case 'button5':
                 copy = copy.sort(
-                    (b, a) => b.price - (b.price * b.discount) / 100 - (a.price - (a.price * a.discount) / 100),
+                    (a, b) => b.price - (b.price * b.discount) / 100 - (a.price - (a.price * a.discount) / 100),
                 );
                 break;
 
@@ -299,6 +299,8 @@ const ShopPage = () => {
                                                 name={product.name}
                                                 price={product.price}
                                                 discount={product.discount}
+                                                numberStar={product.numberStar}
+                                                selled={product.selled}
                                             />
                                         </Link>
                                     </Col>

@@ -182,6 +182,14 @@ const Header = () => {
                                                                 Đơn hàng của bạn
                                                             </Link>
                                                         </li>
+                                                        <li className="mb-2">
+                                                            <Link
+                                                                to={`/wishlist`}
+                                                                className="text-black text-decoration-none"
+                                                            >
+                                                                Danh sách yêu thích
+                                                            </Link>
+                                                        </li>
                                                         {user.data.isAdmin && (
                                                             <li className="mb-2">
                                                                 <Link

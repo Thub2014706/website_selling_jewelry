@@ -10,6 +10,7 @@ import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
 import RegisterPage from '~/pages/RegisterPage/RegisterPage';
 import ShipperPage from '~/pages/ShipperPage/ShipperPage';
 import ShopPage from '~/pages/ShopPage/ShopPage';
+import WishlistPage from '~/pages/WishlistPage/WishlistPage';
 
 const publicRoutes = [
     {
@@ -65,6 +66,10 @@ const privateRoutes = [
     {
         path: '/myorder',
         component: MyOrderPage,
+    },
+    {
+        path: '/wishlist',
+        component: WishlistPage,
     },
 ];
 

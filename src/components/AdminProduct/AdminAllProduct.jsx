@@ -115,7 +115,7 @@ const AdminAllProduct = () => {
         <div>
             <ToastContainer />
             <Row className="mb-4">
-                <Col>
+                {/* <Col>
                     <Search
                         color="black"
                         search={search}
@@ -124,7 +124,7 @@ const AdminAllProduct = () => {
                         // handleSearch={handleSearch}
                         // handleKeyDown={handleKeyDown}
                     />
-                </Col>
+                </Col> */}
                 <Col>
                     <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
                         Thêm sản phẩm

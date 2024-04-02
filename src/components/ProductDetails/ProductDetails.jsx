@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBagShopping, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBagShopping, faHeart, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { addToCart } from '~/redux/cartSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,15 +14,22 @@ import { allCommentByProduct } from '~/services/CommentService';
 import Star from '../Star/Star';
 import ImgSample from '../ImgSample/ImgSample';
 import TimeFormat from '../TimeFormat/TimeFormat';
+import { addFavorite, deleteFavorite, numberFavoriteByProduct, testFavorite } from '~/services/UserService';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
+
+    const user = useSelector((state) => state.auth.login.currentUser);
 
     const { id } = useParams();
 
     const navigate = useNavigate();
 
     const [comments, setComments] = useState(null);
+
+    const [favorite, setFavorite] = useState(false);
+
+    const [numberFavorite, setNumberFavorite] = useState(0);
 
     // lấy thông tin chi tiết sp
     const [product, setProduct] = useState(null);
@@ -32,9 +39,13 @@ const ProductDetails = () => {
             setProduct(dataProduct);
             const dataComment = await allCommentByProduct(id);
             setComments(dataComment);
+            const dataFavorite = await testFavorite(id, user?.data.id);
+            setFavorite(dataFavorite);
+            const number = await numberFavoriteByProduct(id);
+            setNumberFavorite(number);
         };
         fetchProductDetail();
-    }, [id]);
+    }, [id, favorite, user]);
 
     // giá trị số lượng sp
     const [number, setNumber] = useState(1);
@@ -73,7 +84,7 @@ const ProductDetails = () => {
         }
     };
 
-    console.log('fghjhj', product);
+    // console.log('fghjhj', product);
 
     const products = useSelector((state) => state.cart.cartItems);
     const handleToCart = () => {
@@ -171,19 +182,20 @@ const ProductDetails = () => {
         setNumber(1);
         setSizeValue(i);
     };
-    console.log('sdfghjkl;', comments);
+    // console.log('sdfghjkl;', comments);
 
-    // const avgStar = () => {
-    //     if (comments !== null) {
-    //         let sum = 0;
-    //         let i = 0;
-    //         comments.map((item) => {
-    //             sum += item.star;
-    //             i += 1;
-    //         });
-    //         return sum / i;
-    //     }
-    // };
+    const handleFavorite = async () => {
+        if (user) {
+            setFavorite(!favorite);
+            if (favorite === false) {
+                await addFavorite(user?.accessToken, id, user?.data.id);
+            } else {
+                await deleteFavorite(user?.accessToken, id, user?.data.id);
+            }
+        } else {
+            navigate('/signin');
+        }
+    };
 
     return (
         <div>
@@ -193,13 +205,6 @@ const ProductDetails = () => {
                     <Row>
                         <Col md={1}>
                             {product.image.map((img, index) => (
-                                // <img
-                                //     onClick={() => setPhoto(index)}
-                                //     src={img}
-                                //     className={`d-block mx-auto w-75 border rounded mt-2 ${
-                                //         photo === index ? 'border-secondary shadow' : ''
-                                //     }`}
-                                // />
                                 <ImgSample
                                     onClick={() => setPhoto(index)}
                                     pathImg={img}
@@ -310,6 +315,16 @@ const ProductDetails = () => {
                             >
                                 Mua ngay
                             </Button>
+                            <div className="d-flex mt-4">
+                                <span className="d-flex" onClick={handleFavorite}>
+                                    <FontAwesomeIcon
+                                        icon={faHeart}
+                                        size="xl"
+                                        color={favorite ? '#FF8787' : '#9e9e9e'}
+                                    />
+                                    <h5 className="ms-2">Yêu thích ({numberFavorite})</h5>
+                                </span>
+                            </div>
                         </Col>
                     </Row>
                     <Row>
@@ -329,7 +344,7 @@ const ProductDetails = () => {
                                             <span className="d-flex">
                                                 <h5 className="me-2">{item.user.username}</h5>
                                                 <Star number={item.star} />
-                                                <p className='ms-2'>
+                                                <p className="ms-2">
                                                     <TimeFormat time={item.createdAt} />
                                                 </p>
                                             </span>
