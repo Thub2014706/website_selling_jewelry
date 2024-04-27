@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { axiosJWT } from '~/redux/apiRequest';
 
-export const allUser = async (token) => {
+export const allUser = async (token, search, number, show) => {
     try {
-        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/user/all-account`, {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/user/all-account?search=${search}&number=${number}&show=${show}`, {
             headers: { authorization: `Bearer ${token}` },
         });
         return response.data;

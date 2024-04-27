@@ -2,30 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { searchProducts } from '~/redux/productSlice';
-import { useNavigate } from 'react-router-dom';
 
-const Search = ({ color, search, searchInput, handleSearch, handleKeyDown, deleteSearch }) => {
-    // const dispatch = useDispatch();
-    // const navigate = useNavigate();
-    // const [search, setSearch] = useState('');
-    // const searchInput = (e) => {
-    //     setSearch(e.target.value);
-    // };
-    // // console.log(search)
-
-    // const handleKeyDown = (e) => {
-    //     if (e.key === 'Enter') {
-    //         e.preventDefault();
-    //         dispatch(searchProducts(search));
-    //         navigate(`/search/${search}`);
-    //     }
-    // };
-    // const handleSearch = () => {
-    //     dispatch(searchProducts(search));
-    //     navigate(`/search/${search}`);
-    // };
+const Search = ({ color, search, searchInput, handleSearch }) => {
 
     return (
         <Col xs="auto">

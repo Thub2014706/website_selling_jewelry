@@ -14,13 +14,10 @@ import { searchProducts } from '~/redux/productSlice';
 import AdminUpdateProduct from './AdminUpdateProduct';
 import AdminAddProduct from './AdminAddProduct';
 import ImgSample from '../ImgSample/ImgSample';
+import PaginationSearch from '../PaginationSearch/PaginationSearch';
 
 const AdminAllProduct = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
-
-    const dispatch = useDispatch();
-
-    // let axiosJWT = createAxios(user, dispatch);
 
     const [products, setProducts] = useState(null);
 
@@ -28,43 +25,28 @@ const AdminAllProduct = () => {
 
     const [search, setSearch] = useState('');
 
-    const searchInput = (e) => {
-        setSearch(e.target.value);
-    };
+    const [number, setNumber] = useState(1);
 
-    const deleteSearch = () => {
-        setSearch('');
-    };
+    const [length, setLength] = useState(1)
+
+    const handleNumber = (number) => {
+        setNumber(number)
+    }
+
+    const handleSearch = (search) => {
+        setSearch(search)
+    }
 
     useEffect(() => {
         const fetchAllProduct = async () => {
-            const data = await allProduct();
+            const data = await allProduct(search, number, 2);
             const dataType = await allType();
             setCategories(dataType);
-            // const timer = setTimeout(() => {
-            //     if (search !== '') {
-            //         const newData = data.filter((item) =>
-            //             item.name
-            //                 .normalize('NFD')
-            //                 .replace(/[\u0300-\u036f]/g, '')
-            //                 .toLowerCase()
-            //                 .includes(
-            //                     search
-            //                         .normalize('NFD')
-            //                         .replace(/[\u0300-\u036f]/g, '')
-            //                         .toLowerCase(),
-            //                 ),
-            //         );
-            //         setProducts(newData);
-            //     } else {
-            setProducts(data);
-            // }
-            // }, 1200);
-            // return () => clearTimeout(timer);
+            setProducts(data.data);
+            setLength(data.length)
         };
         fetchAllProduct();
     }, [products]);
-    // console.log(categories);
 
     const sumArray = (array) => {
         let sum = 0;
@@ -112,19 +94,9 @@ const AdminAllProduct = () => {
     };
 
     return (
-        <div>
+        <div className="shadow rounded p-5">
             <ToastContainer />
             <Row className="mb-4">
-                {/* <Col>
-                    <Search
-                        color="black"
-                        search={search}
-                        searchInput={searchInput}
-                        deleteSearch={deleteSearch}
-                        // handleSearch={handleSearch}
-                        // handleKeyDown={handleKeyDown}
-                    />
-                </Col> */}
                 <Col>
                     <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
                         Thêm sản phẩm
@@ -132,7 +104,8 @@ const AdminAllProduct = () => {
                     <AdminAddProduct show={showAdd} handleClose={handleCloseAdd} />
                 </Col>
             </Row>
-            <Row>
+            <PaginationSearch length={length} selectNumber={handleNumber} handleSubmit={handleSearch} />
+            <Row className='mt-3'>
                 {products !== null ? (
                     <Table bordered striped>
                         <thead>

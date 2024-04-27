@@ -12,9 +12,9 @@ export const typeDetail = async (id, token) => {
     }
 };
 
-export const allProduct = async () => {
+export const allProduct = async (search, number, show) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/all-product`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/all-product?search=${search}&number=${number}&show=${show}`);
         return response.data;
     } catch (error) {
         console.log(error);

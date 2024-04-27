@@ -69,13 +69,13 @@ const AdminCategory = () => {
     // console.log(idUpdate)
 
     return (
-        <div>
+        <div className="shadow rounded p-5">
             <ToastContainer />
             <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
                 Thêm phân loại
             </Button>
             {types !== null && (
-                <Table bordered striped className="w-50 text-center">
+                <Table bordered striped className="text-center">
                     <thead>
                         <tr>
                             <th>STT</th>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
 import TitleImage from '~/components/TitleImage/TitleImage';
-import { allProduct, allSize, allType, filterAll } from '~/services/ProductService';
+import { filterAll } from '~/services/ProductService';
 import title from '~/assets/images/title3.png';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ const ShopPage = () => {
     // const history = useHistory()
 
     const { type } = useParams();
-    console.log(type)
+    console.log(type);
 
     const search = new URLSearchParams(location.search).get('query'); //lấy giá trị chuỗi truy vấn trên url
 
@@ -84,17 +84,15 @@ const ShopPage = () => {
                 const data = await filterAll({ search });
                 setProducts(data);
                 setSizes(data);
-            } else
-            if (type) {
+            } else if (type) {
                 const data = await filterAll({ type });
                 setProducts(data);
                 setSizes(data);
-            }
-            else {
+            } else {
                 const data = await filterAll({});
                 setProducts(data);
                 setSizes(data);
-                console.log(data)
+                console.log(data);
             }
         };
         fetchProducts();
