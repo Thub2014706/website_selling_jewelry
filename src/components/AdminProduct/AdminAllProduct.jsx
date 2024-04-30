@@ -27,23 +27,23 @@ const AdminAllProduct = () => {
 
     const [number, setNumber] = useState(1);
 
-    const [length, setLength] = useState(1)
+    const [length, setLength] = useState(1);
 
     const handleNumber = (number) => {
-        setNumber(number)
-    }
+        setNumber(number);
+    };
 
     const handleSearch = (search) => {
-        setSearch(search)
-    }
+        setSearch(search);
+    };
 
     useEffect(() => {
         const fetchAllProduct = async () => {
-            const data = await allProduct(search, number, 2);
+            const data = await allProduct(search, number, 8);
             const dataType = await allType();
             setCategories(dataType);
             setProducts(data.data);
-            setLength(data.length)
+            setLength(data.length);
         };
         fetchAllProduct();
     }, [products]);
@@ -96,7 +96,7 @@ const AdminAllProduct = () => {
     return (
         <div className="shadow rounded p-5">
             <ToastContainer />
-            <Row className="mb-4">
+            <Row>
                 <Col>
                     <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
                         Thêm sản phẩm
@@ -105,7 +105,7 @@ const AdminAllProduct = () => {
                 </Col>
             </Row>
             <PaginationSearch length={length} selectNumber={handleNumber} handleSubmit={handleSearch} />
-            <Row className='mt-3'>
+            <Row>
                 {products !== null ? (
                     <Table bordered striped>
                         <thead>
@@ -125,7 +125,7 @@ const AdminAllProduct = () => {
                                 let idType = categories.find((item) => item._id === product.type);
                                 return (
                                     <tr key={product._id} className="align-middle">
-                                        <td className="text-center">{index + 1}</td>
+                                        <td className="text-center">{index + 1 + 8 * (number - 1)}</td>
                                         <td className="text-center">
                                             <ImgSample pathImg={product.image[0]} style={{ height: '50px' }} />
                                             {/* <ImgSample img={product.image[0]} style={{ height: '50px' }} /> */}

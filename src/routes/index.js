@@ -4,6 +4,7 @@ import CartPage from '~/pages/CartPage/CartPage';
 import CheckoutPage from '~/pages/CheckoutPage/CheckoutPage';
 import HomePage from '~/pages/HomePage/HomePage';
 import LoginPage from '~/pages/LoginPage/LoginPage';
+import AllAddressPage from '~/pages/MyAddressPage/MyAddressPage';
 import MyOrderPage from '~/pages/MyOrderPage/MyOrderPage';
 import NoPage from '~/pages/NoPage/NoPage';
 import ProductDetailsPage from '~/pages/ProductDetailsPage/ProductDetailsPage';
@@ -70,6 +71,10 @@ const privateRoutes = [
     {
         path: '/wishlist',
         component: WishlistPage,
+    },
+    {
+        path: '/myaddress',
+        component: AllAddressPage,
     },
 ];
 

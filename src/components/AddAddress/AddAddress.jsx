@@ -73,7 +73,6 @@ const AddAdress = ({ show, handleClose, disabled }) => {
         user: user?.data.id,
     };
 
-    const dispatch = useDispatch();
 
     // const axiosJWT = createAxios(user, dispatch);
 

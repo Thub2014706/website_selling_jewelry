@@ -100,3 +100,14 @@ export const getAllAddress = async (token) => {
         console.log(error);
     }
 };
+
+export const deleteByUser = async (token, id) => {
+    try {
+        const response = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/api/address/delete-by-user/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

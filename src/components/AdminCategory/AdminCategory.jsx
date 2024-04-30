@@ -4,26 +4,39 @@ import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { allType, deleteType } from '~/services/ProductService';
+import { allType, allTypeSearch, deleteType } from '~/services/ProductService';
 import ModalSelect from '../ModalSelect/ModalSelect';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateCategory from '../UpdateCategory/UpdateCategory';
 import AdminAddCategories from '../AdminProduct/AdminAddCategories';
+import PaginationSearch from '../PaginationSearch/PaginationSearch';
 
 const AdminCategory = () => {
     const user = useSelector((state) => state.auth.login.currentUser);
 
-    const dispatch = useDispatch();
-
-    // const axiosJWT = createAxios(user, dispatch);
-
     const [types, setTypes] = useState(null);
+
+    const [search, setSearch] = useState('');
+
+    const [number, setNumber] = useState(1);
+
+    const [length, setLength] = useState(1);
+
+    const handleNumber = (number) => {
+        setNumber(number);
+    };
+
+    const handleSearch = (search) => {
+        setSearch(search);
+    };
+
 
     useEffect(() => {
         const fetchType = async () => {
-            const data = await allType();
-            setTypes(data);
+            const data = await allTypeSearch(search, number, 15);
+            setTypes(data.data);
+            setLength(data.length)
         };
         fetchType();
     }, [types]);
@@ -74,6 +87,8 @@ const AdminCategory = () => {
             <Button variant="danger" className="rounded-0" onClick={handleShowAdd}>
                 Thêm phân loại
             </Button>
+            <PaginationSearch length={length} selectNumber={handleNumber} handleSubmit={handleSearch} />
+
             {types !== null && (
                 <Table bordered striped className="text-center">
                     <thead>
@@ -88,7 +103,7 @@ const AdminCategory = () => {
                     <tbody>
                         {types.map((item, index) => (
                             <tr key={index}>
-                                <td>{index + 1}</td>
+                                <td>{index + 1 + 15 * (number - 1)}</td>
                                 <td>{item.name}</td>
                                 <td>{item.father}</td>
                                 <td className="text-center">

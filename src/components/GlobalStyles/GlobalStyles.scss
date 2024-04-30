@@ -243,10 +243,29 @@ body {
     // max-width: 450px;
 }
 
-// .col-order {
-//     background-color: #555555;
-// }
+.panigation-circle {
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
 
-// .favorite-product {
+.panigation-icon {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
 
-// }
+.panigation-circle:hover {
+    border-color: #744a00;
+    color: #744a00;
+}
+
+.panigation-icon:hover {
+    color: #744a00;
+}

@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Pagination, Row } from 'react-bootstrap';
 import Product from '~/components/Product/Product';
 import TitleImage from '~/components/TitleImage/TitleImage';
 import { filterAll } from '~/services/ProductService';
 import title from '~/assets/images/title3.png';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Star from '~/components/Star/Star';
 
 const ShopPage = () => {
     const [products, setProducts] = useState(null);
+
+    const [number, setNumber] = useState(1);
+
+    const [length, setLength] = useState(1);
+
+    const handleNumber = (value) => {
+        setNumber(value);
+    };
+
+    const handlePre = () => {
+        if (number > 1) {
+            setNumber(number - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (number < length) {
+            setNumber(number + 1);
+        }
+    };
 
     const location = useLocation();
     // const history = useHistory()
@@ -40,24 +60,36 @@ const ShopPage = () => {
 
     // const [data, setData] = useState(null);
     const [numberStar, setNumberStar] = useState('');
+
     const [size, setSize] = useState([]);
 
     const handleApply = async () => {
         setPriceFrom(valueFrom);
         setPriceTo(valueTo);
-        const value = await filterAll({ type, search, priceFrom: valueFrom, priceTo: valueTo, numberStar, size });
-        setProducts(value);
+        const value = await filterAll({
+            type,
+            search,
+            priceFrom: valueFrom,
+            priceTo: valueTo,
+            numberStar,
+            size,
+            number,
+        });
+        setProducts(value.data);
+        setLength(value.length);
     };
 
     const handleStar = async (number) => {
         if (number === numberStar) {
             setNumberStar('');
-            const value = await filterAll({ type, search, priceFrom, priceTo, size });
-            setProducts(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, size, number });
+            setProducts(value.data);
+            setLength(value.length);
         } else {
             setNumberStar(number);
-            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar: number, size });
-            setProducts(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar: number, size, number });
+            setProducts(value.data);
+            setLength(value.length);
         }
     };
 
@@ -65,13 +97,15 @@ const ShopPage = () => {
         if (size.findIndex((item) => item === thisSize) < 0) {
             const copy = [...size, thisSize];
             setSize(copy);
-            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: copy });
-            setProducts(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: copy, number });
+            setProducts(value.data);
+            setLength(value.length);
         } else {
             const data = size.filter((item) => item !== thisSize);
             setSize(data);
-            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: data });
-            setProducts(value);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar, size: data, number });
+            setProducts(value.data);
+            setLength(value.length);
         }
     };
     // console.log(size);
@@ -81,22 +115,25 @@ const ShopPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             if (search) {
-                const data = await filterAll({ search });
-                setProducts(data);
-                setSizes(data);
+                const data = await filterAll({ search, number });
+                setProducts(data.data);
+                setSizes(data.data);
+                setLength(data.length);
             } else if (type) {
-                const data = await filterAll({ type });
-                setProducts(data);
-                setSizes(data);
+                const data = await filterAll({ type, number });
+                setProducts(data.data);
+                setSizes(data.data);
+                setLength(data.length);
             } else {
-                const data = await filterAll({});
-                setProducts(data);
-                setSizes(data);
+                const data = await filterAll({ number });
+                setProducts(data.data);
+                setSizes(data.data);
+                setLength(data.length);
                 console.log(data);
             }
         };
         fetchProducts();
-    }, [search, type]);
+    }, [search, type, number]);
 
     const [button, setButton] = useState('button3');
 
@@ -143,6 +180,13 @@ const ShopPage = () => {
             }),
         );
     }
+
+    let options = [];
+    for (let i = 1; i <= length; i++) {
+        options.push(i);
+    }
+
+    console.log(Math.floor(length / 2));
 
     return (
         <div>
@@ -303,6 +347,94 @@ const ShopPage = () => {
                                         </Link>
                                     </Col>
                                 ))}
+                            </Row>
+                            <Row>
+                                <span className="d-flex justify-content-center">
+                                    <div className="text-center align-middle panigation-icon">
+                                        <FontAwesomeIcon icon={faAngleLeft} onClick={() => handlePre()} />
+                                    </div>
+                                    {length <= 4 ? (
+                                        options.map((value) => (
+                                            <span
+                                                style={{
+                                                    color: number === value && '#744a00',
+                                                    borderColor: number === value && '#744a00',
+                                                }}
+                                                className="mx-1 panigation-circle text-center align-middle"
+                                                onClick={() => handleNumber(value)}
+                                            >
+                                                {value}
+                                            </span>
+                                        ))
+                                    ) : number <= Math.floor(length / 2) - 1 ? (
+                                        <span className="d-flex justify-content-center">
+                                            {options.map(
+                                                (value) =>
+                                                    (value === number ||
+                                                        value === number + 1 ||
+                                                        value === number - 1 ||
+                                                        value === number - 2) && (
+                                                        <span
+                                                            style={{
+                                                                color: number === value && '#744a00',
+                                                                borderColor: number === value && '#744a00',
+                                                            }}
+                                                            className="mx-1 panigation-circle text-center align-middle"
+                                                            onClick={() => handleNumber(value)}
+                                                        >
+                                                            {value}
+                                                        </span>
+                                                    ),
+                                            )}
+                                            <span className="mx-1 panigation-circle text-center align-middle">...</span>
+                                            <span
+                                                style={{
+                                                    color: number === length && '#744a00',
+                                                    borderColor: number === length && '#744a00',
+                                                }}
+                                                className="mx-1 panigation-circle text-center align-middle"
+                                                onClick={() => handleNumber(length)}
+                                            >
+                                                {length}
+                                            </span>
+                                        </span>
+                                    ) : (
+                                        <span className="d-flex justify-content-center">
+                                            <span
+                                                style={{
+                                                    color: number === 1 && '#744a00',
+                                                    borderColor: number === 1 && '#744a00',
+                                                }}
+                                                className="mx-1 panigation-circle text-center align-middle"
+                                                onClick={() => handleNumber(1)}
+                                            >
+                                                1
+                                            </span>
+                                            <span className="mx-1 panigation-circle text-center align-middle">...</span>
+                                            {options.map(
+                                                (value) =>
+                                                    value >= Math.floor(length / 2) &&
+                                                    (value === number ||
+                                                        value === number + 1 ||
+                                                        value === number - 1) && (
+                                                        <span
+                                                            style={{
+                                                                color: number === value && '#744a00',
+                                                                borderColor: number === value && '#744a00',
+                                                            }}
+                                                            className="mx-1 panigation-circle text-center align-middle"
+                                                            onClick={() => handleNumber(value)}
+                                                        >
+                                                            {value}
+                                                        </span>
+                                                    ),
+                                            )}
+                                        </span>
+                                    )}
+                                    <div className="text-center align-middle panigation-icon">
+                                        <FontAwesomeIcon icon={faAngleRight} onClick={() => handleNext()} />
+                                    </div>
+                                </span>
                             </Row>
                         </Col>
                     </Row>

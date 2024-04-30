@@ -184,6 +184,14 @@ const Header = () => {
                                                         </li>
                                                         <li className="mb-2">
                                                             <Link
+                                                                to={`/myaddress`}
+                                                                className="text-black text-decoration-none"
+                                                            >
+                                                                Địa chỉ của bạn
+                                                            </Link>
+                                                        </li>
+                                                        <li className="mb-2">
+                                                            <Link
                                                                 to={`/wishlist`}
                                                                 className="text-black text-decoration-none"
                                                             >
@@ -275,16 +283,6 @@ const Header = () => {
                                             {item.name}
                                         </li>
                                     </Link>
-                                ))}
-                            </ul>
-                        </Col>
-                        <Col md={2}>
-                            <h5 className="text-white">Danh mục</h5>
-                            <ul>
-                                {dataShow.map((item) => (
-                                    <li key={item._id} className="text-white">
-                                        {item.name}
-                                    </li>
                                 ))}
                             </ul>
                         </Col>

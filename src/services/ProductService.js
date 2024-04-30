@@ -171,9 +171,19 @@ export const createType = async (data, token, toast) => {
     }
 };
 
+export const allTypeSearch = async (search, number, show) => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/getall-type?search=${search}&number=${number}&show=${show}`);
+        // console.log("dfghj",response.data)
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const allType = async () => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/getall-type`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/all-type`);
         // console.log("dfghj",response.data)
         return response.data;
     } catch (error) {
@@ -302,7 +312,7 @@ export const filterByStar = async (numberStar) => {
 
 export const filterAll = async (data) => {
     try {
-        const { type, search, priceFrom, priceTo, numberStar, size } = data;
+        const { type, search, priceFrom, priceTo, numberStar, size, number } = data;
         console.log(search, priceFrom, priceTo, numberStar, size);
         let url = `${process.env.REACT_APP_API_URL}/api/product/filter-all?`;
         if (type) {
@@ -320,7 +330,18 @@ export const filterAll = async (data) => {
         if (size && Array.isArray(size)) {
             size.map((item) => (url = url + `size=${item}&`));
         }
-        const response = await axios.get(url);
+        const response = await axios.get(url + `number=${number}&show=1`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const randomProduct = async (id) => {
+    try {
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/product/random-products/?id=${id}&length=5`,
+        );
         return response.data;
     } catch (error) {
         console.log(error);

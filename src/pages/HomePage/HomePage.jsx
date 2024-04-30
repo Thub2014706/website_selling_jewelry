@@ -19,17 +19,13 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchAllProduct = async () => {
-            const data = await allProduct();
-            setProducts(data);
+            const data = await allProduct('', 1, 10);
+            setProducts(data.data);
             AOS.init({ once: true, duration: 1500 });
         };
         fetchAllProduct();
     }, [AOS]);
 
-    // const shopNow = () => {
-    //     dispatch(removeSearch());
-    //     navigate('/shop')
-    // }
 
     return (
         <div style={{ position: 'relative', width: '100%' }}>

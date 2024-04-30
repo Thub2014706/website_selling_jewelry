@@ -28,12 +28,13 @@ const PaginationSearch = ({ length, selectNumber, handleSubmit }) => {
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
+        setNumber(1);
         selectNumber(1);
         handleSubmit(search);
     };
 
     return (
-        <Row>
+        <Row className='my-3'>
             <Col>
                 <div className="input-group" style={{ width: '130px' }}>
                     <Form.Label className="me-2 mt-1">Hiện trang: </Form.Label>

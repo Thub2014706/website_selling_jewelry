@@ -31,8 +31,15 @@ const ProductDetails = () => {
 
     const [numberFavorite, setNumberFavorite] = useState(0);
 
+    // giá trị số lượng sp
+    const [number, setNumber] = useState(1);
+
+    // chọn kích thước, lấy vị trí index
+    const [sizeValue, setSizeValue] = useState(null);
+
     // lấy thông tin chi tiết sp
     const [product, setProduct] = useState(null);
+    
     useEffect(() => {
         const fetchProductDetail = async () => {
             const dataProduct = await productDetail(id);
@@ -43,15 +50,12 @@ const ProductDetails = () => {
             setFavorite(dataFavorite);
             const number = await numberFavoriteByProduct(id);
             setNumberFavorite(number);
+
+            setNumber(1);
+            setSizeValue(null);
         };
         fetchProductDetail();
     }, [id, favorite, user]);
-
-    // giá trị số lượng sp
-    const [number, setNumber] = useState(1);
-
-    // chọn kích thước, lấy vị trí index
-    const [sizeValue, setSizeValue] = useState(null);
 
     const [war, setWar] = useState(''); //thông báo lỗi
 
@@ -144,27 +148,6 @@ const ProductDetails = () => {
                 });
             }
         }
-    };
-
-    const buyNow = () => {
-        //     const products = JSON.parse(localStorage.getItem('cartProduct'));
-        //     if (products) {
-        //         const productAtId = products.find((item) => item.product._id === id);
-        //         console.log('ghjdfghj', productAtId);
-        //         if (sizeValue === null) {
-        //             setWar('Hãy chọn phân loại hàng');
-        //         } else if (productAtId && productAtId.cartQuantity + number > product.variants[sizeValue].inStock) {
-        //             setWar('Số lượng bạn chọn vượt quá số lượng sản phẩm trong kho.');
-        //         } else {
-        //             dispatch(addToCart(data));
-        //             navigate('/cart');
-        //             setWar('');
-        //         }
-        //     } else {
-        //         dispatch(addToCart(data));
-        //         navigate('/cart');
-        //         setWar('');
-        //     }
     };
 
     const [photo, setPhoto] = useState(0);
@@ -302,18 +285,11 @@ const ProductDetails = () => {
                             <p className="text-danger mt-2">{war}</p>
                             <Button
                                 className="py-2 px-4 mt-4 me-3 rounded-0"
-                                style={{ backgroundColor: 'var(--primary-color)', border: 'none' }}
+                                style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
                                 onClick={handleToCart}
                             >
                                 <FontAwesomeIcon icon={faBagShopping} className="me-2" />
                                 Thêm vào giỏ
-                            </Button>
-                            <Button
-                                className="py-2 px-4 mt-4 rounded-0"
-                                style={{ backgroundColor: 'var(--font-color)', border: 'none' }}
-                                onClick={buyNow}
-                            >
-                                Mua ngay
                             </Button>
                             <div className="d-flex mt-4">
                                 <span className="d-flex" onClick={handleFavorite}>
@@ -327,35 +303,33 @@ const ProductDetails = () => {
                             </div>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col>
-                            <h3 className="text-center fst-italic">Thông tin sản phẩm</h3>
-                            <div>{parse(product.information)}</div>
-                        </Col>
+                    <Row className="mt-5">
+                        <h3 className="fst-italic">Thông tin sản phẩm</h3>
+                        <div>{parse(product.information)}</div>
                         {/* </Row>
                     <Row> */}
-                        <Col>
-                            <h3 className="text-center fst-italic">Đánh giá sản phẩm</h3>
-                            {comments !== null && comments.length > 0 ? (
-                                <div>
-                                    <h5 style={{ color: 'var(--font-color)' }}>{comments.length} đánh giá</h5>
-                                    {comments.map((item) => (
-                                        <div>
-                                            <span className="d-flex">
-                                                <h5 className="me-2">{item.user.username}</h5>
-                                                <Star number={item.star} />
-                                                <p className="ms-2">
-                                                    <TimeFormat time={item.createdAt} />
-                                                </p>
-                                            </span>
-                                            <p>{item.shortComment}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <h5 className="text-center">Chưa có đánh giá nào</h5>
-                            )}
-                        </Col>
+                    </Row>
+                    <Row>
+                        <h3 className="mt-3 fst-italic">Đánh giá sản phẩm</h3>
+                        {comments !== null && comments.length > 0 ? (
+                            <div>
+                                <h5 style={{ color: 'var(--font-color)' }}>{comments.length} đánh giá</h5>
+                                {comments.map((item) => (
+                                    <div>
+                                        <span className="d-flex">
+                                            <h5 className="me-2">{item.user.username}</h5>
+                                            <Star number={item.star} />
+                                            <p className="ms-2">
+                                                <TimeFormat time={item.createdAt} />
+                                            </p>
+                                        </span>
+                                        <p>{item.shortComment}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <h5>Chưa có đánh giá nào.</h5>
+                        )}
                     </Row>
                 </Container>
             ) : (

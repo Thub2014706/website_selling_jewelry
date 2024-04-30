@@ -54,17 +54,12 @@ const AdminOrder = () => {
 
     const handleClose = () => setShow(false);
 
-    const handleClick = async (id) => {
-        // console.log(id);
-        await transportUpdate(id, user?.accessToken);
-    };
-
     return orders1 !== null && orders2 !== null && orders3 !== null && orders4 !== null ? (
         <Container fluid>
             <Row>
                 <Col>
                     <h5>Đơn hàng xử lý</h5>
-                    <HandleOrderTable orders={orders1} handleShow={handleShow} handleClick={handleClick} />
+                    <HandleOrderTable orders={orders1} handleShow={handleShow} />
                 </Col>
 
                 <Col>

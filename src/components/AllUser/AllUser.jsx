@@ -26,7 +26,7 @@ const AllUser = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await allUser(user?.accessToken, search, number, 3);
+            const data = await allUser(user?.accessToken, search, number, 10);
             setAllData(data.data);
             setLength(data.length)
         };
@@ -49,7 +49,7 @@ const AllUser = () => {
                     <tbody>
                         {allData.map((item, index) => (
                             <tr>
-                                <td>{index + 1}</td>
+                                <td>{index + 1 + 10 * (number - 1)}</td>
                                 <td>{item.username}</td>
                                 <td>{item.email}</td>
                                 {item.isAdmin ? <td>Admin</td> : <td>Không</td>}
