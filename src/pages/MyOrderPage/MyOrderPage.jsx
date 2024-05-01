@@ -182,7 +182,7 @@ const MyOrderPage = () => {
                                             <td>
                                                 <span>
                                                     <h5>{pro.name}</h5>
-                                                    <p>Kích thước: {pro.size} cm</p>
+                                                    <p>Kích thước: {pro.size}</p>
                                                     <p>x {pro.quantity}</p>
                                                 </span>
                                             </td>

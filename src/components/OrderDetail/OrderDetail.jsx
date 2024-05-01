@@ -57,7 +57,7 @@ const OrderDetail = ({ show, handleClose, orderShow }) => {
                                 </td>
                                 <td>
                                     <span className="ms-2">
-                                        {pro.name} <br /> Kích thước: {pro.size}cm
+                                        {pro.name} <br /> Kích thước: {pro.size}
                                     </span>
                                 </td>
                                 <td className="text-center">

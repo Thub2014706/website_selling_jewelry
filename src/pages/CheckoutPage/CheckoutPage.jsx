@@ -171,7 +171,7 @@ const CheckoutPage = () => {
                                                     />
                                                 </td>
                                                 <td>
-                                                    {item.product.name} <br /> size: {item.idSize.size}cm
+                                                    {item.product.name} <br /> size: {item.idSize.size}
                                                 </td>
                                                 <td>x{item.cartQuantity}</td>
                                                 <td>

@@ -26,7 +26,6 @@ const HomePage = () => {
         fetchAllProduct();
     }, [AOS]);
 
-
     return (
         <div style={{ position: 'relative', width: '100%' }}>
             <Banner />
@@ -123,21 +122,25 @@ const HomePage = () => {
             )}
 
             {products !== null ? (
-                <Container style={{ zIndex: 100 }}>
+                <Container className="my-4" style={{ zIndex: 100 }}>
+                    <h3 className="text-center mb-4 fw-bold">GỢI Ý CHO BẠN</h3>
                     <Row>
-                        {products.map((product, index) => (
-                            <Col md={3} key={product._id}>
-                                <Link to={`/product/${product._id}`} className="text-decoration-none">
-                                    <Product
-                                        image={product.image}
-                                        name={product.name}
-                                        price={product.price}
-                                        discount={product.discount}
-                                        numberStar={product.numberStar}
-                                    />
-                                </Link>
-                            </Col>
-                        ))}
+                        {products.map(
+                            (product, index) =>
+                                index < 8 && (
+                                    <Col md={3} key={product._id}>
+                                        <Link to={`/product/${product._id}`} className="text-decoration-none">
+                                            <Product
+                                                image={product.image}
+                                                name={product.name}
+                                                price={product.price}
+                                                discount={product.discount}
+                                                numberStar={product.numberStar}
+                                            />
+                                        </Link>
+                                    </Col>
+                                ),
+                        )}
                     </Row>
                 </Container>
             ) : (

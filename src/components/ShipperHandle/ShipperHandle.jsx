@@ -13,6 +13,7 @@ import NoteModal from '../NoteModal/NoteModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalSelect from '../ModalSelect/ModalSelect';
+import ShipDetail from '../ShipDetail/ShipDetail';
 
 const ShipperHandle = ({ statusOrder }) => {
     const user = useSelector((state) => state.auth.login.currentUser);
@@ -112,87 +113,92 @@ const ShipperHandle = ({ statusOrder }) => {
     }, [orders, idNote, idShow]);
 
     return (
-        <Row>
-            <ToastContainer />
-            <Col>
-                <Table bordered striped>
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>ID đơn hàng</th>
-                            <th>Địa chỉ</th>
-                            <th>Tổng thu</th>
-                            <th>Xử lý</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders !== null ? (
-                            orders.map((item, index) => (
-                                <tr
-                                    key={item._id}
-                                    onClick={() => handleDetail(item)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <td>{index + 1}</td>
-                                    <td>{item._id}</td>
-                                    <td>
-                                        {item.shipping.phone}, {item.shipping.address}, {item.shipping.ward}, {item.shipping.district},{' '}
-                                        {item.shipping.province}
-                                    </td>
-                                    <td>{item.total.toLocaleString('it-IT')}đ</td>
-                                    <td>
-                                        {statusOrder === 'prepare' ? (
-                                            <Button onClick={() => handleDelivering(item._id)} variant="dark">
-                                                Nhập đơn giao
-                                            </Button>
-                                        ) : (
-                                            <div className="d-flex">
-                                                <Button
-                                                    onClick={() => handleDelivered(item._id)}
-                                                    variant="dark"
-                                                >
-                                                    Đã giao
+        <div>
+            <Row>
+                <ToastContainer />
+                <Col>
+                    <Table bordered striped>
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>ID đơn hàng</th>
+                                <th>Địa chỉ</th>
+                                <th>Tổng thu</th>
+                                <th>Xử lý</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders !== null ? (
+                                orders.map((item, index) => (
+                                    <tr
+                                        key={item._id}
+                                        onClick={() => handleDetail(item)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <td>{index + 1}</td>
+                                        <td>{item._id}</td>
+                                        <td>
+                                            {item.shipping.phone}, {item.shipping.address}, {item.shipping.ward}, {item.shipping.district},{' '}
+                                            {item.shipping.province}
+                                        </td>
+                                        <td>{item.total.toLocaleString('it-IT')}đ</td>
+                                        <td>
+                                            {statusOrder === 'prepare' ? (
+                                                <Button onClick={() => handleDelivering(item._id)} variant="dark">
+                                                    Nhập đơn giao
                                                 </Button>
-                                                {item.variants.length < 6 ? (
+                                            ) : (
+                                                <div className="d-flex">
                                                     <Button
-                                                        onClick={() => handleStock(item._id)}
+                                                        onClick={() => handleDelivered(item._id)}
                                                         variant="dark"
-                                                        className="ms-3"
                                                     >
-                                                        Trở lại kho
+                                                        Đã giao
                                                     </Button>
-                                                ) : (
-                                                    <Button
-                                                        onClick={() => handleShow(item._id)}
-                                                        variant="dark"
-                                                        className="ms-3"
-                                                    >
-                                                        Huỷ đơn
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        )}
-                                    </td>
-                                    <td>{item.variants[item.variants.length - 1].note}</td>
-                                </tr>
-                            ))
-                        ) : (
-                            <p>Loading...</p>
-                        )}
-                    </tbody>
-                </Table>
-                <ModalSelect
-                    show={show}
-                    text="Bạn có chắc muốn hủy đơn hàng này"
-                    accept="Hủy đơn"
-                    cancel="Thoát"
-                    handleAction={handleCancel}
-                    handleClose={handleClose}
-                />
-                {idNote !== null && <NoteModal show={showNote} handleClose={handleCloseStock} handleSave={handleSave} />}
-            </Col>
-        </Row>
+                                                    {item.variants.length < 6 ? (
+                                                        <Button
+                                                            onClick={() => handleStock(item._id)}
+                                                            variant="dark"
+                                                            className="ms-3"
+                                                        >
+                                                            Trở lại kho
+                                                        </Button>
+                                                    ) : (
+                                                        <Button
+                                                            onClick={() => handleShow(item._id)}
+                                                            variant="dark"
+                                                            className="ms-3"
+                                                        >
+                                                            Huỷ đơn
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td>{item.variants[item.variants.length - 1].note}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <p>Loading...</p>
+                            )}
+                        </tbody>
+                    </Table>
+                    <ModalSelect
+                        show={show}
+                        text="Bạn có chắc muốn hủy đơn hàng này"
+                        accept="Hủy đơn"
+                        cancel="Thoát"
+                        handleAction={handleCancel}
+                        handleClose={handleClose}
+                    />
+                    {idNote !== null && <NoteModal show={showNote} handleClose={handleCloseStock} handleSave={handleSave} />}
+                </Col>
+            </Row>
+            {/* <Row>
+                {<ShipDetail order={detail} />}
+            </Row> */}
+        </div>
     );
 };
 

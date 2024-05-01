@@ -12,6 +12,7 @@ import HandleOrder from '~/components/HandleOrder/HandleOrder';
 import ListMenu from '~/components/ListMenu/ListMenu';
 import MenuSelect from '~/components/MenuSelect/MenuSelect';
 import Statistical from '~/components/Statistical/Statistical';
+import StatisticalProduct from '~/components/StatisticalProduct/StatisticalProduct';
 
 const AdminPage = () => {
     const [showPage, setShowPage] = useState('');
@@ -29,6 +30,8 @@ const AdminPage = () => {
             return <HandleOrder />;
         } else if (showPage === 'statistical') {
             return <Statistical />;
+        } else if (showPage === 'statisticalP') {
+            return <StatisticalProduct />;
         }
     };
 
@@ -101,29 +104,33 @@ const AdminPage = () => {
                     />
 
                     {/* Thống kê */}
-                    <MenuSelect
-                        title="Thống kê"
-                        icon={faChartLine}
-                        handleClick={() => setShowPage('statistical')}
-                        styleMenu={{ backgroundColor: showPage === 'statistical' ? 'var(--list-menu)' : '' }}
-                    />
-                    {/* <ListMenu title="Thống kê" icon={faChartPie}>
-                        <li className="mb-3">
-                            <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                quanly
-                            </a>
-                        </li>
-                        <li className="mb-3">
-                            <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                quanly
-                            </a>
-                        </li>
-                        <li className="mb-3">
-                            <a className="text-decoration-none text-white" href="javascript:void(0)">
-                                quanly
-                            </a>
-                        </li>
-                    </ListMenu> */}
+                    <ListMenu title="Thống kê" icon={faChartLine}>
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('statistical')}
+                        >
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'statistical' ? 'var(--list-menu)' : '' }}
+                            >
+                                Doanh thu
+                            </li>
+                        </a>
+                        <a
+                            className="text-decoration-none text-white"
+                            href="javascript:void(0)"
+                            onClick={() => setShowPage('statisticalP')}
+                        >
+                            <li
+                                className="menu mb-1 px-3 py-2 rounded"
+                                style={{ backgroundColor: showPage === 'statisticalP' ? 'var(--list-menu)' : '' }}
+                            >
+                                Sản phẩm
+                            </li>
+                        </a>
+
+                    </ListMenu>
                 </Col>
 
                 <Col sm={10} className="p-3">

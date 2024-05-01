@@ -330,7 +330,7 @@ export const filterAll = async (data) => {
         if (size && Array.isArray(size)) {
             size.map((item) => (url = url + `size=${item}&`));
         }
-        const response = await axios.get(url + `number=${number}&show=1`);
+        const response = await axios.get(url + `number=${number}&show=6`);
         return response.data;
     } catch (error) {
         console.log(error);
@@ -340,7 +340,7 @@ export const filterAll = async (data) => {
 export const randomProduct = async (id) => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/product/random-products/?id=${id}&length=5`,
+            `${process.env.REACT_APP_API_URL}/api/product/random-products/?id=${id}&length=4`,
         );
         return response.data;
     } catch (error) {

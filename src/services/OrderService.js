@@ -283,3 +283,41 @@ export const allCancel = async () => {
         console.log(error);
     }
 };
+
+export const sDayStatistics = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/statistic-seven-day`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const monthStatistics = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/statistic-month-pre`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const topFiveBest = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/top-five-best`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const topFiveLow = async () => {
+    try {
+        const response = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/api/order/top-five-low`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+

@@ -79,19 +79,21 @@ const ShopPage = () => {
         setLength(value.length);
     };
 
-    const handleStar = async (number) => {
-        if (number === numberStar) {
+    const handleStar = async (numberS) => {
+        if (numberS === numberStar) {
             setNumberStar('');
             const value = await filterAll({ type, search, priceFrom, priceTo, size, number });
             setProducts(value.data);
             setLength(value.length);
         } else {
-            setNumberStar(number);
-            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar: number, size, number });
+            setNumberStar(numberS);
+            const value = await filterAll({ type, search, priceFrom, priceTo, numberStar: numberS, size, number });
             setProducts(value.data);
             setLength(value.length);
         }
     };
+
+    console.log(products);
 
     const handleSize = async (thisSize) => {
         if (size.findIndex((item) => item === thisSize) < 0) {
@@ -117,11 +119,13 @@ const ShopPage = () => {
             if (search) {
                 const data = await filterAll({ search, number });
                 setProducts(data.data);
+                setNumber(1)
                 setSizes(data.data);
                 setLength(data.length);
             } else if (type) {
                 const data = await filterAll({ type, number });
                 setProducts(data.data);
+                setNumber(1)
                 setSizes(data.data);
                 setLength(data.length);
             } else {
@@ -129,7 +133,6 @@ const ShopPage = () => {
                 setProducts(data.data);
                 setSizes(data.data);
                 setLength(data.length);
-                console.log(data);
             }
         };
         fetchProducts();
@@ -251,7 +254,7 @@ const ShopPage = () => {
                                                         />
                                                     )}
                                                 </div>
-                                                <p>{item}cm</p>
+                                                <p>{item}</p>
                                             </div>
                                         ))}
                                 </Col>
@@ -331,111 +334,121 @@ const ShopPage = () => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row className="mt-4">
-                                {showPage().map((product) => (
-                                    <Col key={product._id} sm={4}>
-                                        <Link to={`/product/${product._id}`} className="text-decoration-none">
-                                            <Product
-                                                key={product._id}
-                                                image={product.image}
-                                                name={product.name}
-                                                price={product.price}
-                                                discount={product.discount}
-                                                numberStar={product.numberStar}
-                                                selled={product.selled}
-                                            />
-                                        </Link>
-                                    </Col>
-                                ))}
-                            </Row>
-                            <Row>
-                                <span className="d-flex justify-content-center">
-                                    <div className="text-center align-middle panigation-icon">
-                                        <FontAwesomeIcon icon={faAngleLeft} onClick={() => handlePre()} />
-                                    </div>
-                                    {length <= 4 ? (
-                                        options.map((value) => (
-                                            <span
-                                                style={{
-                                                    color: number === value && '#744a00',
-                                                    borderColor: number === value && '#744a00',
-                                                }}
-                                                className="mx-1 panigation-circle text-center align-middle"
-                                                onClick={() => handleNumber(value)}
-                                            >
-                                                {value}
-                                            </span>
-                                        ))
-                                    ) : number <= Math.floor(length / 2) - 1 ? (
+                            {products.length > 0 ? (
+                                <div>
+                                    <Row className="mt-4">
+                                        {showPage().map((product) => (
+                                            <Col key={product._id} sm={4}>
+                                                <Link to={`/product/${product._id}`} className="text-decoration-none">
+                                                    <Product
+                                                        key={product._id}
+                                                        image={product.image}
+                                                        name={product.name}
+                                                        price={product.price}
+                                                        discount={product.discount}
+                                                        numberStar={product.numberStar}
+                                                        selled={product.selled}
+                                                    />
+                                                </Link>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                    <Row>
                                         <span className="d-flex justify-content-center">
-                                            {options.map(
-                                                (value) =>
-                                                    (value === number ||
-                                                        value === number + 1 ||
-                                                        value === number - 1 ||
-                                                        value === number - 2) && (
-                                                        <span
-                                                            style={{
-                                                                color: number === value && '#744a00',
-                                                                borderColor: number === value && '#744a00',
-                                                            }}
-                                                            className="mx-1 panigation-circle text-center align-middle"
-                                                            onClick={() => handleNumber(value)}
-                                                        >
-                                                            {value}
-                                                        </span>
-                                                    ),
+                                            <div className="text-center align-middle panigation-icon">
+                                                <FontAwesomeIcon icon={faAngleLeft} onClick={() => handlePre()} />
+                                            </div>
+                                            {length <= 4 ? (
+                                                options.map((value) => (
+                                                    <span
+                                                        style={{
+                                                            color: number === value && '#744a00',
+                                                            borderColor: number === value && '#744a00',
+                                                        }}
+                                                        className="mx-1 panigation-circle text-center align-middle"
+                                                        onClick={() => handleNumber(value)}
+                                                    >
+                                                        {value}
+                                                    </span>
+                                                ))
+                                            ) : number <= Math.floor(length / 2) - 1 ? (
+                                                <span className="d-flex justify-content-center">
+                                                    {options.map(
+                                                        (value) =>
+                                                            (value === number ||
+                                                                value === number + 1 ||
+                                                                value === number - 1 ||
+                                                                value === number - 2) && (
+                                                                <span
+                                                                    style={{
+                                                                        color: number === value && '#744a00',
+                                                                        borderColor: number === value && '#744a00',
+                                                                    }}
+                                                                    className="mx-1 panigation-circle text-center align-middle"
+                                                                    onClick={() => handleNumber(value)}
+                                                                >
+                                                                    {value}
+                                                                </span>
+                                                            ),
+                                                    )}
+                                                    <span className="mx-1 panigation-circle text-center align-middle">
+                                                        ...
+                                                    </span>
+                                                    <span
+                                                        style={{
+                                                            color: number === length && '#744a00',
+                                                            borderColor: number === length && '#744a00',
+                                                        }}
+                                                        className="mx-1 panigation-circle text-center align-middle"
+                                                        onClick={() => handleNumber(length)}
+                                                    >
+                                                        {length}
+                                                    </span>
+                                                </span>
+                                            ) : (
+                                                <span className="d-flex justify-content-center">
+                                                    <span
+                                                        style={{
+                                                            color: number === 1 && '#744a00',
+                                                            borderColor: number === 1 && '#744a00',
+                                                        }}
+                                                        className="mx-1 panigation-circle text-center align-middle"
+                                                        onClick={() => handleNumber(1)}
+                                                    >
+                                                        1
+                                                    </span>
+                                                    <span className="mx-1 panigation-circle text-center align-middle">
+                                                        ...
+                                                    </span>
+                                                    {options.map(
+                                                        (value) =>
+                                                            value >= Math.floor(length / 2) &&
+                                                            (value === number ||
+                                                                value === number + 1 ||
+                                                                value === number - 1) && (
+                                                                <span
+                                                                    style={{
+                                                                        color: number === value && '#744a00',
+                                                                        borderColor: number === value && '#744a00',
+                                                                    }}
+                                                                    className="mx-1 panigation-circle text-center align-middle"
+                                                                    onClick={() => handleNumber(value)}
+                                                                >
+                                                                    {value}
+                                                                </span>
+                                                            ),
+                                                    )}
+                                                </span>
                                             )}
-                                            <span className="mx-1 panigation-circle text-center align-middle">...</span>
-                                            <span
-                                                style={{
-                                                    color: number === length && '#744a00',
-                                                    borderColor: number === length && '#744a00',
-                                                }}
-                                                className="mx-1 panigation-circle text-center align-middle"
-                                                onClick={() => handleNumber(length)}
-                                            >
-                                                {length}
-                                            </span>
+                                            <div className="text-center align-middle panigation-icon">
+                                                <FontAwesomeIcon icon={faAngleRight} onClick={() => handleNext()} />
+                                            </div>
                                         </span>
-                                    ) : (
-                                        <span className="d-flex justify-content-center">
-                                            <span
-                                                style={{
-                                                    color: number === 1 && '#744a00',
-                                                    borderColor: number === 1 && '#744a00',
-                                                }}
-                                                className="mx-1 panigation-circle text-center align-middle"
-                                                onClick={() => handleNumber(1)}
-                                            >
-                                                1
-                                            </span>
-                                            <span className="mx-1 panigation-circle text-center align-middle">...</span>
-                                            {options.map(
-                                                (value) =>
-                                                    value >= Math.floor(length / 2) &&
-                                                    (value === number ||
-                                                        value === number + 1 ||
-                                                        value === number - 1) && (
-                                                        <span
-                                                            style={{
-                                                                color: number === value && '#744a00',
-                                                                borderColor: number === value && '#744a00',
-                                                            }}
-                                                            className="mx-1 panigation-circle text-center align-middle"
-                                                            onClick={() => handleNumber(value)}
-                                                        >
-                                                            {value}
-                                                        </span>
-                                                    ),
-                                            )}
-                                        </span>
-                                    )}
-                                    <div className="text-center align-middle panigation-icon">
-                                        <FontAwesomeIcon icon={faAngleRight} onClick={() => handleNext()} />
-                                    </div>
-                                </span>
-                            </Row>
+                                    </Row>
+                                </div>
+                            ) : (
+                                <h3 className="text-center mt-4">Không có sản phẩm nào</h3>
+                            )}
                         </Col>
                     </Row>
                 )}

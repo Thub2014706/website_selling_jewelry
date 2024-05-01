@@ -86,7 +86,7 @@ const CartPage = () => {
                                                         </Col>
                                                         <Col sm={10}>
                                                             <p className="text-long" title={item.product.name} style={{maxWidth: '450px'}}>{item.product.name}</p>
-                                                            Phân loại: {item.idSize.size}(cm)
+                                                            Phân loại kích thước: {item.idSize.size}
                                                         </Col>
                                                     </Row>
                                                 </Link>

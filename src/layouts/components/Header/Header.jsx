@@ -271,7 +271,7 @@ const Header = () => {
                                 {dataShow.map((item) => (
                                     <Link
                                         key={item._id}
-                                        to={`/${item.name}`}
+                                        to={`/type/${item.name}`}
                                         className="text-decoration-none"
                                         onClick={() => setSelect(item.name)}
                                     >

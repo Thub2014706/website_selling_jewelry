@@ -21,7 +21,7 @@ const ProductRandom = () => {
     };
 
     return (
-        <Container>
+        <Container className='mt-3'>
             <h3 className="fst-italic">Gợi ý sản phẩm</h3>
             <Row>
                 {products?.map(

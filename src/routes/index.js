@@ -50,7 +50,7 @@ const publicRoutes = [
         component: ShopPage,
     },
     {
-        path: '/:type',
+        path: '/type/:type',
         component: ShopPage,
     },
     {

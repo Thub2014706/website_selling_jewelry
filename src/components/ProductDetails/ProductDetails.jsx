@@ -235,7 +235,7 @@ const ProductDetails = () => {
                                 </h3>
                             </div>
                             <h5>
-                                Chọn kích thước (cm):
+                                Chọn kích thước:
                                 {product.variants.map((item, index) =>
                                     item.inStock >= 1 ? (
                                         <Button
@@ -245,7 +245,7 @@ const ProductDetails = () => {
                                             }`}
                                             onClick={() => handleSize(index)}
                                         >
-                                            {item.size}
+                                            {item.size !== 0 ? item.size : 'FreeStyle'}
                                         </Button>
                                     ) : (
                                         <Button
